@@ -1,0 +1,15 @@
+sqlr -c LocalPostgreSQL -d / --describe
+sqlr -l / --list
+sqlr -c LocalPostgreSQL -q / --query "select top 100 from Users"
+sqlr -c LocalPostgreSQL --init
+
+
+
+Available connections:
+
+* Local PostgreSQL
+* Docker PostgreSQL
+* Prod PostgreSQL
+
+
+
