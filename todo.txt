@@ -1,10 +1,6 @@
 sqlr -c local-postgresql -q / --query "select top 100 * from Users"
 sqlr -c local-postgresql -i input.sql -o output.json
 
-sqlr query -c local-postgresql "select top 100 * from Users"
-sqlr query -c local-postgresql -i input.sql
-sqlr query -c local-postgresql -o output.json "select top 10 * from Users"
-
 sqlr describe -c local-postgresql or sql describe -s "localhost:5432@user-db:pass123"
 
 +----------+
