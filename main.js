@@ -12,7 +12,7 @@ await new Command()
   .command("describe", describe)
   .command("query", query)
   .globalOption("--debug", "Enable debug logs")
-  .parse(Deno.args);
+  .parse();
 //await new Command()
 //  .name("sqlr")
 //  .version("0.1.0")

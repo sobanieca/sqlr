@@ -5,6 +5,7 @@ export default new Command()
   .option("-c, --connection", "Name of the connection")
   .option("-q, --query", "Query")
   .option("-i, --input", "Input SQL file")
+  .global()
   .action(async ({show, connection}) => {
     console.log("Show: " + show);
     console.log("Connection: " + connection);
