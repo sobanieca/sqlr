@@ -16,7 +16,7 @@ users (id int not null, name)
 ...
 
 
-sqlr connections add 
+sqlr connections --add 
   Select type of connection:
   [*] PostgreSQL
   Provide name of connection: local-postgresql
@@ -25,7 +25,7 @@ sqlr connections add
     yes -> Provide password to secure connection string
     no
 
-sqlr connections list
+sqlr connections
 
 Available connections:
 
@@ -33,6 +33,6 @@ Available connections:
 * docker-local
 * prod-postgresql
 
-sqlr connections remove -c local-postgresql
-sqlr connections show -c local-postgresql
+sqlr connections --remove -c local-postgresql
+sqlr connections --show -c local-postgresql
 
