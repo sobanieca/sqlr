@@ -1,6 +1,7 @@
 import { Command } from "../deps.js";
 
 export default new Command()
+  .description("Describe all tables and columns available in database")
   .option("-s, --connection-string", "Connection string", {
     conflicts: [ "connection" ]
   })
