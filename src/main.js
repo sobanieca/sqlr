@@ -1,12 +1,12 @@
 import { Command } from "./deps.js";
-
 import describe from "./commands/describe.js";
 import connections from "./commands/connections.js";
 import query from "./commands/query.js";
+import { VERSION } from "./version.js";
 
 await new Command()
   .name("sqlr")
-  .version("0.1.0")
+  .version(VERSION)
   .description("Command line for executing SQL queries")
   .action(function() { this.showHelp(); })
   .globalOption("--debug", "Enable debug logs")

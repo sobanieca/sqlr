@@ -1,3 +1,3 @@
 #!/bin/bash
 
-deno run --allow-all ../main.js "$@"
+deno run --allow-all --unstable ../src/main.js "$@"
