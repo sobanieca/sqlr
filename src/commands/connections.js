@@ -1,18 +1,33 @@
 import { Command, Input } from "../deps.js";
 
-let showConnection = async (connectionName) => {
+const validateConnectionName = (connectionName) => {
+  let connectionNameRule = /^[A-Za-z0-9]+\-*[A-Za-z0-9]+$/g;
 
+  if (!connectionNameRule.test(connectionName)) {
+    
+  }
 };
 
-let removeConnection = async (connectionName) => {
-
-};
-
-let addConnection = async (connectionName) => {
+const addConnection = async (connectionName) => {
   if (!connectionName) {
     connectionName = await Input.prompt("Provide name of the connection"); 
   }
+
+
+
+  let connection = {
+    name: connectionName;
+  }
 };
+
+const showConnection = async (connectionName) => {
+
+};
+
+const removeConnection = async (connectionName) => {
+
+};
+
 
 export default new Command()
   .option("-a, --add [flag:boolean]", "Add new connection", {
