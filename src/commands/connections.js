@@ -1,10 +1,12 @@
 import { Command, Input } from "../deps.js";
+import logger from "../logger.js";
 
 const validateConnectionName = (connectionName) => {
   let connectionNameRule = /^[A-Za-z0-9]+\-*[A-Za-z0-9]+$/g;
 
   if (!connectionNameRule.test(connectionName)) {
-    
+    logger.error("Invalid connection name, please use only alphanumeric characters and/or at most 1 '-'");
+    Deno.exit(1);
   }
 };
 
@@ -16,7 +18,7 @@ const addConnection = async (connectionName) => {
 
 
   let connection = {
-    name: connectionName;
+    name: connectionName
   }
 };
 
