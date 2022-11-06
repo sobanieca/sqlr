@@ -19,6 +19,8 @@ users (id int not null, name)
 sqlr connections --add 
   Select type of connection:
   [*] PostgreSQL
+  [ ] Microsoft SQL Server
+  [ ] MySQL
   Provide name of connection: local-postgresql
   Provide connection string: "localhost:5432@user-db:pass123"
   Do you want to encrypt connection? (Use for PROD databases)
