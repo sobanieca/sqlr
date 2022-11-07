@@ -1,5 +1,6 @@
 import { Command, Input } from "../deps.js";
 import logger from "../logger.js";
+import connectioTypes from "../connection-types.js";
 
 const validateConnectionName = (connectionName) => {
   let connectionNameRule = /^[A-Za-z0-9]+\-*[A-Za-z0-9]+$/g;
@@ -14,6 +15,8 @@ const addConnection = async (connectionName) => {
   if (!connectionName) {
     connectionName = await Input.prompt("Provide name of the connection"); 
   }
+
+  validateConnectionName(connectionName);
 
 
 
@@ -30,6 +33,8 @@ const removeConnection = async (connectionName) => {
 
 };
 
+const showAllConnections = async () => {
+};
 
 export default new Command()
   .option("-a, --add [flag:boolean]", "Add new connection", {
@@ -41,14 +46,14 @@ export default new Command()
   .option("-s, --show [flag:boolean]", "Show connection data", {
     conflicts: [ "add", "remove"]
   })
-  .option("-c, --connection", "Name of the connection")
-  .action(async ({add, remove, show, connection}) => {
+  .option("-c, --connection [value:string]", "Name of the connection")
+  .action(async function ({add, remove, show, connection}) {
+    if (!(add || remove || show)) {
+      showAllConnections();
+      return;
+    }
+
     add && await addConnection(connection);
     remove && await removeConnection(connection);
     show && await showConnection(connection);
-    
-    console.log("Add: " + add);
-    console.log("Remove: " + remove);
-    console.log("Show: " + show);
-    console.log("Connection: " + connection);
   });
