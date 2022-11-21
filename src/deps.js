@@ -6,7 +6,6 @@ import { brightBlue, brightYellow, brightRed, bold } from "https://deno.land/std
 import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
 import { BaseHandler } from "https://deno.land/std@0.158.0/log/handlers.ts?s=BaseHandler";
 import { LogLevels } from "https://deno.land/std@0.158.0/log/mod.ts";
-import { AES } from "https://deno.land/x/god_crypto/aes.ts";
 
 const colors = {
   brightBlue,
@@ -15,9 +14,4 @@ const colors = {
   bold
 }
 
-const aes = new AES(Deno.osRelease(), {
-  mode: "cbc",
-  iv: Deno.hostname()
-});
-
-export { Command, Input, Select, Toggle, colors, log, LogLevels, BaseHandler, aes };
+export { Command, Input, Select, Toggle, colors, log, LogLevels, BaseHandler };
