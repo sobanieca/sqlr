@@ -1,8 +1,13 @@
 const encoder = new TextEncoder();
 const decoder =  new TextDecoder();
 
-const getIv = () => 
-  encoder.encode(Deno.osRelease() + Deno.hostname());
+const getIv = () => { 
+  return encoder.encode(Deno.osRelease() + Deno.hostname()).slice(0, 12);
+}
+
+const getSalt = () => {
+  return encoder.encode(Deno.hostname() + Deno.osRelease()).slice(0, 12);
+}
 
 const getPasswordKey = async (password) => {
   const baseKey = await crypto.subtle.importKey(
@@ -10,13 +15,13 @@ const getPasswordKey = async (password) => {
     encoder.encode(password),
     "PBKDF2",
     false,
-    ["deriveKey"]
+    [ "deriveKey", "deriveBits" ]
   );
 
   const derivedKey = await crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
-      salt: Deno.hostname() + Deno.osRelease(),
+      salt: getSalt(),
       iterations: 25000,
       hash: "SHA-256",
     },
@@ -30,7 +35,7 @@ const getPasswordKey = async (password) => {
 }
 
 const encrypt = async (input, password) => {
-  const key = getPasswordKey(password);
+  const key = await getPasswordKey(password);
   const result = await crypto.subtle.encrypt(
     {
       name: "AES-GCM",
@@ -39,19 +44,19 @@ const encrypt = async (input, password) => {
     key,
     encoder.encode(input)
   );
- 
-  return decoder.decode(new Uint8Array(result));
+
+  return btoa(encodeURIComponent(decoder.decode(result)));
 }
 
 const decrypt = async (input, password) => {
-  const key = getPasswordKey(password);
+  const key = await getPasswordKey(password);
   const result = await crypto.subtle.decrypt(
     {
       name: "AES-GCM",
       iv: getIv(),
     },
     key,
-    encoder.encode(input)
+    encoder.encode(decodeURIComponent(atob(input)))
   );
 
   return decoder.decode(result);

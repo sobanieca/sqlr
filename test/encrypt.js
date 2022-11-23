@@ -1,17 +1,18 @@
 import guard from "../src/guard.js";
 
+console.log(Deno.osRelease());
+console.log(Deno.hostname());
 
-const test = (input, password) => {
+const test = async (input, password) => {
   console.log(`Testing encrypt and decrypt for "${input}" input and "${password}" password`);
-  const encrypted = guard.encrypt(input, password);
+  const encrypted = await guard.encrypt(input, password);
   console.log(`Encrypted data: ${encrypted}`);
 
-  console.log(`Decrypted data: ${guard.decrypt(encrypted, "myPassword")}`);
-
- 
+  const decrypted = await guard.decrypt(encrypted, "myPassword");
+  console.log(`Decrypted data: ${decrypted}`);
 }
 
-test("Some dummy data to be encrypted", "myPassword");
+await test("Some dummy data to be encrypted", "myPassword");
 
-test("Some other dummy data", "myAnotherPassword");
+await test("Some other dummy data", "myAnotherPassword");
 
