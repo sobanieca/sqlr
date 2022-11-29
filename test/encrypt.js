@@ -14,5 +14,5 @@ const test = async (input, password) => {
 
 await test("Some dummy data to be encrypted", "myPassword");
 
-await test("Some other dummy data", "myAnotherPassword");
+//await test("Some other dummy data", "myAnotherPassword");
 

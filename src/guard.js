@@ -36,7 +36,7 @@ const getPasswordKey = async (password) => {
 
 const encrypt = async (input, password) => {
   const key = await getPasswordKey(password);
-  const result = await crypto.subtle.encrypt(
+  let result = await crypto.subtle.encrypt(
     {
       name: "AES-GCM",
       iv: getIv(),
@@ -45,18 +45,24 @@ const encrypt = async (input, password) => {
     encoder.encode(input)
   );
 
-  return btoa(encodeURIComponent(decoder.decode(result)));
+  console.log(result);
+  result = btoa(encodeURIComponent(decoder.decode(result)));
+  return result;
 }
 
 const decrypt = async (input, password) => {
   const key = await getPasswordKey(password);
+
+  input = encoder.encode(decodeURIComponent(atob(input)));
+  console.log(input);
+
   const result = await crypto.subtle.decrypt(
     {
       name: "AES-GCM",
       iv: getIv(),
     },
     key,
-    encoder.encode(decodeURIComponent(atob(input)))
+    input
   );
 
   return decoder.decode(result);
