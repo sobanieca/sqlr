@@ -1,0 +1,32 @@
+<html>
+
+  <head>
+    <script type="module">
+      import guard from "./guard.js";
+
+      const test = async (input, password) => {
+      console.log(`Testing encrypt and decrypt for "${input}" input and "${password}" password`);
+      const encrypted = await guard.encrypt(input, password);
+      console.log(`Encrypted data: ${encrypted}`);
+
+
+      // TODO: result is ArrayBuffer(47), while decoded is Uint8Array(80), check why such mismatch
+      const decrypted = await guard.decrypt(encrypted, "myPassword");
+      console.log(`Decrypted data: ${decrypted}`);
+      }
+
+      try {
+      await test("Some dummy data to be encrypted", "myPassword");
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+
+
+    </script>
+  </head>
+  <body>
+    Check console
+  </body>
+
+</html>
