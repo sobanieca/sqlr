@@ -45,16 +45,13 @@ const encrypt = async (input, password) => {
     encoder.encode(input)
   );
 
-  console.log(result);
-  result = btoa(encodeURIComponent(decoder.decode(result)));
-  return result;
+  return btoa(new Uint8Array(result).join("+"));
 }
 
 const decrypt = async (input, password) => {
   const key = await getPasswordKey(password);
 
-  input = encoder.encode(decodeURIComponent(atob(input)));
-  console.log(input);
+  input = Uint8Array.from(atob(input).split("+")).buffer;
 
   const result = await crypto.subtle.decrypt(
     {
