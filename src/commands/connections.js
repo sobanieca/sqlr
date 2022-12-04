@@ -1,6 +1,9 @@
 import { Command, Input, Select, Toggle } from "../deps.js";
 import logger from "../logger.js";
 import connectionTypes from "../connection-types.js";
+import guard from "../guard.js";
+
+const MIN_PASSWORD_LENGTH = 8;
 
 const validateConnectionName = (connectionName) => {
   let connectionNameRule = /^[A-Za-z0-9]+\-*[A-Za-z0-9]+$/g;
@@ -47,13 +50,17 @@ const addConnection = async (connectionName) => {
 
   if (connection.isEncrypted) {
     const password = await Input.prompt("Provide password to encrypt connection");
-    // TODO: encrypt (create new instance of AES (password) and then run encrypt), Ideally, encryption should be moved
-    // to separate service
-    connection.connectionString = aes.encrypt("");
+    if (password && password.length > 8) {
+      connection.connectionString = guard.encrypt(password);
+    }
+    else {
+      logger.error(`Please provide password with at least ${MIN_PASSWORD_LENGTH} characters`);
+      Deno.exit(1);
+    }
   }
   console.log(connection);
 
-  // TODO: add to localStorage
+  localStorage.setItem(connection.name, connection);
 };
 
 const showConnection = async (connectionName) => {
@@ -80,7 +87,7 @@ export default new Command()
   .option("-c, --connection [value:string]", "Name of the connection")
   .action(async function ({add, remove, show, connection}) {
     if (!(add || remove || show)) {
-      showAllConnections();
+      this.showHelp();
       return;
     }
 
