@@ -1,4 +1,4 @@
-import { Command, Input, Select, Toggle } from "../deps.js";
+import { Command, Input, Select, Table, Toggle } from "../deps.js";
 import logger from "../logger.js";
 import connectionTypes from "../connection-types.js";
 import guard from "../guard.js";
@@ -58,7 +58,6 @@ const addConnection = async (connectionName) => {
       Deno.exit(1);
     }
   }
-  console.log(connection);
 
   localStorage.setItem(connection.name, connection);
 };
@@ -72,6 +71,19 @@ const removeConnection = async (connectionName) => {
 };
 
 const showAllConnections = async () => {
+  // TODO: refactor code so it works properly
+
+  let connections = [];
+
+  for(let i = 0; i < localStorage.length; i++) {
+    const connection = localStorage.getItem(localStorage.key(i));
+    connections.push([ connection.name, connection.type ]);
+  }
+
+  logger.info(new Table()
+    .header(["Name", "Type" ])
+    .body(connections)
+    .toString());
 };
 
 export default new Command()
@@ -87,7 +99,7 @@ export default new Command()
   .option("-c, --connection [value:string]", "Name of the connection")
   .action(async function ({add, remove, show, connection}) {
     if (!(add || remove || show)) {
-      this.showHelp();
+      await showAllConnections();
       return;
     }
 
