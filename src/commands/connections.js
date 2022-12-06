@@ -31,12 +31,9 @@ const getConnectionString = async ( connectionType ) => {
   return await Input.prompt(`Provide connection string (${connectionStringDescription})`);
 };
 
-const addConnection = async (connectionName) => {
+const addConnection = async () => {
   const connection = {};
-
-  if (!connectionName) {
-    connectionName = await Input.prompt("Provide name of the connection"); 
-  }
+  const connectionName = await Input.prompt("Provide name of the connection"); 
 
   validateConnectionName(connectionName);
 
@@ -59,30 +56,33 @@ const addConnection = async (connectionName) => {
     }
   }
 
-  localStorage.setItem(connection.name, connection);
+  localStorage.setItem(connection.name, JSON.stringify(connection));
 };
 
-const showConnection = async (connectionName) => {
+const showConnection = async () => {
 
 };
 
-const removeConnection = async (connectionName) => {
+const removeConnection = async () => {
 
 };
 
 const showAllConnections = async () => {
-  // TODO: refactor code so it works properly
-
   let connections = [];
 
   for(let i = 0; i < localStorage.length; i++) {
-    const connection = localStorage.getItem(localStorage.key(i));
+    const key = localStorage.key(i);
+    const connection = JSON.parse(localStorage.getItem(key));
     connections.push([ connection.name, connection.type ]);
   }
 
   logger.info(new Table()
     .header(["Name", "Type" ])
     .body(connections)
+    .maxColWidth(25)
+    .padding(1)
+    .indent(2)
+    .border(true)
     .toString());
 };
 
@@ -96,14 +96,13 @@ export default new Command()
   .option("-s, --show [flag:boolean]", "Show connection data", {
     conflicts: [ "add", "remove"]
   })
-  .option("-c, --connection [value:string]", "Name of the connection")
   .action(async function ({add, remove, show, connection}) {
     if (!(add || remove || show)) {
       await showAllConnections();
       return;
     }
 
-    add && await addConnection(connection);
-    remove && await removeConnection(connection);
-    show && await showConnection(connection);
+    add && await addConnection();
+    remove && await removeConnection();
+    show && await showConnection();
   });

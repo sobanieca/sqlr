@@ -7,7 +7,7 @@ class BrightConsoleHandler extends BaseHandler {
 
     switch (logRecord.level) {
       case LogLevels.INFO:
-        msg = colors.brightBlue(msg);
+        msg = colors.white(msg);
         break;
       case LogLevels.WARNING:
         msg = colors.brightYellow(msg);
@@ -19,6 +19,7 @@ class BrightConsoleHandler extends BaseHandler {
         msg = colors.bold(colors.brightRed(msg));
         break;
       default:
+        msg = colors.gray(msg);
         break;
     }
 
