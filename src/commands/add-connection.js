@@ -63,7 +63,7 @@ const addConnection = async () => {
 };
 
 export default new Command()
-  .arguments("[connection]")
-  .action(async function ({connection}) {
+  .description("Add new connection")
+  .action(async function () {
     await addConnection();
 });

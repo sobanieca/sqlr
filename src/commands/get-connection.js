@@ -7,6 +7,7 @@ import logger from "../logger.js";
 import connectionTypes from "../connection-types.js";
 import guard from "../guard.js";
 
+//TODO: refactor so only get connection is present (remember about encrypted connections)
 const MIN_PASSWORD_LENGTH = 8;
 
 const validateConnectionName = (connectionName) => {

@@ -1,12 +1,15 @@
 import logger from "./logger.js";
+import guard from "./guard.js";
+import { Secret } from "cliffy/prompts/secret.ts";
 
-const getConnection = (connectionName) => {
+const getConnection = async (connectionName) => {
 
   try {
     const connection = JSON.parse(localStorage.getItem(connectionName));
 
     if (connection.isEncrypted) {
-      // TODO: decrypt connection string
+      const password = await Secret.prompt("Provide password used to encrypt connection");
+      connection.connectionString = guard.decrypt(connection.connectionString, password);
     }
 
     return connection;

@@ -22,4 +22,5 @@ const showAllConnections = async () => {
 };
 
 export default new Command()
+  .description("List all defined connections")
   .action(async () => await showAllConnections());
