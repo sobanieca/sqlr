@@ -1,4 +1,4 @@
-import { Command } from "../deps.js";
+import { Command } from "cliffy/command/mod.ts";
 
 export default new Command()
   .option("-s, --show", "Show connection data")

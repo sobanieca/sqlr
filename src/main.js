@@ -1,4 +1,4 @@
-import { Command } from "./deps.js";
+import { Command } from "cliffy/command/mod.ts";
 import describe from "./commands/describe.js";
 import connections from "./commands/connections.js";
 import addConnection from "./commands/add-connection.js";

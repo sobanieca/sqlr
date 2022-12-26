@@ -1,4 +1,15 @@
-import { log, LogLevels, BaseHandler, colors } from "./deps.js";
+import * as log from "log/mod.ts";
+import { LogLevels } from "log/mod.ts";
+import { BaseHandler } from "log/handlers.ts?s=BaseHandler";
+import { gray, white, brightYellow, brightRed, bold } from "fmt/colors.ts";
+
+const colors = {
+  gray,
+  white,
+  brightYellow,
+  brightRed,
+  bold
+}
 
 class BrightConsoleHandler extends BaseHandler {
   format(logRecord) {

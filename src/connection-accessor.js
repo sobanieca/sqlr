@@ -1,4 +1,4 @@
-import { logger } from "./deps.js";
+import logger from "./logger.js";
 
 const getConnection = (connectionName) => {
 

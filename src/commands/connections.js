@@ -1,7 +1,6 @@
-import { Command, Input, Select, Table, Toggle } from "../deps.js";
+import { Command } from "cliffy/command/mod.ts";
+import { Table } from "cliffy/table/mod.ts";
 import logger from "../logger.js";
-import connectionTypes from "../connection-types.js";
-import guard from "../guard.js";
 
 const showAllConnections = async () => {
   let connections = [];

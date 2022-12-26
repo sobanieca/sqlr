@@ -1,4 +1,4 @@
-import { Command } from "../deps.js";
+import { Command } from "cliffy/command/mod.ts";
 
 export default new Command()
   .description("Describe all tables and columns available in database")
