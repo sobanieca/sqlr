@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "cliffy": "https://deno.land/x/cliffy@0.25.4",
+    "fmt": "https://deno.land/std@0.158.0/fmt",
+    "log": "https://deno.land/std@0.158.0/log"
+  }
+}
