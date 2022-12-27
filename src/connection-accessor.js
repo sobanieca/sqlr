@@ -1,6 +1,6 @@
 import logger from "./logger.js";
 import guard from "./guard.js";
-import { Secret } from "cliffy/prompts/secret.ts";
+import { Secret } from "cliffy/prompt/secret.ts";
 
 const getConnection = async (connectionName) => {
 
@@ -9,7 +9,13 @@ const getConnection = async (connectionName) => {
 
     if (connection.isEncrypted) {
       const password = await Secret.prompt("Provide password used to encrypt connection");
-      connection.connectionString = guard.decrypt(connection.connectionString, password);
+      try {
+        connection.connectionString = await guard.decrypt(connection.connectionString, password);
+      } catch(err) {
+        logger.debug(err);
+        logger.error(`Something went wrong when trying to decrypt connection ${connectionName}. Ensure that password you've provided is valid`);
+        Deno.exit(1);
+      }
     }
 
     return connection;

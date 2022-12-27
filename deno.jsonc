@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "test": "deno run --allow-all --unstable --import-map=src/imports.json src/main.js"
+    "run": "deno run --allow-all --unstable --import-map=src/imports.json src/main.js"
   }  
 }

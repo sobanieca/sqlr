@@ -1,10 +1,6 @@
 import { Command } from "cliffy/command/mod.ts";
-import { Input } from "cliffy/prompt/input.ts";
 import { Select } from "cliffy/prompt/select.ts";
-import { Toggle } from "cliffy/prompt/toggle.ts";
 import logger from "../logger.js";
-import connectionTypes from "../connection-types.js";
-import guard from "../guard.js";
 
 const getConnectionName = async () => {
   const options = [];
