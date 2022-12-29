@@ -1,19 +1,18 @@
 import * as log from "log/mod.ts";
 import { LogLevels } from "log/mod.ts";
 import { BaseHandler } from "log/handlers.ts?s=BaseHandler";
-import { gray, white, brightYellow, brightRed, bold } from "fmt/colors.ts";
+import { bold, brightRed, brightYellow, gray, white } from "fmt/colors.ts";
 
 const colors = {
   gray,
   white,
   brightYellow,
   brightRed,
-  bold
-}
+  bold,
+};
 
 class BrightConsoleHandler extends BaseHandler {
   format(logRecord) {
-
     let msg = super.format(logRecord);
 
     switch (logRecord.level) {

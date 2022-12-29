@@ -1,14 +1,15 @@
 export default {
   postgresql: {
     description: "PostgreSQL",
-    connectionStringDescription: "driver://host:port/database_name?user=user&password=password&application_name=my_app"
+    connectionStringDescription:
+      "driver://host:port/database_name?user=user&password=password&application_name=my_app",
   },
   mssql: {
     description: "Microsof SQL Server",
-    connectionStringDescription: ""
+    connectionStringDescription: "",
   },
   mysql: {
     description: "MySQL",
-    connectionStringDescription: ""
-  }
-}
+    connectionStringDescription: "",
+  },
+};

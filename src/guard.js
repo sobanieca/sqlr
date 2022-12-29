@@ -1,13 +1,13 @@
 const encoder = new TextEncoder();
-const decoder =  new TextDecoder();
+const decoder = new TextDecoder();
 
-const getIv = () => { 
+const getIv = () => {
   return encoder.encode(Deno.osRelease() + Deno.hostname()).slice(0, 12);
-}
+};
 
 const getSalt = () => {
   return encoder.encode(Deno.hostname() + Deno.osRelease()).slice(0, 12);
-}
+};
 
 const getPasswordKey = async (password) => {
   const baseKey = await crypto.subtle.importKey(
@@ -15,7 +15,7 @@ const getPasswordKey = async (password) => {
     encoder.encode(password),
     "PBKDF2",
     false,
-    [ "deriveKey", "deriveBits" ]
+    ["deriveKey", "deriveBits"],
   );
 
   const derivedKey = await crypto.subtle.deriveKey(
@@ -28,25 +28,25 @@ const getPasswordKey = async (password) => {
     baseKey,
     { name: "AES-GCM", length: 256 },
     false,
-    [ "encrypt", "decrypt" ]
+    ["encrypt", "decrypt"],
   );
 
   return derivedKey;
-}
+};
 
 const encrypt = async (input, password) => {
   const key = await getPasswordKey(password);
-  let result = await crypto.subtle.encrypt(
+  const result = await crypto.subtle.encrypt(
     {
       name: "AES-GCM",
       iv: getIv(),
     },
     key,
-    encoder.encode(input)
+    encoder.encode(input),
   );
 
   return btoa(new Uint8Array(result).join("+"));
-}
+};
 
 const decrypt = async (input, password) => {
   const key = await getPasswordKey(password);
@@ -59,15 +59,15 @@ const decrypt = async (input, password) => {
       iv: getIv(),
     },
     key,
-    input
+    input,
   );
 
   return decoder.decode(result);
-}
+};
 
 const guard = {
   encrypt,
-  decrypt
+  decrypt,
 };
 
 export default guard;

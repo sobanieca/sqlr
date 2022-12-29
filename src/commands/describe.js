@@ -3,10 +3,10 @@ import { Command } from "cliffy/command/mod.ts";
 export default new Command()
   .description("Describe all tables and columns available in database")
   .option("-s, --connection-string [value:string]", "Connection string", {
-    conflicts: [ "connection" ]
+    conflicts: ["connection"],
   })
   .option("-c, --connection [value:string]", "Name of the connection", {
-    conflicts: [ "connection-string" ]
+    conflicts: ["connection-string"],
   })
   .option("--compact [flag:boolean]", "Show every table in one line")
   .action(async ({ connection, connectionString, compact }) => {

@@ -16,7 +16,9 @@ await new Command()
   .name("sqlr")
   .version(VERSION)
   .description("Command line for executing SQL queries")
-  .action(function() { this.showHelp(); })
+  .action(function () {
+    this.showHelp();
+  })
   .globalOption("--debug", "Enable debug logs")
   .command("add-connection", addConnection)
   .command("rm-connection", removeConnection)
@@ -25,4 +27,3 @@ await new Command()
   .command("describe", describe)
   .command("query", query)
   .parse();
-
