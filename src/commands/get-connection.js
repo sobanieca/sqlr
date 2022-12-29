@@ -19,8 +19,10 @@ const getConnectionName = async () => {
   });
 };
 
-const showConnection = async () => {
-  const connectionName = await getConnectionName();
+const showConnection = async (connectionName) => {
+  if (!connectionName) {
+    connectionName = await getConnectionName();
+  }
   const connection = await getConnection(connectionName);
 
   logger.info(new Table()
@@ -34,7 +36,8 @@ const showConnection = async () => {
 }
 
 export default new Command()
+  .arguments("[connection-name]")
   .description("Get details of selected connection")
-  .action(async function () {
-    await showConnection();
-})
+  .action(async (_, connectionName) => {
+    await showConnection(connectionName);
+  });

@@ -6,6 +6,10 @@ const getConnection = async (connectionName) => {
 
   try {
     const connection = JSON.parse(localStorage.getItem(connectionName));
+    if (!connection) {
+      logger.error(`Connection ${connectionName} not found. Use connections command to list available connections.`);
+      Deno.exit(1);
+    }
 
     if (connection.isEncrypted) {
       const password = await Secret.prompt("Provide password used to encrypt connection");
@@ -23,7 +27,8 @@ const getConnection = async (connectionName) => {
   catch(err) {
     logger.debug(`Error when reading connection ${connectionName}`);
     logger.debug(err);
-    logger.error(`Connection ${connectionName} not found. Use connections command to list available connection names.`);
+    logger.error(`Unknown error occured when reading connection. Enable debug mode for details.`);
+    Deno.exit(1);
   }
 }
 

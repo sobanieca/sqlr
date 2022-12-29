@@ -6,7 +6,9 @@ import removeConnection from "./commands/rm-connection.js";
 import getConnection from "./commands/get-connection.js";
 import query from "./commands/query.js";
 import { VERSION } from "./version.js";
+import logger from "./logger.js";
 
+logger.debug("Debug mode enabled");
 //todo: empty list, rm-connection fails
 //todo: check for more edge cases
 

@@ -17,14 +17,17 @@ const getConnectionName = async () => {
   });
 };
 
-const removeConnection = async () => {
-  const connectionName = await getConnectionName();
+const removeConnection = async (connectionName) => {
+  if (!connectionName) {
+    connectionName = await getConnectionName();
+  }
   localStorage.removeItem(connectionName);
   logger.info("Connection removed");
 };
 
 export default new Command()
+  .arguments("[connection-name]")
   .description("Remove selected connection")
-  .action(async function () {
-    await removeConnection()
+  .action(async (_, connectionName) => {
+    await removeConnection(connectionName)
   });
