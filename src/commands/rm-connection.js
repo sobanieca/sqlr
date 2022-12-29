@@ -26,8 +26,8 @@ const removeConnection = async (connectionName) => {
 };
 
 export default new Command()
-  .arguments("[connection-name]")
+  .arguments("[connection]")
   .description("Remove selected connection")
-  .action(async (_, connectionName) => {
-    await removeConnection(connectionName);
+  .action(async (_, connection) => {
+    await removeConnection(connection);
   });
