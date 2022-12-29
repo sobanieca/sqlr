@@ -9,7 +9,7 @@ export default new Command()
     conflicts: ["connection-string"],
   })
   .option("--compact [flag:boolean]", "Show every table in one line")
-  .action(async ({ connection, connectionString, compact }) => {
+  .action(({ connection, connectionString, compact }) => {
     console.log("Connection: " + connection);
     console.log("Connection string: " + connectionString);
     console.log("Compact: " + compact);
