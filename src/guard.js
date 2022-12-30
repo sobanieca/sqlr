@@ -1,11 +1,17 @@
+import logger from "./logger.js";
+
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
 const getIv = () => {
-  return encoder.encode(Deno.osRelease() + Deno.hostname()).slice(0, 12);
+  const ivCore = Deno.osRelease() + Deno.hostname();
+  logger.debug(`Generating initial vector for encryption with ${ivCore}`);
+  return encoder.encode(ivCore).slice(0, 12);
 };
 
 const getSalt = () => {
+  const saltCore = Deno.hostname() + Deno.osRelease();
+  logger.debug(`Generating salt with ${saltCore}`);
   return encoder.encode(Deno.hostname() + Deno.osRelease()).slice(0, 12);
 };
 
@@ -31,6 +37,7 @@ const getPasswordKey = async (password) => {
     ["encrypt", "decrypt"],
   );
 
+  logger.debug("Generated password key");
   return derivedKey;
 };
 
