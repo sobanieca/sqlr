@@ -1,0 +1,4 @@
+const postgresConnector = {
+  describe: (connectionString) => {
+  }
+}
