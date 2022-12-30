@@ -4,15 +4,15 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
 const getIv = () => {
-  const ivCore = Deno.osRelease() + Deno.hostname();
+  const ivCore = (Deno.osRelease() + Deno.hostname()).padStart(12, "0");
   logger.debug(`Generating initial vector for encryption with ${ivCore}`);
   return encoder.encode(ivCore).slice(0, 12);
 };
 
 const getSalt = () => {
-  const saltCore = Deno.hostname() + Deno.osRelease();
+  const saltCore = (Deno.hostname() + Deno.osRelease()).padStart(12, "0");
   logger.debug(`Generating salt with ${saltCore}`);
-  return encoder.encode(Deno.hostname() + Deno.osRelease()).slice(0, 12);
+  return encoder.encode(saltCore).slice(0, 12);
 };
 
 const getPasswordKey = async (password) => {
