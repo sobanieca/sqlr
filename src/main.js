@@ -9,21 +9,25 @@ import { VERSION } from "./version.js";
 import logger from "./logger.js";
 
 logger.debug("Debug mode enabled");
-//todo: empty list, rm-connection fails
-//todo: check for more edge cases
 
-await new Command()
-  .name("sqlr")
-  .version(VERSION)
-  .description("Command line for executing SQL queries")
-  .action(function () {
-    this.showHelp();
-  })
-  .globalOption("--debug", "Enable debug logs")
-  .command("add-connection", addConnection)
-  .command("rm-connection", removeConnection)
-  .command("get-connection", getConnection)
-  .command("connections", connections)
-  .command("describe", describe)
-  .command("query", query)
-  .parse();
+try {
+  await new Command()
+    .name("sqlr")
+    .version(VERSION)
+    .description("Command line for executing SQL queries")
+    .action(function () {
+      this.showHelp();
+    })
+    .globalOption("--debug", "Enable debug logs")
+    .command("add-connection", addConnection)
+    .command("rm-connection", removeConnection)
+    .command("get-connection", getConnection)
+    .command("connections", connections)
+    .command("describe", describe)
+    .command("query", query)
+      .parse();
+}
+catch(err) {
+  logger.error(err.message);
+  logger.debug(err);
+}

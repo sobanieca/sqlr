@@ -1,6 +1,7 @@
 import logger from "./logger.js";
 import guard from "./guard.js";
 import { Secret } from "cliffy/prompt/secret.ts";
+import { Select } from "cliffy/prompt/select.ts";
 
 const getConnection = async (connectionName) => {
   try {
@@ -41,4 +42,21 @@ const getConnection = async (connectionName) => {
   }
 };
 
-export { getConnection };
+const getConnectionName = async () => {
+  const options = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const connection = JSON.parse(localStorage.getItem(key));
+    options.push({ name: connection.name, value: connection.name });
+  }
+
+  if(localStorage.length == 0) throw new Error("No connections defined. Add new connection first.");
+
+  return await Select.prompt({
+    message: "Select connection you want to remove",
+    options,
+  });
+};
+
+export { getConnection, getConnectionName };
