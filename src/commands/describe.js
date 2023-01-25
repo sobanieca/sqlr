@@ -1,4 +1,9 @@
 import { Command } from "cliffy/command/mod.ts";
+//import connectionTypes from "../connection-types.js";
+
+const _describe = (_connection, _connectionString, _compact) => {
+
+}
 
 //TODO: implement
 // read connection type from connection (this may block possibility to use 
