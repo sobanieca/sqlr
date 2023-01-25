@@ -1,8 +1,15 @@
 import { Command } from "cliffy/command/mod.ts";
-//import connectionTypes from "../connection-types.js";
+import connectionTypes from "../connection-types.js";
+import { getConnection, getConnectionName } from "../connection-accessor.js";
 
-const _describe = (_connection, _connectionString, _compact) => {
+const describe = async (connectionName) => {
+  if (!connectionName) {
+    connectionName = await getConnectionName();
+  }
 
+  const connection = await getConnection(connectionName);
+
+  await connectionTypes[connection.type].connector.describe(connection.connectionString)
 }
 
 //TODO: implement
@@ -16,17 +23,9 @@ const _describe = (_connection, _connectionString, _compact) => {
 //
 // Pass it to function responsible for displaying data, respect compact flag, so it gets
 // displayed in single line if requested
-export default new Command()
+  export default new Command()
+  .arguments("[connection]")
   .description("Describe all tables and columns available in database")
-  .option("-s, --connection-string [value:string]", "Connection string", {
-    conflicts: ["connection"],
-  })
-  .option("-c, --connection [value:string]", "Name of the connection", {
-    conflicts: ["connection-string"],
-  })
-  .option("--compact [flag:boolean]", "Show every table in one line")
-  .action(({ connection, connectionString, compact }) => {
-    console.log("Connection: " + connection);
-    console.log("Connection string: " + connectionString);
-    console.log("Compact: " + compact);
+  .action(async (_, connection) => {
+    await describe(connection);
   });
