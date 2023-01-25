@@ -15,6 +15,7 @@ sqlr describe -c local-postgresql --compact
 users (id int not null, name)
 ...
 
+todo: what to do with foreign keys? how to display relations?
 
 sqlr connections --add 
   Select type of connection:
