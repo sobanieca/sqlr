@@ -15,7 +15,11 @@ const describe = async (connectionName) => {
   showDescription(description);
 }
 
-const showDescription = (_description) => {
+const showDescription = (description) => {
+  for (let table of description.tables) {
+    
+  }
+
   logger.info("Presenting database structure");
 }
 

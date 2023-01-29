@@ -12,12 +12,17 @@ const postgresConnector = {
           columns: [
             {
               name: "id",
-              type: "bigint"
+              type: "bigint",
+              nullable: false,
             },
             {
               name: "user_id",
-              type: "foreignKey",
-              target: "dbo.users.id"
+              relation: "dbo.users.id"
+            },
+            {
+              name: "created_on",
+              type: "datetime",
+              nullable: true
             }
           ]
         }
