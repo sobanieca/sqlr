@@ -1,6 +1,7 @@
 import { Command } from "cliffy/command/mod.ts";
 import connectionTypes from "../connection-types.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
+import logger from "../logger.js";
 
 const describe = async (connectionName) => {
   if (!connectionName) {
@@ -9,7 +10,13 @@ const describe = async (connectionName) => {
 
   const connection = await getConnection(connectionName);
 
-  await connectionTypes[connection.type].connector.describe(connection.connectionString)
+  const description = await connectionTypes[connection.type].connector.getDescription(connection.connectionString);
+
+  showDescription(description);
+}
+
+const showDescription = (_description) => {
+  logger.info("Presenting database structure");
 }
 
 //TODO: implement
