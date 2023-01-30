@@ -1,7 +1,4 @@
-import * as log from "log/mod.ts";
-import { LogLevels } from "log/mod.ts";
-import { BaseHandler } from "log/handlers.ts?s=BaseHandler";
-import { bold, brightRed, brightYellow, gray, white } from "fmt/colors.ts";
+import { log, LogLevels, BaseHandler, bold, brightRed, brightYellow, gray, white } from "./deps.js";
 
 const colors = {
   gray,

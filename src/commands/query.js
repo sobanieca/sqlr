@@ -1,4 +1,4 @@
-import { Command } from "cliffy/command/mod.ts";
+import { Command } from "../deps.js";
 
 export default new Command()
   .description("Run query against specified database")

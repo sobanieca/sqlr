@@ -1,12 +1,12 @@
-import { Command } from "cliffy/command/mod.ts";
-import describe from "./commands/describe.js";
-import connections from "./commands/connections.js";
-import addConnection from "./commands/add-connection.js";
-import removeConnection from "./commands/rm-connection.js";
-import getConnection from "./commands/get-connection.js";
-import query from "./commands/query.js";
-import { VERSION } from "./version.js";
-import logger from "./logger.js";
+import { Command } from "./src/deps.js";
+import describe from "./src/commands/describe.js";
+import connections from "./src/commands/connections.js";
+import addConnection from "./src/commands/add-connection.js";
+import removeConnection from "./src/commands/rm-connection.js";
+import getConnection from "./src/commands/get-connection.js";
+import query from "./src/commands/query.js";
+import { VERSION } from "./src/version.js";
+import logger from "./src/logger.js";
 
 logger.debug("Debug mode enabled");
 

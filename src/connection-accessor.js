@@ -1,7 +1,6 @@
 import logger from "./logger.js";
 import guard from "./guard.js";
-import { Secret } from "cliffy/prompt/secret.ts";
-import { Select } from "cliffy/prompt/select.ts";
+import { Secret, Select } from "./deps.js";
 
 const getConnection = async (connectionName) => {
   try {

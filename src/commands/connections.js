@@ -1,5 +1,5 @@
-import { Command } from "cliffy/command/mod.ts";
-import { Table } from "cliffy/table/mod.ts";
+import { Command } from "../deps.js";
+import { Table } from "../deps.js";
 import logger from "../logger.js";
 
 const showAllConnections = () => {

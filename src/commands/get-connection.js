@@ -1,5 +1,4 @@
-import { Command } from "cliffy/command/mod.ts";
-import { Table } from "cliffy/table/mod.ts";
+import { Command, Table } from "../deps.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
 
