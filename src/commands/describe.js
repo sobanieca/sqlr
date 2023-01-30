@@ -16,25 +16,27 @@ const describe = async (connectionName) => {
 }
 
 const showDescription = (description) => {
-  for (let table of description.tables) {
-    
-  }
+  logger.info("Database schema:");
+  for (const table of description.tables) {
+    const columns = table.columns.reduce((acc, _, index) => {
+      const column = table.columns[index];
+      if(column.relation) {
+        acc += `${column.name} fk("${column.relation}")`
+      } else {
+        acc += `${column.name}${column.nullable ? '?' : '' } ${column.type}`;
+      }
+      if(index != table.columns.length - 1) {
+        acc += ', ';
+      }
 
-  logger.info("Presenting database structure");
+      return acc;
+    }, '');
+    const tableLine = `${table.schema}.${table.name} [${columns}]`;
+    logger.info(tableLine);
+  }
 }
 
-//TODO: implement
-// read connection type from connection (this may block possibility to use 
-// connection string, or at least demand providing type together)
-// basing on connection type take proper db connector by reading connectionTypes
-// and call it's describe() method, passing connection string there
-// with result returned in proper format:
-// { tables: [ { name: users, columns: [ { name: id, type: int, nullable: true } ] } ] }
-//
-//
-// Pass it to function responsible for displaying data, respect compact flag, so it gets
-// displayed in single line if requested
-  export default new Command()
+export default new Command()
   .arguments("[connection]")
   .description("Describe all tables and columns available in database")
   .action(async (_, connection) => {

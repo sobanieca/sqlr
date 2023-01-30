@@ -12,7 +12,8 @@ sqlr describe -c local-postgresql or sql describe -s "localhost:5432@user-db:pas
 
 sqlr describe -c local-postgresql --compact
 
-users (id int not null, name)
+dbo.users [id int, name? varchar(250)]
+dbo.books [id int, name? varchar(250), user_id fk("dbo.users.id")]
 ...
 
 todo: what to do with foreign keys? how to display relations?
