@@ -10,8 +10,6 @@ import logger from "./src/logger.js";
 
 logger.debug("Debug mode enabled");
 
-// TODO: introduce deps.js file, move main.js to root folder
-
 try {
   await new Command()
     .name("sqlr")

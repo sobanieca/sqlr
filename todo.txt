@@ -16,8 +16,6 @@ dbo.users [id int, name? varchar(250)]
 dbo.books [id int, name? varchar(250), user_id fk("dbo.users.id")]
 ...
 
-todo: what to do with foreign keys? how to display relations?
-
 sqlr connections --add 
   Select type of connection:
   [*] PostgreSQL
