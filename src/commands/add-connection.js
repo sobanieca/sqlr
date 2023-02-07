@@ -24,7 +24,7 @@ const validateConnectionName = (connectionName) => {
 const getConnectionType = async () => {
   const options = [];
   for (const [key, value] of Object.entries(connectionTypes)) {
-    options.push({ name: value.description, value: key });
+    options.push({ name: value.getDatabaseName(), value: key });
   }
 
   return await Select.prompt({
@@ -35,7 +35,7 @@ const getConnectionType = async () => {
 
 const getConnectionString = async (connectionType) => {
   const connectionStringDescription =
-    connectionTypes[connectionType].connectionStringDescription;
+    connectionTypes[connectionType].getConnectionStringDescription();
   return await Input.prompt(
     `Provide connection string (${connectionStringDescription})`,
   );

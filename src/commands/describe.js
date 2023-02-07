@@ -12,6 +12,8 @@ const describe = async (connectionName) => {
 
   const description = await connectionTypes[connection.type].connector.getDescription(connection.connectionString);
 
+  if (description)
+    description?.tables.sort((a,b) => a.schema.localeCompare(b.schema));
   showDescription(description);
 }
 

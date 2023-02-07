@@ -1,4 +1,6 @@
 const postgresConnector = {
+  getDatabaseName: () => "PostgreSQL",
+  getConnectionStringDescription: () => "driver://host:port/database_name?user=user&password=password&application_name=my_app",
   getDescription: async (connectionString) => {
     await Promise.resolve();
     console.log("Postgres connector running describe command with conn string:");
@@ -25,6 +27,11 @@ const postgresConnector = {
               nullable: true
             }
           ]
+        },
+        {
+          schema: "invoices",
+          name: "documents",
+          columns: [ { name: "id", type: "bigint" } ]
         }
       ]
     }

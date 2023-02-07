@@ -1,18 +1,13 @@
 import { postgresConnector } from "./connectors/postgres.js";
 
 export default {
-  postgresql: {
-    description: "PostgreSQL",
-    connectionStringDescription:
-    "driver://host:port/database_name?user=user&password=password&application_name=my_app",
-    connector: postgresConnector
-  },
+  postgresql: postgresConnector,
   mssql: {
-    description: "Microsof SQL Server",
-    connectionStringDescription: "",
+    getDatabaseName: () => "Microsoft SQL Server",
+    getConnectionStringDescription: () => "mssql conn string",
   },
   mysql: {
-    description: "MySQL",
-    connectionStringDescription: "",
-  },
+    getDatabaseName: () => "MySQL",
+    getConnectionStringDescription: () => "mysql conn string",
+  }
 };
