@@ -1,7 +1,16 @@
+import { DbClient } from "../deps.js";
+
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
   getConnectionStringDescription: () => "driver://host:port/database_name?user=user&password=password&application_name=my_app",
   getDescription: async (connectionString) => {
+    // TODO: url encode password!
+    const dbClient = new DbClient(connectionString);
+    await dbClient.connect();
+
+    const tables = await dbClient.queryArray('select * from information_schema.tables where table_schema not in (\'pg_catalog\', \'information_schema\')');
+    console.log(tables)
+
     await Promise.resolve();
     console.log("Postgres connector running describe command with conn string:");
     console.log(connectionString);

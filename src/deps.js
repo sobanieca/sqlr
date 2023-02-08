@@ -8,6 +8,7 @@ import { Select } from "https://deno.land/x/cliffy@v0.25.6/prompt/select.ts";
 import { Toggle } from "https://deno.land/x/cliffy@v0.25.6/prompt/toggle.ts";
 import { Secret } from "https://deno.land/x/cliffy@v0.25.6/prompt/secret.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.6/table/mod.ts";
+import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 
 export { 
   Command,
@@ -23,5 +24,6 @@ export {
   brightRed,
   brightYellow,
   gray,
-  white
+  white,
+  Client as DbClient
 };
