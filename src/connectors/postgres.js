@@ -2,18 +2,69 @@ import { DbClient } from "../deps.js";
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
-  getConnectionStringDescription: () => "driver://host:port/database_name?user=user&password=password&application_name=my_app",
+  getConnectionStringDescription: () => "postgres://host:port/database_name?user=user&password=password&application_name=my_app",
   getDescription: async (connectionString) => {
     // TODO: url encode password!
     const dbClient = new DbClient(connectionString);
     await dbClient.connect();
 
-    const tables = await dbClient.queryArray('select * from information_schema.tables where table_schema not in (\'pg_catalog\', \'information_schema\')');
-    console.log(tables)
+    const tablesQuery = await dbClient.queryObject(`
+      select 
+        table_schema,
+        table_name
+      from 
+        information_schema.tables 
+      where 
+        table_schema not in ('pg_catalog', 'information_schema')`);
 
-    await Promise.resolve();
-    console.log("Postgres connector running describe command with conn string:");
-    console.log(connectionString);
+    const tables = tablesQuery.rows;
+
+    const columnsQuery = await dbClient.queryObject(`
+      select 
+        table_schema,
+        table_name,
+        column_name,
+        column_default,
+        is_nullable,
+        data_type 
+      from 
+        information_schema.columns 
+      where 
+        table_schema not in ('pg_catalog', 'information_schema')`);
+
+    const columns = columnsQuery.rows;
+
+    const foreignKeysQuery = await dbClient.queryObject(`
+      select 
+        tc.table_schema, 
+        tc.constraint_name, 
+        tc.table_name, 
+        kcu.column_name, 
+        ccu.table_schema AS foreign_table_schema, 
+        ccu.table_name AS foreign_table_name, 
+        ccu.column_name AS foreign_column_name 
+      from
+        information_schema.table_constraints as tc 
+        join information_schema.key_column_usage as kcu
+          on tc.constraint_name = kcu.constraint_name
+          and tc.table_schema = kcu.table_schema
+        join information_schema.constraint_column_usage as ccu
+          on ccu.constraint_name = tc.constraint_name
+          and ccu.table_schema = tc.table_schema
+      where 
+        tc.constraint_type = 'FOREIGN KEY'`);
+
+    const foreignKeys = foreignKeysQuery.rows;
+    
+
+    // TODO: remove console.log
+    console.log(tables);
+    console.log(columns);
+    console.log(foreignKeys);
+
+    const result = {};
+
+    result.tables = [];
 
     return {
       tables: [

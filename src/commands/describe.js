@@ -11,15 +11,16 @@ const describe = async (connectionName) => {
   const connection = await getConnection(connectionName);
 
   try {
-    const description = await connectionTypes[connection.type].connector.getDescription(connection.connectionString);
+    const description = await connectionTypes[connection.type].getDescription(connection.connectionString);
+
+    if (description)
+      description?.tables.sort((a,b) => a.schema.localeCompare(b.schema));
+
+    showDescription(description);
   } catch(err) {
     logger.debug(err);
     logger.error(`Error occurred when executing query against database. Ensure connection string is valid.`);
   }
-
-  if (description)
-    description?.tables.sort((a,b) => a.schema.localeCompare(b.schema));
-  showDescription(description);
 }
 
 const showDescription = (description) => {
