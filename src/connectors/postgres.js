@@ -2,9 +2,10 @@ import { DbClient } from "../deps.js";
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
-  getConnectionStringDescription: () => "postgres://host:port/database_name?user=user&password=password&application_name=my_app",
-  getDescription: async (connectionString) => {
-    // TODO: url encode password!
+  getConnectionStringDescription: () => "postgres://host:port/database_name?user=user&password=password&application_name=sqlr",
+  getTables: async (connectionString) => {
+    // TODO: url encode password! or provide readme details on how to setup connection
+    // consider creating connection string builder, or provide some more instructions
     const dbClient = new DbClient(connectionString);
     await dbClient.connect();
 
@@ -56,45 +57,28 @@ const postgresConnector = {
 
     const foreignKeys = foreignKeysQuery.rows;
     
-
-    // TODO: remove console.log
-    console.log(tables);
-    console.log(columns);
-    console.log(foreignKeys);
-
     const result = {};
 
     result.tables = [];
 
-    return {
-      tables: [
-        {
-          schema: "dbo",
-          name: "orders",
-          columns: [
-            {
-              name: "id",
-              type: "bigint",
-              nullable: false,
-            },
-            {
-              name: "user_id",
-              relation: "dbo.users.id"
-            },
-            {
-              name: "created_on",
-              type: "datetime",
-              nullable: true
-            }
-          ]
-        },
-        {
-          schema: "invoices",
-          name: "documents",
-          columns: [ { name: "id", type: "bigint" } ]
-        }
-      ]
-    }
+    return tables.map(table => ({
+      schema: table["table_schema"],
+      name: table["table_name"],
+      columns: columns
+        .filter(column => column["table_schema"] == table["table_schema"] && column["table_name"] == table["table_name"])
+        .map(column => ({
+          name: column["column_name"],
+          type: column["data_type"],
+          nullable: column["is_nullable"] == "YES",
+          relation: foreignKeys
+            .map(foreignKey => ({
+              ...foreignKey,
+              relation: `${foreignKey["foreign_table_schema"]}.${foreignKey["foreign_table_name"]}.${foreignKey["foreign_column_name"]}`}))
+            .find(foreignKey => foreignKey["table_schema"] == table["table_schema"] 
+              && foreignKey["table_name"] == table["table_name"] 
+              && foreignKey["column_name"] == column["column_name"])?.relation
+        }))
+    }));
   }
 }
 

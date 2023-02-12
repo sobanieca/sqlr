@@ -10,6 +10,9 @@ import logger from "./src/logger.js";
 
 logger.debug("Debug mode enabled");
 
+// TODO: handle all commands via batch scripts (allow to skip interactive mode)
+// TODO: introduce unit tests + to avoid typescript
+
 try {
   await new Command()
     .name("sqlr")
