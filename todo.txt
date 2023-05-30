@@ -16,6 +16,8 @@ dbo.users [id int, name? varchar(250)]
 dbo.books [id int, name? varchar(250), user_id fk("dbo.users.id")]
 ...
 
+sqlr describe -c local-postgresql --json
+
 sqlr connections --add 
   Select type of connection:
   [*] PostgreSQL

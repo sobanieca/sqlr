@@ -28,9 +28,8 @@ try {
     .command("connections", connections)
     .command("describe", describe)
     .command("query", query)
-      .parse();
-}
-catch(err) {
+    .parse();
+} catch (err) {
   logger.error(err.message);
   logger.debug(err);
 }
