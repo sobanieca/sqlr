@@ -2,8 +2,8 @@ import { Command } from "../deps.js";
 import connectionTypes from "../connection-types.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
+import { brightBlue, brightGreen, brightRed, brightYellow, gray } from "../deps.js";
 
-// TODO: introduce option to specify resulting format (one line, tables to visually represent data)
 const describe = async (connectionName, json, compact) => {
   if (!connectionName) {
     connectionName = await getConnectionName();
@@ -41,6 +41,7 @@ const showTables = (tables, json, compact) => {
 }
 
 const showTablesJson = (tables) => {
+  tables.forEach(t => t.columns.forEach(c => c.relation || (delete c.relation)));
   logger.info(Deno.inspect(
     tables,
     {
@@ -57,9 +58,9 @@ const showTablesCompact = (tables) => {
     const columns = table.columns.reduce((acc, _, index) => {
       const column = table.columns[index];
       if (column.relation) {
-        acc += `${column.name} fk("${column.relation}")`
+        acc += `${brightYellow(column.name)} -> "${brightBlue(column.relation)}"`
       } else {
-        acc += `${column.name}${column.nullable ? '?' : '' } ${column.type}`;
+        acc += `${column.name}${column.nullable ? brightRed('?') : '' } ${gray(column.type)}`;
       }
       if (index != table.columns.length - 1) {
         acc += ', ';
@@ -67,7 +68,7 @@ const showTablesCompact = (tables) => {
 
       return acc;
     }, '');
-    const tableLine = `${table.schema}.${table.name} [${columns}]`;
+    const tableLine = `${brightGreen(table.schema)}.${brightGreen(table.name)} [ ${columns} ]`;
     logger.info(tableLine);
   } 
 }
