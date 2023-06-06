@@ -1,4 +1,13 @@
-import { log, LogLevels, BaseHandler, bold, brightRed, brightYellow, gray, white } from "./deps.js";
+import {
+  BaseHandler,
+  bold,
+  brightRed,
+  brightYellow,
+  gray,
+  log,
+  LogLevels,
+  white,
+} from "./deps.js";
 
 const colors = {
   gray,

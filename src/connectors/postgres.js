@@ -2,7 +2,8 @@ import { DbClient } from "../deps.js";
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
-  getConnectionStringDescription: () => "postgres://host:port/database_name?user=user&password=password&application_name=sqlr",
+  getConnectionStringDescription: () =>
+    "postgres://host:port/database_name?user=user&password=password&application_name=sqlr",
   getTables: async (connectionString) => {
     // TODO: url encode password! or provide readme details on how to setup connection
     // consider creating connection string builder, or provide some more instructions
@@ -56,30 +57,38 @@ const postgresConnector = {
         tc.constraint_type = 'FOREIGN KEY'`);
 
     const foreignKeys = foreignKeysQuery.rows;
-    
+
     const result = {};
 
     result.tables = [];
 
-    return tables.map(table => ({
+    return tables.map((table) => ({
       schema: table["table_schema"],
       name: table["table_name"],
       columns: columns
-        .filter(column => column["table_schema"] == table["table_schema"] && column["table_name"] == table["table_name"])
-        .map(column => ({
+        .filter((column) =>
+          column["table_schema"] == table["table_schema"] &&
+          column["table_name"] == table["table_name"]
+        )
+        .map((column) => ({
           name: column["column_name"],
           type: column["data_type"],
           nullable: column["is_nullable"] == "YES",
           relation: foreignKeys
-            .map(foreignKey => ({
+            .map((foreignKey) => ({
               ...foreignKey,
-              relation: `${foreignKey["foreign_table_schema"]}.${foreignKey["foreign_table_name"]}.${foreignKey["foreign_column_name"]}`}))
-            .find(foreignKey => foreignKey["table_schema"] == table["table_schema"] 
-              && foreignKey["table_name"] == table["table_name"] 
-              && foreignKey["column_name"] == column["column_name"])?.relation
-        }))
+              relation: `${foreignKey["foreign_table_schema"]}.${
+                foreignKey["foreign_table_name"]
+              }.${foreignKey["foreign_column_name"]}`,
+            }))
+            .find((foreignKey) =>
+              foreignKey["table_schema"] == table["table_schema"] &&
+              foreignKey["table_name"] == table["table_name"] &&
+              foreignKey["column_name"] == column["column_name"]
+            )?.relation,
+        })),
     }));
-  }
-}
+  },
+};
 
-export { postgresConnector }
+export { postgresConnector };

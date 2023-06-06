@@ -9,5 +9,5 @@ export default {
   mysql: {
     getDatabaseName: () => "MySQL",
     getConnectionStringDescription: () => "mysql conn string",
-  }
+  },
 };

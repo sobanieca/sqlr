@@ -50,7 +50,9 @@ const getConnectionName = async () => {
     options.push({ name: connection.name, value: connection.name });
   }
 
-  if(localStorage.length == 0) throw new Error("No connections defined. Add new connection first.");
+  if (localStorage.length == 0) {
+    throw new Error("No connections defined. Add new connection first.");
+  }
 
   return await Select.prompt({
     message: "Select connection you want to remove",

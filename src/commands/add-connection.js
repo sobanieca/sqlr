@@ -1,4 +1,4 @@
-import { Command, Input, Select, Toggle, Secret } from "../deps.js";
+import { Command, Input, Secret, Select, Toggle } from "../deps.js";
 import logger from "../logger.js";
 import connectionTypes from "../connection-types.js";
 import guard from "../guard.js";
@@ -34,8 +34,8 @@ const getConnectionType = async () => {
 };
 
 const getConnectionString = async (connectionType) => {
-  const connectionStringDescription =
-    connectionTypes[connectionType].getConnectionStringDescription();
+  const connectionStringDescription = connectionTypes[connectionType]
+    .getConnectionStringDescription();
   return await Input.prompt(
     `Provide connection string (${connectionStringDescription})`,
   );
