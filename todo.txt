@@ -1,42 +1,21 @@
-sqlr -c local-postgresql -q / --query "select top 100 * from Users"
-sqlr -c local-postgresql -i input.sql -o output.json
+figure out how to build connection string in most user friendly way (urlencode password for example)
+  inside connector create method like:
+  buildConnectionString(), which will ask one by one for server url, password, etc. and urlencode it
 
-sqlr describe -c local-postgresql or sql describe -s "localhost:5432@user-db:pass123"
-
-+----------+
-| users    |
-|----------|
-| id (int) |
-| name (s) |
-+----------+
-
-sqlr describe -c local-postgresql --compact
-
-dbo.users [id int, name? varchar(250)]
-dbo.books [id int, name? varchar(250), user_id fk("dbo.users.id")]
-...
-
-sqlr describe -c local-postgresql --json
-
-sqlr connections --add 
-  Select type of connection:
-  [*] PostgreSQL
-  [ ] Microsoft SQL Server
-  [ ] MySQL
-  Provide name of connection: local-postgresql
-  Provide connection string: "localhost:5432@user-db:pass123"
-  Do you want to encrypt connection? (Use for PROD databases)
-    yes -> Provide password to secure connection string
-    no
+inside connection string hint users should more clearly see that password/username needs to be url encoded
 
 sqlr connections
+sqlr add-connection
+sqlr rm-connection
+sqlr get-connection
+sqlr list-connectors
+  postgres
+  ms sql server
+  mysql
+sqlr describe [connection] -s "localhost:5341" -t postgres
+sqlr query [connection] "select * from all"
 
-Available connections:
+-i input.sql
+-o output.json
 
-* local-postgresql
-* docker-local
-* prod-postgresql
-
-sqlr connections --remove -c local-postgresql
-sqlr connections --show -c local-postgresql
 
