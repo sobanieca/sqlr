@@ -3,7 +3,13 @@ import { DbClient, Input, Secret } from "../deps.js";
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
   getConnectionStringHint: () =>
-    "postgres://host:port/database_name?user=user&password=password(urlencoded)&application_name=sqlr",
+  `
+postgres://host:port/database_name?user=user&password=password(urlencoded)&application_name=sqlr
+Additional url parameters: 
+'sslmode' - require | prefer | disable
+'options' - additional values for connection (options=--cluster=your_cluster_name)
+More details: https://deno-postgres.com/#/?id=url-parameters
+  `.trim(),
   getConnectionString: async () => {
     const host = await Input.prompt("Database host (example: localhost | my.db.com)");
     const port = await Input.prompt("Port (default: 5432)") || 5432;
