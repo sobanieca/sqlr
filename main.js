@@ -15,7 +15,9 @@ try {
   await new Command()
     .name("sqlr")
     .version(VERSION)
-    .description("Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters")
+    .description(
+      "Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters",
+    )
     .action(function () {
       this.showHelp();
     })

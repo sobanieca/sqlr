@@ -40,7 +40,8 @@ const getConnectionString = async (connectionType) => {
 
 const addConnection = async (name, type, connectionString) => {
   const connection = {};
-  const connectionName = name || await Input.prompt("Provide name of the connection");
+  const connectionName = name ||
+    await Input.prompt("Provide name of the connection");
 
   validateConnectionName(connectionName);
 
@@ -48,7 +49,8 @@ const addConnection = async (name, type, connectionString) => {
 
   connection.type = type || await getConnectionType();
 
-  connection.connectionString = connectionString || await getConnectionString(connection.type);
+  connection.connectionString = connectionString ||
+    await getConnectionString(connection.type);
 
   connection.isEncrypted = connectionString ? false : await Toggle.prompt(
     "Do you want to encrypt connection? (Use for Production connections, each time when connection will be used you will need to specify password",
@@ -79,7 +81,10 @@ export default new Command()
   .option("-t, --type [type]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
   .description("Add new connection. Run without parameters to use wizard.")
-  .meta("Connection Types", "Available types and connection string hints can be found using 'get-connection-types' command")
-  .action(async function ({name, type, connectionString}) {
+  .meta(
+    "Connection Types",
+    "Available types and connection string hints can be found using 'get-connection-types' command",
+  )
+  .action(async function ({ name, type, connectionString }) {
     await addConnection(name, type, connectionString);
   });

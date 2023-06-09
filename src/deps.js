@@ -11,12 +11,12 @@ import {
   green,
   white,
 } from "https://deno.land/std@0.158.0/fmt/colors.ts";
-import { Command } from "https://deno.land/x/cliffy@v0.25.6/command/mod.ts";
-import { Input } from "https://deno.land/x/cliffy@v0.25.6/prompt/input.ts";
-import { Select } from "https://deno.land/x/cliffy@v0.25.6/prompt/select.ts";
-import { Toggle } from "https://deno.land/x/cliffy@v0.25.6/prompt/toggle.ts";
-import { Secret } from "https://deno.land/x/cliffy@v0.25.6/prompt/secret.ts";
-import { Table } from "https://deno.land/x/cliffy@v0.25.6/table/mod.ts";
+import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
+import { Input } from "https://deno.land/x/cliffy@v0.25.7/prompt/input.ts";
+import { Select } from "https://deno.land/x/cliffy@v0.25.7/prompt/select.ts";
+import { Toggle } from "https://deno.land/x/cliffy@v0.25.7/prompt/toggle.ts";
+import { Secret } from "https://deno.land/x/cliffy@v0.25.7/prompt/secret.ts";
+import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 
 export {

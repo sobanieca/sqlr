@@ -1,22 +1,10 @@
-figure out how to build connection string in most user friendly way (urlencode password for example)
-  inside connector create method like:
-  buildConnectionString(), which will ask one by one for server url, password, etc. and urlencode it
-
-inside connection string hint users should more clearly see that password/username needs to be url encoded
-
-sqlr connections
-sqlr get-connection-types
-sqlr add-connection -t postgres -s "" -n name1
-sqlr rm-connection
-sqlr get-connection
-sqlr list-connectors
-  postgres
-  ms sql server
-  mysql
-sqlr describe [connection] -s "localhost:5341" -t postgres
-sqlr query [connection] "select * from all"
-
--i input.sql
--o output.json
-
-
+[x] sqlr connections
+[x] sqlr get-connection-types
+[x] sqlr add-connection -t postgres -s "" -n name1
+[x] sqlr rm-connection
+[x] sqlr get-connection
+[ ] sqlr describe [connection] -s "localhost:5341" -t postgres
+[ ] sqlr query [connection] "select * from all" + files support:
+    -i input.sql
+    -o output.json
+[ ] for all commands that take as an input --type option, validate if such type is defined!

@@ -12,16 +12,29 @@ import {
   Table,
 } from "../deps.js";
 
-const describe = async (connectionName, json, compact) => {
-  if (!connectionName) {
+const describe = async (
+  connectionName,
+  json,
+  compact,
+  type,
+  connectionString,
+) => {
+  if (!connectionName && !connectionString) {
     connectionName = await getConnectionName();
   }
 
-  const connection = await getConnection(connectionName);
+  let targetType = type;
+  let targetConnectionString = connectionString;
+
+  if (connectionName) {
+    const connection = await getConnection(connectionName);
+    targetConnectionString = connection.connectionString;
+    targetType = connection.type;
+  }
 
   try {
-    const tables = await connectionTypes[connection.type].getTables(
-      connection.connectionString,
+    const tables = await connectionTypes[targetType].getTables(
+      targetConnectionString,
     );
 
     if (tables) tables?.sort((a, b) => a.schema.localeCompare(b.schema));
@@ -109,10 +122,14 @@ const getColumnDescription = (column) => {
 };
 
 export default new Command()
-  .option("-n, --name [name]", "Name of the connection")
+  .option("-n, --name [name]", "Name of the connection", {
+    conflicts: ["type", "connection-string"],
+  })
+  .option("-t, --type [type]", "Type of the connection")
+  .option("-s, --connection-string [connection-string]", "Connection string")
   .option("--json", "Display results as JSON")
   .option("--compact", "Display results in compact form")
   .description("Describe all tables and columns available in database")
-  .action(async ({ name, json, compact }) => {
-    await describe(name, json, compact);
+  .action(async ({ name, json, compact, type, connectionString }) => {
+    await describe(name, json, compact, type, connectionString);
   });
