@@ -2,6 +2,7 @@ import { Command } from "../deps.js";
 import connectionTypes from "../connection-types.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
+import { maxTableColumnWidth } from "../const.js";
 import {
   brightBlue,
   brightGreen,
@@ -53,7 +54,7 @@ const showTables = (tables, json, compact) => {
         .body(
           table.columns.map((column) => [getColumnDescription(column)]),
         )
-        .maxColWidth(80)
+        .maxColWidth(maxTableColumnWidth)
         .padding(1)
         .indent(2)
         .border(true)

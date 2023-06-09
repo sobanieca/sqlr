@@ -1,13 +1,14 @@
 import { Command, Table } from "../deps.js";
 import connectionTypes from "../connection-types.js";
 import logger from "../logger.js";
+import { maxTableColumnWidth } from "../const.js";
 
 const getConnectionTypes = () => {
   logger.info(
     new Table()
-      .header(["Type"])
-      .body(Object.keys(connectionTypes).map((type) => [type]))
-      .maxColWidth(80)
+      .header(["Type", "Connection string hint"])
+      .body(Object.keys(connectionTypes).map((type) => [type, connectionTypes[type].getConnectionStringDescription()]))
+      .maxColWidth(maxTableColumnWidth)
       .padding(1)
       .indent(2)
       .border(true)

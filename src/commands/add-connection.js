@@ -41,19 +41,19 @@ const getConnectionString = async (connectionType) => {
   );
 };
 
-const addConnection = async () => {
+const addConnection = async (name, type, connectionString) => {
   const connection = {};
-  const connectionName = await Input.prompt("Provide name of the connection");
+  const connectionName = name || await Input.prompt("Provide name of the connection");
 
   validateConnectionName(connectionName);
 
   connection.name = connectionName;
 
-  connection.type = await getConnectionType();
+  connection.type = type || await getConnectionType();
 
-  connection.connectionString = await getConnectionString(connection.type);
+  connection.connectionString = connectionString || await getConnectionString(connection.type);
 
-  connection.isEncrypted = await Toggle.prompt(
+  connection.isEncrypted = connectionString ? false : await Toggle.prompt(
     "Do you want to encrypt connection? (Use for Production connections, each time when connection will be used you will need to specify password",
   );
 
@@ -61,7 +61,7 @@ const addConnection = async () => {
     const password = await Secret.prompt(
       "Provide password to encrypt connection",
     );
-    if (password && password.length > 8) {
+    if (password && password.length > MIN_PASSWORD_LENGTH) {
       connection.connectionString = await guard.encrypt(
         connection.connectionString,
         password,
@@ -84,6 +84,5 @@ export default new Command()
   .description("Add new connection. Run without parameters to use wizard.")
   .meta("Connection Types", "Available types and connection string hints can be found using 'get-connection-types' command")
   .action(async function ({name, type, connectionString}) {
-    // TODO: handle parameters
-    await addConnection();
+    await addConnection(name, type, connectionString);
   });
