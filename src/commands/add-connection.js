@@ -34,11 +34,8 @@ const getConnectionType = async () => {
 };
 
 const getConnectionString = async (connectionType) => {
-  const connectionStringDescription = connectionTypes[connectionType]
-    .getConnectionStringDescription();
-  return await Input.prompt(
-    `Provide connection string (${connectionStringDescription})`,
-  );
+  logger.info("Provide connection details");
+  return await connectionTypes[connectionType].getConnectionString();
 };
 
 const addConnection = async (name, type, connectionString) => {

@@ -7,7 +7,7 @@ const getConnectionTypes = () => {
   logger.info(
     new Table()
       .header(["Type", "Connection string hint"])
-      .body(Object.keys(connectionTypes).map((type) => [type, connectionTypes[type].getConnectionStringDescription()]))
+      .body(Object.keys(connectionTypes).map((type) => [type, connectionTypes[type].getConnectionStringHint()]))
       .maxColWidth(maxTableColumnWidth)
       .padding(1)
       .indent(2)

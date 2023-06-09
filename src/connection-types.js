@@ -4,10 +4,10 @@ export default {
   postgresql: postgresConnector,
   mssql: {
     getDatabaseName: () => "Microsoft SQL Server",
-    getConnectionStringDescription: () => "mssql conn string",
+    getConnectionStringHint: () => "mssql conn string",
   },
   mysql: {
     getDatabaseName: () => "MySQL",
-    getConnectionStringDescription: () => "mysql conn string",
+    getConnectionStringHint: () => "mysql conn string",
   },
 };

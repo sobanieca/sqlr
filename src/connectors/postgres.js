@@ -1,11 +1,19 @@
-import { DbClient } from "../deps.js";
+import { DbClient, Input, Secret } from "../deps.js";
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
-  getConnectionStringDescription: () => //TODO: support multiline to be able to add more description
-    "postgres://host:port/database_name?user=user&password=password&application_name=sqlr",
+  getConnectionStringHint: () =>
+    "postgres://host:port/database_name?user=user&password=password(urlencoded)&application_name=sqlr",
+  getConnectionString: async () => {
+    const host = await Input.prompt("Database host (example: localhost | my.db.com)");
+    const port = await Input.prompt("Port (default: 5432)") || 5432;
+    const dbName = await Input.prompt("Database name");
+    const user = await Input.prompt("Username");
+    const password = encodeURIComponent(await Secret.prompt("Password"));
+
+    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=prefer`;
+  },
   getTables: async (connectionString) => {
-    // TODO: url encode password!
     const dbClient = new DbClient(connectionString);
     await dbClient.connect();
 
