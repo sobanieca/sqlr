@@ -78,7 +78,12 @@ const addConnection = async () => {
 };
 
 export default new Command()
-  .description("Add new connection")
-  .action(async function () {
+  .option("-n, --name [name]", "Name of the connection")
+  .option("-t, --type [type]", "Type of the connection")
+  .option("-s, --connection-string [connection-string]", "Connection string")
+  .description("Add new connection. Run without parameters to use wizard.")
+  .meta("Connection Types", "Available types and connection string hints can be found using 'get-connection-types' command")
+  .action(async function ({name, type, connectionString}) {
+    // TODO: handle parameters
     await addConnection();
   });

@@ -21,8 +21,8 @@ const showConnection = async (connectionName) => {
 };
 
 export default new Command()
-  .arguments("[connection]")
+  .option("-n, --name [name]", "Name of the connection")
   .description("Get details of selected connection")
-  .action(async (_, connection) => {
-    await showConnection(connection);
+  .action(async ({ name }) => {
+    await showConnection(name);
   });

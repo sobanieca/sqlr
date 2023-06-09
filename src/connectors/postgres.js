@@ -2,11 +2,10 @@ import { DbClient } from "../deps.js";
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
-  getConnectionStringDescription: () =>
+  getConnectionStringDescription: () => //TODO: support multiline to be able to add more description
     "postgres://host:port/database_name?user=user&password=password&application_name=sqlr",
   getTables: async (connectionString) => {
-    // TODO: url encode password! or provide readme details on how to setup connection
-    // consider creating connection string builder, or provide some more instructions
+    // TODO: url encode password!
     const dbClient = new DbClient(connectionString);
     await dbClient.connect();
 

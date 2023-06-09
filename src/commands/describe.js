@@ -108,10 +108,10 @@ const getColumnDescription = (column) => {
 };
 
 export default new Command()
-  .arguments("[connection]")
+  .option("-n, --name [name]", "Name of the connection")
   .option("--json", "Display results as JSON")
   .option("--compact", "Display results in compact form")
   .description("Describe all tables and columns available in database")
-  .action(async ({ json, compact }, connection) => {
-    await describe(connection, json, compact);
+  .action(async ({ name, json, compact }) => {
+    await describe(name, json, compact);
   });

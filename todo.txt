@@ -5,7 +5,8 @@ figure out how to build connection string in most user friendly way (urlencode p
 inside connection string hint users should more clearly see that password/username needs to be url encoded
 
 sqlr connections
-sqlr add-connection
+sqlr get-connection-types
+sqlr add-connection -t postgres -s "" -n name1
 sqlr rm-connection
 sqlr get-connection
 sqlr list-connectors
