@@ -1,6 +1,6 @@
-import { Command, Input, Secret, Select, Toggle } from "../deps.js";
+import { Command, Input, Secret, Select, Toggle, EnumType } from "../deps.js";
 import logger from "../logger.js";
-import connectionTypes from "../connection-types.js";
+import { connectors } from "../connectors.js";
 import guard from "../guard.js";
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -23,7 +23,7 @@ const validateConnectionName = (connectionName) => {
 
 const getConnectionType = async () => {
   const options = [];
-  for (const [key, value] of Object.entries(connectionTypes)) {
+  for (const [key, value] of Object.entries(connectors)) {
     options.push({ name: value.getDatabaseName(), value: key });
   }
 
@@ -35,7 +35,7 @@ const getConnectionType = async () => {
 
 const getConnectionString = async (connectionType) => {
   logger.info("Provide connection details");
-  return await connectionTypes[connectionType].getConnectionString();
+  return await connectors[connectionType].getConnectionString();
 };
 
 const addConnection = async (name, type, connectionString) => {
@@ -77,8 +77,9 @@ const addConnection = async (name, type, connectionString) => {
 };
 
 export default new Command()
+  .type("ConnectorType", new EnumType(Object.keys(connectors)))
   .option("-n, --name [name]", "Name of the connection")
-  .option("-t, --type [type]", "Type of the connection")
+  .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
   .description("Add new connection. Run without parameters to use wizard.")
   .meta(

@@ -3,8 +3,8 @@
 [x] sqlr add-connection -t postgres -s "" -n name1
 [x] sqlr rm-connection
 [x] sqlr get-connection
-[ ] sqlr describe [connection] -s "localhost:5341" -t postgres
+[x] sqlr describe [connection] -s "localhost:5341" -t postgres
 [ ] sqlr query [connection] "select * from all" + files support:
     -i input.sql
     -o output.json
-[ ] for all commands that take as an input --type option, validate if such type is defined!
+[x] for all commands that take as an input --type option, validate if such type is defined!

@@ -1,5 +1,5 @@
-import { Command } from "../deps.js";
-import connectionTypes from "../connection-types.js";
+import { Command, EnumType } from "../deps.js";
+import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
 import { maxTableColumnWidth } from "../const.js";
@@ -33,7 +33,7 @@ const describe = async (
   }
 
   try {
-    const tables = await connectionTypes[targetType].getTables(
+    const tables = await connectors[targetType].getTables(
       targetConnectionString,
     );
 
@@ -122,10 +122,11 @@ const getColumnDescription = (column) => {
 };
 
 export default new Command()
+  .type("ConnectorType", new EnumType(Object.keys(connectors)))
   .option("-n, --name [name]", "Name of the connection", {
     conflicts: ["type", "connection-string"],
   })
-  .option("-t, --type [type]", "Type of the connection")
+  .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
   .option("--json", "Display results as JSON")
   .option("--compact", "Display results in compact form")

@@ -1,6 +1,6 @@
 import { postgresConnector } from "./connectors/postgres.js";
 
-export default {
+export const connectors = {
   postgresql: postgresConnector,
   mssql: {
     getDatabaseName: () => "Microsoft SQL Server",
@@ -11,3 +11,4 @@ export default {
     getConnectionStringHint: () => "mysql conn string",
   },
 };
+

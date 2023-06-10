@@ -1,5 +1,5 @@
 import { Command, Table } from "../deps.js";
-import connectionTypes from "../connection-types.js";
+import { connectors } from "../connectors.js";
 import logger from "../logger.js";
 import { maxTableColumnWidth } from "../const.js";
 
@@ -8,9 +8,9 @@ const getConnectionTypes = () => {
     new Table()
       .header(["Type", "Connection string hint"])
       .body(
-        Object.keys(connectionTypes).map((
+        Object.keys(connectors).map((
           type,
-        ) => [type, connectionTypes[type].getConnectionStringHint()]),
+        ) => [type, connectors[type].getConnectionStringHint()]),
       )
       .maxColWidth(maxTableColumnWidth)
       .padding(1)
