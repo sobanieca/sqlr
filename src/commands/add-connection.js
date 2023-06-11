@@ -1,4 +1,4 @@
-import { Command, Input, Secret, Select, Toggle, EnumType } from "../deps.js";
+import { Command, EnumType, Input, Secret, Select, Toggle } from "../deps.js";
 import logger from "../logger.js";
 import { connectors } from "../connectors.js";
 import guard from "../guard.js";

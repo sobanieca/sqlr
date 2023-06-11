@@ -11,7 +11,10 @@ import {
   green,
   white,
 } from "https://deno.land/std@0.158.0/fmt/colors.ts";
-import { Command, EnumType } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
+import {
+  Command,
+  EnumType,
+} from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Input } from "https://deno.land/x/cliffy@v0.25.7/prompt/input.ts";
 import { Select } from "https://deno.land/x/cliffy@v0.25.7/prompt/select.ts";
 import { Toggle } from "https://deno.land/x/cliffy@v0.25.7/prompt/toggle.ts";

@@ -11,4 +11,3 @@ export const connectors = {
     getConnectionStringHint: () => "mysql conn string",
   },
 };
-
