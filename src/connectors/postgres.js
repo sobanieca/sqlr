@@ -73,6 +73,8 @@ More details: https://deno-postgres.com/#/?id=url-parameters
 
     const foreignKeys = foreignKeysQuery.rows;
 
+    await dbClient.end();
+
     const result = {};
 
     result.tables = [];
@@ -103,6 +105,18 @@ More details: https://deno-postgres.com/#/?id=url-parameters
             )?.relation,
         })),
     }));
+  },
+  query: async (connectionString, query) => {
+    const dbClient = new DbClient(connectionString);
+    await dbClient.connect();
+
+    const result = await dbClient.queryObject({
+      camelcase: true,
+      text: query,
+    });
+    console.log(result);
+
+    await dbClient.end();
   },
 };
 

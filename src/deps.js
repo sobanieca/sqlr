@@ -20,7 +20,10 @@ import { Select } from "https://deno.land/x/cliffy@v0.25.7/prompt/select.ts";
 import { Toggle } from "https://deno.land/x/cliffy@v0.25.7/prompt/toggle.ts";
 import { Secret } from "https://deno.land/x/cliffy@v0.25.7/prompt/secret.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
-import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+import {
+  Client,
+  PostgresError,
+} from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 
 export {
   BaseHandler,
@@ -37,6 +40,7 @@ export {
   Input,
   log,
   LogLevels,
+  PostgresError,
   Secret,
   Select,
   Table,

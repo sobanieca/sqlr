@@ -8,3 +8,5 @@
     -i input.sql
     -o output.json
 [x] for all commands that take as an input --type option, validate if such type is defined!
+[ ] e2e tests
+

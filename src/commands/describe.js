@@ -43,7 +43,7 @@ const describe = async (
   } catch (err) {
     logger.debug(err);
     logger.error(
-      `Error occurred when executing query against database. Ensure connection string is valid.`,
+      `Error occurred when executing query against database. Ensure connection string is valid. Use --debug option for details.`,
     );
   }
 };

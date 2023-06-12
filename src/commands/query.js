@@ -1,14 +1,15 @@
-import { Command, EnumType } from "../deps.js";
+import { Command, EnumType, PostgresError } from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
+import logger from "../logger.js";
 
-const query = async (
+const runQuery = async (
   query,
-  inputFile,
-  outputFile,
+  _inputFile,
+  _outputFile,
   connectionName,
-  json,
-  compact,
+  _json,
+  _compact,
   type,
   connectionString,
 ) => {
@@ -27,23 +28,34 @@ const query = async (
 
   try {
     //TODO: implement query method for connectors
-    const result = await connectors[targetType].query(query);
+    const _result = await connectors[targetType].query(
+      targetConnectionString,
+      query,
+    );
 
     //TODO: present results + affected rows (if > 0)
   } catch (err) {
-    logger.debug(err);
-    logger.error(
-      `Error occurred when executing query against database. Ensure connection string is valid.`,
-    );
+    if (err instanceof PostgresError) {
+      logger.error(err.toString());
+    } else {
+      logger.debug(err);
+      logger.error(
+        `Error occurred when executing query against database. Ensure that query or connection string is valid. Use --debug option for details.`,
+      );
+    }
   }
 };
 
 export default new Command()
   .type("ConnectorType", new EnumType(Object.keys(connectors)))
   .option("-q, --query [query]", "SQL query to be executed")
-  .option("-i, --input-file [input-file]", "Input file for query", {
-    conflicts: ["query"],
-  })
+  .option(
+    "-i, --input-file [input-file]",
+    "Path to input file containing SQL query",
+    {
+      conflicts: ["query"],
+    },
+  )
   .option(
     "-o, --output-file [output-file]",
     "Output file where JSON results will be stored",
@@ -70,7 +82,7 @@ export default new Command()
         connectionString,
       },
     ) => {
-      await query(
+      await runQuery(
         query,
         inputFile,
         outputFile,
