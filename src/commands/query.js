@@ -1,4 +1,4 @@
-import { Command, EnumType, PostgresError } from "../deps.js";
+import { Command, EnumType, PostgresError, gray } from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
@@ -8,7 +8,7 @@ const runQuery = async (
   _inputFile,
   _outputFile,
   connectionName,
-  _json,
+  json,
   _compact,
   type,
   connectionString,
@@ -27,13 +27,34 @@ const runQuery = async (
   }
 
   try {
-    //TODO: implement query method for connectors
-    const _result = await connectors[targetType].query(
+    const startTime = new Date();
+    const result = await connectors[targetType].query(
       targetConnectionString,
       query,
     );
+    const endTime = new Date();
 
-    //TODO: present results + affected rows (if > 0)
+    logger.info(`${gray('Query executed in:')} ${endTime - startTime}ms`);
+    logger.info(`${gray('Rows affected:')} ${result.rowsAffected}`);
+
+    if (result.rows?.length > 0) {
+      if (json) {
+        const jsonResult = Deno.inspect(
+          result.rows,
+          {
+            colors: true,
+            strAbbreviateSize: 256000,
+            iterableLimit: 20000,
+            depth: 100,
+          },
+        );
+        logger.info(jsonResult);
+      }
+    }
+
+    //TODO: present result in tables if no --json or --compact selected
+    //TODO: handle --compact
+    //TODO: handle input and output files
   } catch (err) {
     if (err instanceof PostgresError) {
       logger.error(err.toString());
@@ -48,6 +69,7 @@ const runQuery = async (
 
 export default new Command()
   .type("ConnectorType", new EnumType(Object.keys(connectors)))
+  .arguments("[queryArg]", "SQL query to be executed")
   .option("-q, --query [query]", "SQL query to be executed")
   .option(
     "-i, --input-file [input-file]",
@@ -81,9 +103,10 @@ export default new Command()
         type,
         connectionString,
       },
+      queryArg,
     ) => {
       await runQuery(
-        query,
+        query || queryArg,
         inputFile,
         outputFile,
         name,

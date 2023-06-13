@@ -114,9 +114,13 @@ More details: https://deno-postgres.com/#/?id=url-parameters
       camelcase: true,
       text: query,
     });
-    console.log(result);
 
     await dbClient.end();
+
+    return {
+      rowsAffected: result.rowCount,
+      rows: result.rows,
+    };
   },
 };
 
