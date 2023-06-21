@@ -1,15 +1,16 @@
-import { Command, EnumType, PostgresError, gray } from "../deps.js";
+import { Command, EnumType, PostgresError, gray, Table, brightGreen } from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
+import { maxTableColumnWidth } from "../const.js";
 
 const runQuery = async (
   query,
-  _inputFile,
-  _outputFile,
+  inputFile,
+  outputFile,
   connectionName,
   json,
-  _compact,
+  compact,
   type,
   connectionString,
 ) => {
@@ -26,6 +27,10 @@ const runQuery = async (
     targetType = connection.type;
   }
 
+  if(inputFile) {
+    query = await Deno.readTextFile(inputFile);
+  }
+
   try {
     const startTime = new Date();
     const result = await connectors[targetType].query(
@@ -38,6 +43,12 @@ const runQuery = async (
     logger.info(`${gray('Rows affected:')} ${result.rowsAffected}`);
 
     if (result.rows?.length > 0) {
+      if (outputFile) {
+        await Deno.writeTextFile(outputFile, JSON.stringify(result.rows, null, 2));
+        logger.info(`Results saved to ${outputFile}`);
+        return;
+      }
+
       if (json) {
         const jsonResult = Deno.inspect(
           result.rows,
@@ -49,12 +60,26 @@ const runQuery = async (
           },
         );
         logger.info(jsonResult);
+        return;
       }
-    }
+      
+      if (compact) {
+        logger.info(brightGreen(Object.keys(result.rows[0]).join(',')));
+        result.rows.forEach(row => logger.info(Object.values(row).join(',')));
+        return;
+      }
 
-    //TODO: present result in tables if no --json or --compact selected
-    //TODO: handle --compact
-    //TODO: handle input and output files
+      logger.info(
+        new Table()
+          .header(Object.keys(result.rows[0]).map(column => brightGreen(column)))
+          .body(result.rows.map(row => Object.values(row)))
+          .maxColWidth(maxTableColumnWidth)
+          .padding(1)
+          .indent(2)
+          .border(true)
+          .toString()
+      );
+    }
   } catch (err) {
     if (err instanceof PostgresError) {
       logger.error(err.toString());
@@ -87,8 +112,8 @@ export default new Command()
   })
   .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
-  .option("--json", "Display results as JSON")
-  .option("--compact", "Display results in compact form")
+  .option("--json", "Display results as JSON", { conflicts: ["compact"] })
+  .option("--compact", "Display results in compact form", { conflicts: [ "json" ] })
   .description("Run provided SQL query against selected database")
   .description("Run query against specified database")
   .action(

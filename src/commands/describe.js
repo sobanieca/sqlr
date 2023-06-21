@@ -1,4 +1,3 @@
-import { Command, EnumType } from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
@@ -10,6 +9,8 @@ import {
   brightYellow,
   gray,
   Table,
+  Command,
+  EnumType
 } from "../deps.js";
 
 const describe = async (
