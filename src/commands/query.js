@@ -1,4 +1,11 @@
-import { Command, EnumType, PostgresError, gray, Table, brightGreen } from "../deps.js";
+import {
+  brightGreen,
+  Command,
+  EnumType,
+  gray,
+  PostgresError,
+  Table,
+} from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
@@ -18,6 +25,10 @@ const runQuery = async (
     connectionName = await getConnectionName();
   }
 
+  if (!query) {
+    throw new Error("No SQL query provided");
+  }
+
   let targetType = type;
   let targetConnectionString = connectionString;
 
@@ -27,7 +38,7 @@ const runQuery = async (
     targetType = connection.type;
   }
 
-  if(inputFile) {
+  if (inputFile) {
     query = await Deno.readTextFile(inputFile);
   }
 
@@ -39,12 +50,15 @@ const runQuery = async (
     );
     const endTime = new Date();
 
-    logger.info(`${gray('Query executed in:')} ${endTime - startTime}ms`);
-    logger.info(`${gray('Rows affected:')} ${result.rowsAffected}`);
+    logger.info(`${gray("Query executed in:")} ${endTime - startTime}ms`);
+    logger.info(`${gray("Rows affected:")} ${result.rowsAffected}`);
 
     if (result.rows?.length > 0) {
       if (outputFile) {
-        await Deno.writeTextFile(outputFile, JSON.stringify(result.rows, null, 2));
+        await Deno.writeTextFile(
+          outputFile,
+          JSON.stringify(result.rows, null, 2),
+        );
         logger.info(`Results saved to ${outputFile}`);
         return;
       }
@@ -62,22 +76,24 @@ const runQuery = async (
         logger.info(jsonResult);
         return;
       }
-      
+
       if (compact) {
-        logger.info(brightGreen(Object.keys(result.rows[0]).join(',')));
-        result.rows.forEach(row => logger.info(Object.values(row).join(',')));
+        logger.info(brightGreen(Object.keys(result.rows[0]).join(",")));
+        result.rows.forEach((row) => logger.info(Object.values(row).join(",")));
         return;
       }
 
       logger.info(
         new Table()
-          .header(Object.keys(result.rows[0]).map(column => brightGreen(column)))
-          .body(result.rows.map(row => Object.values(row)))
+          .header(
+            Object.keys(result.rows[0]).map((column) => brightGreen(column)),
+          )
+          .body(result.rows.map((row) => Object.values(row)))
           .maxColWidth(maxTableColumnWidth)
           .padding(1)
           .indent(2)
           .border(true)
-          .toString()
+          .toString(),
       );
     }
   } catch (err) {
@@ -86,7 +102,7 @@ const runQuery = async (
     } else {
       logger.debug(err);
       logger.error(
-        `Error occurred when executing query against database. Ensure that query or connection string is valid. Use --debug option for details.`,
+        `Error occurred when executing query against database. Ensure that query or connection string is valid. Only simple queries are supported. Use --debug option for details.`,
       );
     }
   }
@@ -113,7 +129,9 @@ export default new Command()
   .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
   .option("--json", "Display results as JSON", { conflicts: ["compact"] })
-  .option("--compact", "Display results in compact form", { conflicts: [ "json" ] })
+  .option("--compact", "Display results in compact form", {
+    conflicts: ["json"],
+  })
   .description("Run provided SQL query against selected database")
   .description("Run query against specified database")
   .action(

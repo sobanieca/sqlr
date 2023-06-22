@@ -7,10 +7,10 @@ import {
   brightGreen,
   brightRed,
   brightYellow,
+  Command,
+  EnumType,
   gray,
   Table,
-  Command,
-  EnumType
 } from "../deps.js";
 
 const describe = async (
