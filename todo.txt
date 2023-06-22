@@ -1,12 +1,1 @@
-[x] sqlr connections
-[x] sqlr get-connection-types
-[x] sqlr add-connection -t postgres -s "" -n name1
-[x] sqlr rm-connection
-[x] sqlr get-connection
-[x] sqlr describe [connection] -s "localhost:5341" -t postgres
-[ ] sqlr query [connection] "select * from all" + files support:
-    -i input.sql
-    -o output.json
-[x] for all commands that take as an input --type option, validate if such type is defined!
-[ ] e2e tests
-
+//TODO: when using wizard to configure connection (postgres worlddb), Deno asks for PGAPPNAME env variable...
