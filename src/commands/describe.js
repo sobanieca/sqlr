@@ -18,6 +18,7 @@ const describe = async (
   json,
   compact,
   type,
+  filter,
   connectionString,
 ) => {
   if (!connectionName && !connectionString) {
@@ -39,6 +40,11 @@ const describe = async (
     );
 
     if (tables) tables?.sort((a, b) => a.schema.localeCompare(b.schema));
+    if (filter) {
+      tables = tables.filter((table) =>
+        table.name.includes(filter) || table.schema.includes(filter)
+      );
+    }
 
     showTables(tables, json, compact);
   } catch (err) {
@@ -129,9 +135,10 @@ export default new Command()
   })
   .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
+  .option("-f, --filter [filter]", "Filter results by schema/table name")
   .option("--json", "Display results as JSON")
   .option("--compact", "Display results in compact form")
   .description("Describe all tables and columns available in database")
-  .action(async ({ name, json, compact, type, connectionString }) => {
-    await describe(name, json, compact, type, connectionString);
+  .action(async ({ name, json, compact, type, filter, connectionString }) => {
+    await describe(name, json, compact, type, filter, connectionString);
   });
