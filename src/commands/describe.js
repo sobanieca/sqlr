@@ -35,15 +35,13 @@ const describe = async (
   }
 
   try {
-    const tables = await connectors[targetType].getTables(
+    let tables = await connectors[targetType].getTables(
       targetConnectionString,
     );
 
     if (tables) tables?.sort((a, b) => a.schema.localeCompare(b.schema));
     if (filter) {
-      tables = tables.filter((table) =>
-        table.name.includes(filter) || table.schema.includes(filter)
-      );
+      tables = tables.filter((table) => `${table.schema}.${table.name}`.includes(filter));
     }
 
     showTables(tables, json, compact);

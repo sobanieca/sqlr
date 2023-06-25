@@ -111,7 +111,7 @@ More details: https://deno-postgres.com/#/?id=url-parameters
     await dbClient.connect();
 
     const result = await dbClient.queryObject({
-      camelcase: true,
+      camelcase: false,
       text: query,
     });
 
