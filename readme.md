@@ -31,6 +31,17 @@ Deno runtime environment `https://deno.land`
 `--allow-write` permission is needed only if you are planning to use `-o`
 parameter (write results to json file, check `sqlr query --help` for details)
 
+If your queries are failing due to certificate validation errors (and you trust
+target server) you can install using following command:
+
+`deno install -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write https://deno.land/x/sqlr/main.js`
+
+This means however, that you are no longer protected from MITM attacks for other
+servers. You can consider introducing `sqlr-unsafe` sitting next to your main
+`sqlr` instance to work with trusted servers with problematic certificates:
+
+`deno install -n sqlr-unsafe -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write https://deno.land/x/sqlr/main.js`
+
 ## Hints
 
 If you want to disable colors (at least for main log messages), you can use:
