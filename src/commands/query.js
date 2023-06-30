@@ -25,10 +25,6 @@ const runQuery = async (
     connectionName = await getConnectionName();
   }
 
-  if (!query) {
-    throw new Error("No SQL query provided");
-  }
-
   let targetType = type;
   let targetConnectionString = connectionString;
 
@@ -40,6 +36,10 @@ const runQuery = async (
 
   if (inputFile) {
     query = await Deno.readTextFile(inputFile);
+  }
+
+  if (!query) {
+    throw new Error("No SQL query provided");
   }
 
   try {
@@ -111,7 +111,7 @@ const runQuery = async (
 export default new Command()
   .type("ConnectorType", new EnumType(Object.keys(connectors)))
   .arguments("[queryArg]", "SQL query to be executed")
-  .option("-q, --query [query]", "SQL query to be executed")
+  .option("-q, --query [query]", "SQL query to be executed", { default: "" })
   .option(
     "-i, --input-file [input-file]",
     "Path to input file containing SQL query",
