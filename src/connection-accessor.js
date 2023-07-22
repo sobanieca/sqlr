@@ -55,7 +55,7 @@ const getConnectionName = async () => {
   }
 
   return await Select.prompt({
-    message: "Select connection you want to remove",
+    message: "Select connection",
     options,
   });
 };

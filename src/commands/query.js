@@ -34,6 +34,10 @@ const runQuery = async (
     targetType = connection.type;
   }
 
+  if (inputFile && query) {
+    throw new Error("Option '--input-file' conflicts with option '--query'.");
+  }
+
   if (inputFile) {
     query = await Deno.readTextFile(inputFile);
   }
@@ -115,9 +119,6 @@ export default new Command()
   .option(
     "-i, --input-file [input-file]",
     "Path to input file containing SQL query",
-    {
-      conflicts: ["query"],
-    },
   )
   .option(
     "-o, --output-file [output-file]",
