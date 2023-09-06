@@ -16,7 +16,7 @@ const runQuery = async (
   inputFile,
   outputFile,
   connectionName,
-  json,
+  table,
   compact,
   type,
   connectionString,
@@ -67,17 +67,19 @@ const runQuery = async (
         return;
       }
 
-      if (json) {
-        const jsonResult = Deno.inspect(
-          result.rows,
-          {
-            colors: true,
-            strAbbreviateSize: 256000,
-            iterableLimit: 20000,
-            depth: 100,
-          },
+      if (table) {
+        logger.info(
+          new Table()
+            .header(
+              Object.keys(result.rows[0]).map((column) => brightGreen(column)),
+            )
+            .body(result.rows.map((row) => Object.values(row)))
+            .maxColWidth(maxTableColumnWidth)
+            .padding(1)
+            .indent(2)
+            .border(true)
+            .toString(),
         );
-        logger.info(jsonResult);
         return;
       }
 
@@ -87,18 +89,16 @@ const runQuery = async (
         return;
       }
 
-      logger.info(
-        new Table()
-          .header(
-            Object.keys(result.rows[0]).map((column) => brightGreen(column)),
-          )
-          .body(result.rows.map((row) => Object.values(row)))
-          .maxColWidth(maxTableColumnWidth)
-          .padding(1)
-          .indent(2)
-          .border(true)
-          .toString(),
+      const jsonResult = Deno.inspect(
+        result.rows,
+        {
+          colors: true,
+          strAbbreviateSize: 256000,
+          iterableLimit: 20000,
+          depth: 100,
+        },
       );
+      logger.info(jsonResult);
     }
   } catch (err) {
     if (err instanceof PostgresError) {
@@ -129,9 +129,9 @@ export default new Command()
   })
   .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
-  .option("--json", "Display results as JSON", { conflicts: ["compact"] })
+  .option("--table", "Display results as table", { conflicts: ["compact"] })
   .option("--compact", "Display results in compact form", {
-    conflicts: ["json"],
+    conflicts: ["table"],
   })
   .description("Run provided SQL query against selected database")
   .description("Run query against specified database")
@@ -142,7 +142,7 @@ export default new Command()
         inputFile,
         outputFile,
         name,
-        json,
+        table,
         compact,
         type,
         connectionString,
@@ -154,7 +154,7 @@ export default new Command()
         inputFile,
         outputFile,
         name,
-        json,
+        table,
         compact,
         type,
         connectionString,

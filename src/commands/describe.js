@@ -15,7 +15,7 @@ import {
 
 const describe = async (
   connectionName,
-  json,
+  table,
   compact,
   type,
   filter,
@@ -46,7 +46,7 @@ const describe = async (
       );
     }
 
-    showTables(tables, json, compact);
+    showTables(tables, table, compact);
   } catch (err) {
     logger.debug(err);
     logger.error(
@@ -55,18 +55,32 @@ const describe = async (
   }
 };
 
-const showTables = (tables, json, compact) => {
+const showTables = (tables, table, compact) => {
   logger.info("Database schema:");
   if (compact) {
     showTablesCompact(tables);
     return;
   }
 
-  if (json) {
-    showTablesJson(tables);
+  if (table) {
+    showTablesTable(tables);
     return;
   }
 
+  tables.forEach((t) =>
+    t.columns.forEach((c) => c.relation || delete c.relation)
+  );
+  logger.info(
+    Deno.inspect(tables, {
+      colors: true,
+      strAbbreviateSize: 256000,
+      iterableLimit: 20000,
+      depth: 100,
+    }),
+  );
+};
+
+const showTablesTable = (tables) => {
   for (const table of tables) {
     logger.info(
       new Table()
@@ -81,20 +95,6 @@ const showTables = (tables, json, compact) => {
         .toString(),
     );
   }
-};
-
-const showTablesJson = (tables) => {
-  tables.forEach((t) =>
-    t.columns.forEach((c) => c.relation || delete c.relation)
-  );
-  logger.info(
-    Deno.inspect(tables, {
-      colors: true,
-      strAbbreviateSize: 256000,
-      iterableLimit: 20000,
-      depth: 100,
-    }),
-  );
 };
 
 const showTablesCompact = (tables) => {
@@ -136,9 +136,9 @@ export default new Command()
   .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
   .option("-f, --filter [filter]", "Filter results by schema/table name")
-  .option("--json", "Display results as JSON")
+  .option("--table", "Display results in table")
   .option("--compact", "Display results in compact form")
   .description("Describe all tables and columns available in database")
-  .action(async ({ name, json, compact, type, filter, connectionString }) => {
-    await describe(name, json, compact, type, filter, connectionString);
+  .action(async ({ name, table, compact, type, filter, connectionString }) => {
+    await describe(name, table, compact, type, filter, connectionString);
   });
