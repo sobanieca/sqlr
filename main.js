@@ -1,3 +1,4 @@
+/* @ts-self-types="./main.d.ts" */
 import { Command } from "./src/deps.js";
 import describe from "./src/commands/describe.js";
 import connections from "./src/commands/connections.js";
