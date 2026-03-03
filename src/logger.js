@@ -18,6 +18,7 @@ const colors = {
 };
 
 class BrightConsoleHandler extends BaseHandler {
+  /** @override */
   format(logRecord) {
     let msg = super.format(logRecord);
 
@@ -42,6 +43,7 @@ class BrightConsoleHandler extends BaseHandler {
     return msg;
   }
 
+  /** @override */
   log(msg) {
     console.log(msg);
   }

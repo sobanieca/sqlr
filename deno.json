@@ -1,0 +1,26 @@
+{
+  "name": "@sobanieca/sqlr",
+  "description": "CLI tool for interacting with SQL databases",
+  "version": "0.3.0",
+  "license": "MIT",
+  "exports": "./main.js",
+  "compilerOptions": {
+    "checkJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "useUnknownInCatchVariables": false
+  },
+  "fmt": {
+    "include": [".", "test/"]
+  },
+  "lint": {
+    "include": [".", "test/"],
+    "rules": {
+      "exclude": ["no-import-prefix", "no-slow-types"]
+    }
+  },
+  "tasks": {
+    "run": "deno run --allow-all main.js",
+    "check": "deno fmt --check && deno lint && deno check main.js && deno check test/test.js && cd test && deno task test"
+  }
+}

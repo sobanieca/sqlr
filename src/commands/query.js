@@ -47,12 +47,12 @@ const runQuery = async (
   }
 
   try {
-    const startTime = new Date();
+    const startTime = Date.now();
     const result = await connectors[targetType].query(
       targetConnectionString,
       query,
     );
-    const endTime = new Date();
+    const endTime = Date.now();
 
     logger.info(`${gray("Query executed in:")} ${endTime - startTime}ms`);
     logger.info(`${gray("Rows affected:")} ${result.rowsAffected}`);
@@ -114,7 +114,7 @@ const runQuery = async (
 
 export default new Command()
   .type("ConnectorType", new EnumType(Object.keys(connectors)))
-  .arguments("[queryArg]", "SQL query to be executed")
+  .arguments("[queryArg:string]")
   .option("-q, --query [query]", "SQL query to be executed", { default: "" })
   .option(
     "-i, --input-file [input-file]",
