@@ -19,8 +19,8 @@ try {
     .description(
       "Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters",
     )
-    .action(function () {
-      this.showHelp();
+    .action((_options, cmd) => {
+      cmd.showHelp();
     })
     .globalOption("--debug", "Enable debug logs")
     .command("add-connection", addConnection)
