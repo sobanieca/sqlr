@@ -1,6 +1,6 @@
-import * as log from "https://deno.land/std@0.158.0/log/mod.ts";
-import { LogLevels } from "https://deno.land/std@0.158.0/log/mod.ts";
-import { BaseHandler } from "https://deno.land/std@0.158.0/log/handlers.ts?s=BaseHandler";
+import * as log from "jsr:@std/log@0.224.14";
+import { LogLevels } from "jsr:@std/log@0.224.14";
+import { BaseHandler } from "jsr:@std/log@0.224.14/base-handler";
 import {
   bold,
   brightBlue,
@@ -10,20 +10,14 @@ import {
   gray,
   green,
   white,
-} from "https://deno.land/std@0.158.0/fmt/colors.ts";
-import {
-  Command,
-  EnumType,
-} from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
-import { Input } from "https://deno.land/x/cliffy@v0.25.7/prompt/input.ts";
-import { Select } from "https://deno.land/x/cliffy@v0.25.7/prompt/select.ts";
-import { Toggle } from "https://deno.land/x/cliffy@v0.25.7/prompt/toggle.ts";
-import { Secret } from "https://deno.land/x/cliffy@v0.25.7/prompt/secret.ts";
-import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
-import {
-  Client,
-  PostgresError,
-} from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+} from "jsr:@std/fmt@1.0.9/colors";
+import { Command, EnumType } from "jsr:@cliffy/command@1.0.0";
+import { Input } from "jsr:@cliffy/prompt@1.0.0/input";
+import { Select } from "jsr:@cliffy/prompt@1.0.0/select";
+import { Toggle } from "jsr:@cliffy/prompt@1.0.0/toggle";
+import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
+import { Table } from "jsr:@cliffy/table@1.0.0";
+import { Client, PostgresError } from "jsr:@db/postgres@0.19.5";
 
 export {
   BaseHandler,

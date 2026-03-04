@@ -4,29 +4,29 @@ snapshot[`sqlr CLI 1`] = `
 {
   code: 0,
   output: "
-  Usage:   sqlr 
-  Version: 0.3.0
+Usage:   sqlr 
+Version: 0.3.0
 
-  Description:
+Description:
 
-    Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters
 
-  Options:
+Options:
 
-    -h, --help     - Show this help.                            
-    -V, --version  - Show the version number for this program.  
-    --debug        - Enable debug logs                          
+  -h, --help     - Show this help.                            
+  -V, --version  - Show the version number for this program.  
+  --debug        - Enable debug logs                          
 
-  Commands:
+Commands:
 
-    add-connection                      - Add new connection. Run without parameters to use wizard.           
-    rm-connection         [connection]  - Remove selected connection                                          
-    get-connection        [connection]  - Get details of selected connection                                  
-    get-connection-types                - Get available connection types to be used with '--type' parameter in
-                                          'add-connection' command                                            
-    connections                         - List all defined connections                                        
-    describe                            - Describe all tables and columns available in database               
-    query                 [queryArg]    - Run query against specified database                                
+  add-connection                      - Add new connection. Run without parameters to use wizard.           
+  rm-connection         [connection]  - Remove selected connection                                          
+  get-connection        [connection]  - Get details of selected connection                                  
+  get-connection-types                - Get available connection types to be used with '--type' parameter in
+                                        'add-connection' command                                            
+  connections                         - List all defined connections                                        
+  describe                            - Describe all tables and columns available in database               
+  query                 [queryArg]    - Run query against specified database                                
 
 ",
   outputError: "",
@@ -68,25 +68,25 @@ snapshot[`sqlr CLI 4`] = `
 {
   code: 0,
   output: '
-  Usage:   sqlr query [queryArg]
-  Version: 0.3.0                
+Usage:   sqlr query [queryArg]
+Version: 0.3.0                
 
-  Description:
+Description:
 
-    Run query against specified database
+  Run query against specified database
 
-  Options:
+Options:
 
-    -h, --help                                    - Show this help.                                                                        
-    --debug                                       - Enable debug logs                                                                      
-    -q, --query              [query]              - SQL query to be executed                       (Default: "")                           
-    -i, --input-file         [input-file]         - Path to input file containing SQL query                                                
-    -o, --output-file        [output-file]        - Output file where JSON results will be stored                                          
-    -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)
-    -t, --type               [type]               - Type of the connection                         (Values: "postgresql")                  
-    -s, --connection-string  [connection-string]  - Connection string                                                                      
-    --table                                       - Display results as table                       (Conflicts: --compact)                  
-    --compact                                     - Display results in compact form                (Conflicts: --table)                    
+  -h, --help                                    - Show this help.                                                                        
+  --debug                                       - Enable debug logs                                                                      
+  -q, --query              [query]              - SQL query to be executed                       (Default: "")                           
+  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                
+  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                          
+  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)
+  -t, --type               [type]               - Type of the connection                         (Values: "postgresql")                  
+  -s, --connection-string  [connection-string]  - Connection string                                                                      
+  --table                                       - Display results as table                       (Conflicts: --compact)                  
+  --compact                                     - Display results in compact form                (Conflicts: --table)                    
 
 ',
   outputError: "",
@@ -98,23 +98,23 @@ snapshot[`sqlr CLI 5`] = `
 {
   code: 0,
   output: '
-  Usage:   sqlr describe
-  Version: 0.3.0        
+Usage:   sqlr describe
+Version: 0.3.0        
 
-  Description:
+Description:
 
-    Describe all tables and columns available in database
+  Describe all tables and columns available in database
 
-  Options:
+Options:
 
-    -h, --help                                    - Show this help.                                                              
-    --debug                                       - Enable debug logs                                                            
-    -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)
-    -t, --type               [type]               - Type of the connection               (Values: "postgresql")                  
-    -s, --connection-string  [connection-string]  - Connection string                                                            
-    -f, --filter             [filter]             - Filter results by schema/table name                                          
-    --table                                       - Display results in table                                                     
-    --compact                                     - Display results in compact form                                              
+  -h, --help                                    - Show this help.                                                              
+  --debug                                       - Enable debug logs                                                            
+  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)
+  -t, --type               [type]               - Type of the connection               (Values: "postgresql")                  
+  -s, --connection-string  [connection-string]  - Connection string                                                            
+  -f, --filter             [filter]             - Filter results by schema/table name                                          
+  --table                                       - Display results in table                                                     
+  --compact                                     - Display results in compact form                                              
 
 ',
   outputError: "",

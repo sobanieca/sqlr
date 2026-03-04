@@ -51,10 +51,10 @@ class BrightConsoleHandler extends BaseHandler {
 
 const logLevel = Deno.args.includes("--debug") ? "DEBUG" : "INFO";
 
-await log.setup({
+log.setup({
   handlers: {
     console: new BrightConsoleHandler("DEBUG", {
-      formatter: "{msg}",
+      formatter: (logRecord) => logRecord.msg,
     }),
   },
   loggers: {
