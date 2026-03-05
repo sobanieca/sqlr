@@ -7,6 +7,7 @@ import removeConnection from "./src/commands/rm-connection.js";
 import getConnection from "./src/commands/get-connection.js";
 import getConnectionTypes from "./src/commands/get-connection-types.js";
 import query from "./src/commands/query.js";
+import update from "./src/commands/update.js";
 import { version } from "./src/version.js";
 import logger from "./src/logger.js";
 
@@ -30,6 +31,7 @@ try {
     .command("connections", connections)
     .command("describe", describe)
     .command("query", query)
+    .command("update", update)
     .parse();
 } catch (err) {
   logger.error(err.message);

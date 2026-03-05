@@ -26,7 +26,8 @@ Commands:
                                         'add-connection' command                                            
   connections                         - List all defined connections                                        
   describe                            - Describe all tables and columns available in database               
-  query                 [queryArg]    - Run query against specified database                                
+  query                 [queryArg]    - Run query against specified database
+  update                              - Update sqlr to the latest version
 
 ",
   outputError: "",
@@ -35,16 +36,6 @@ Commands:
 `;
 
 snapshot[`sqlr CLI 2`] = `
-{
-  code: 0,
-  output: "sqlr 0.3.0
-",
-  outputError: "",
-  sqlrCommand: "sqlr --version",
-}
-`;
-
-snapshot[`sqlr CLI 3`] = `
 {
   code: 0,
   output: "  ┌────────────┬──────────────────────────────────────────────────────────────────────────────────┐
@@ -64,7 +55,7 @@ snapshot[`sqlr CLI 3`] = `
 }
 `;
 
-snapshot[`sqlr CLI 4`] = `
+snapshot[`sqlr CLI 3`] = `
 {
   code: 0,
   output: '
@@ -94,7 +85,7 @@ Options:
 }
 `;
 
-snapshot[`sqlr CLI 5`] = `
+snapshot[`sqlr CLI 4`] = `
 {
   code: 0,
   output: '
@@ -122,7 +113,7 @@ Options:
 }
 `;
 
-snapshot[`sqlr CLI 6`] = `
+snapshot[`sqlr CLI 5`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -134,7 +125,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 7`] = `
+snapshot[`sqlr CLI 6`] = `
 {
   code: 0,
   output: 'Query executed in: *ms
@@ -150,7 +141,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 8`] = `
+snapshot[`sqlr CLI 7`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -170,7 +161,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 9`] = `
+snapshot[`sqlr CLI 8`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -185,7 +176,7 @@ AGO,Angola
 }
 `;
 
-snapshot[`sqlr CLI 10`] = `
+snapshot[`sqlr CLI 9`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -197,7 +188,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 11`] = `
+snapshot[`sqlr CLI 10`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -209,7 +200,7 @@ Results saved to /tmp/sqlr-test-output.json
 }
 `;
 
-snapshot[`sqlr CLI 12`] = `
+snapshot[`sqlr CLI 11`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -271,7 +262,7 @@ snapshot[`sqlr CLI 12`] = `
 }
 `;
 
-snapshot[`sqlr CLI 13`] = `
+snapshot[`sqlr CLI 12`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -334,7 +325,7 @@ snapshot[`sqlr CLI 13`] = `
 }
 `;
 
-snapshot[`sqlr CLI 14`] = `
+snapshot[`sqlr CLI 13`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -347,7 +338,7 @@ public.country_language [ language text, country_code -> "public.country.code", 
 }
 `;
 
-snapshot[`sqlr CLI 15`] = `
+snapshot[`sqlr CLI 14`] = `
 {
   code: 0,
   output: 'PostgresError: syntax error at or near "INVALID"
