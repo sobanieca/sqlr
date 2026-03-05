@@ -1,0 +1,349 @@
+export const snapshot = {};
+
+snapshot[`sqlr CLI 1`] = `
+{
+  code: 0,
+  output: "
+Usage:   sqlr 
+Version: 0.4.0
+
+Description:
+
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters
+
+Options:
+
+  -h, --help     - Show this help.                            
+  -V, --version  - Show the version number for this program.  
+  --debug        - Enable debug logs                          
+
+Commands:
+
+  add-connection                      - Add new connection. Run without parameters to use wizard.           
+  rm-connection         [connection]  - Remove selected connection                                          
+  get-connection        [connection]  - Get details of selected connection                                  
+  get-connection-types                - Get available connection types to be used with '--type' parameter in
+                                        'add-connection' command                                            
+  connections                         - List all defined connections                                        
+  describe                            - Describe all tables and columns available in database               
+  query                 [queryArg]    - Run query against specified database                                
+  update                              - Update sqlr to the latest version                                   
+
+",
+  outputError: "",
+  sqlrCommand: "sqlr --help",
+}
+`;
+
+snapshot[`sqlr CLI 2`] = `
+{
+  code: 0,
+  output: "  ┌────────────┬──────────────────────────────────────────────────────────────────────────────────┐
+  │ Type       │ Connection string hint                                                           │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ postgresql │ postgres://host:port/database_name?user=user&password=password(urlencoded)&appli │
+  │            │ cation_name=sqlr                                                                 │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'sslmode' - require | prefer | disable                                           │
+  │            │ 'options' - additional values for connection                                     │
+  │            │ (options=--cluster=your_cluster_name)                                            │
+  │            │ More details: https://deno-postgres.com/#/?id=url-parameters                     │
+  └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connection-types",
+}
+`;
+
+snapshot[`sqlr CLI 3`] = `
+{
+  code: 0,
+  output: '
+Usage:   sqlr query [queryArg]
+Version: 0.4.0                
+
+Description:
+
+  Run query against specified database
+
+Options:
+
+  -h, --help                                    - Show this help.                                                                        
+  --debug                                       - Enable debug logs                                                                      
+  -q, --query              [query]              - SQL query to be executed                       (Default: "")                           
+  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                
+  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                          
+  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)
+  -t, --type               [type]               - Type of the connection                         (Values: "postgresql")                  
+  -s, --connection-string  [connection-string]  - Connection string                                                                      
+  --table                                       - Display results as table                       (Conflicts: --compact)                  
+  --compact                                     - Display results in compact form                (Conflicts: --table)                    
+
+',
+  outputError: "",
+  sqlrCommand: "sqlr query --help",
+}
+`;
+
+snapshot[`sqlr CLI 4`] = `
+{
+  code: 0,
+  output: '
+Usage:   sqlr describe
+Version: 0.4.0        
+
+Description:
+
+  Describe all tables and columns available in database
+
+Options:
+
+  -h, --help                                    - Show this help.                                                              
+  --debug                                       - Enable debug logs                                                            
+  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)
+  -t, --type               [type]               - Type of the connection               (Values: "postgresql")                  
+  -s, --connection-string  [connection-string]  - Connection string                                                            
+  -f, --filter             [filter]             - Filter results by schema/table name                                          
+  --table                                       - Display results in table                                                     
+  --compact                                     - Display results in compact form                                              
+
+',
+  outputError: "",
+  sqlrCommand: "sqlr describe --help",
+}
+`;
+
+snapshot[`sqlr CLI 5`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr CLI 6`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+}
+`;
+
+snapshot[`sqlr CLI 7`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+}
+`;
+
+snapshot[`sqlr CLI 8`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+}
+`;
+
+snapshot[`sqlr CLI 9`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { input_file_test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -i test-query.sql',
+}
+`;
+
+snapshot[`sqlr CLI 10`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+Results saved to /tmp/sqlr-test-output.json
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
+}
+`;
+
+snapshot[`sqlr CLI 11`] = `
+{
+  code: 0,
+  output: 'Database schema:
+[
+  {
+    schema: "public",
+    name: "country_flag",
+    columns: [
+      { name: "emoji", type: "text", nullable: false },
+      { name: "code2", type: "character", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country",
+    columns: [
+      { name: "continent", type: "USER-DEFINED", nullable: false },
+      {
+        name: "capital",
+        type: "integer",
+        nullable: true,
+        relation: "public.city.id"
+      },
+      { name: "gnp", type: "numeric", nullable: true },
+      { name: "population", type: "integer", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "code", type: "character", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "code2", type: "character", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
+      { name: "surface_area", type: "real", nullable: false },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "gnp_old", type: "numeric", nullable: true },
+      { name: "name", type: "text", nullable: false }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_language",
+    columns: [
+      { name: "language", type: "text", nullable: false },
+      {
+        name: "country_code",
+        type: "character",
+        nullable: false,
+        relation: "public.country.code"
+      },
+      { name: "percentage", type: "real", nullable: false },
+      { name: "is_official", type: "boolean", nullable: false }
+    ]
+  }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country"',
+}
+`;
+
+snapshot[`sqlr CLI 12`] = `
+{
+  code: 0,
+  output: 'Database schema:
+  ┌─────────────────────┐
+  │ public.country_flag │
+  ├─────────────────────┤
+  │ emoji text          │
+  ├─────────────────────┤
+  │ code2 character     │
+  ├─────────────────────┤
+  │ unicode? text       │
+  └─────────────────────┘
+  ┌─────────────────────────────┐
+  │ public.country              │
+  ├─────────────────────────────┤
+  │ continent USER-DEFINED      │
+  ├─────────────────────────────┤
+  │ capital -> "public.city.id" │
+  ├─────────────────────────────┤
+  │ gnp? numeric                │
+  ├─────────────────────────────┤
+  │ population integer          │
+  ├─────────────────────────────┤
+  │ region text                 │
+  ├─────────────────────────────┤
+  │ code character              │
+  ├─────────────────────────────┤
+  │ indep_year? smallint        │
+  ├─────────────────────────────┤
+  │ life_expectancy? real       │
+  ├─────────────────────────────┤
+  │ code2 character             │
+  ├─────────────────────────────┤
+  │ head_of_state? text         │
+  ├─────────────────────────────┤
+  │ surface_area real           │
+  ├─────────────────────────────┤
+  │ local_name text             │
+  ├─────────────────────────────┤
+  │ government_form text        │
+  ├─────────────────────────────┤
+  │ gnp_old? numeric            │
+  ├─────────────────────────────┤
+  │ name text                   │
+  └─────────────────────────────┘
+  ┌───────────────────────────────────────┐
+  │ public.country_language               │
+  ├───────────────────────────────────────┤
+  │ language text                         │
+  ├───────────────────────────────────────┤
+  │ country_code -> "public.country.code" │
+  ├───────────────────────────────────────┤
+  │ percentage real                       │
+  ├───────────────────────────────────────┤
+  │ is_official boolean                   │
+  └───────────────────────────────────────┘
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country" --table',
+}
+`;
+
+snapshot[`sqlr CLI 13`] = `
+{
+  code: 0,
+  output: 'Database schema:
+public.country_flag [ emoji text, code2 character, unicode? text ]
+public.country [ continent USER-DEFINED, capital -> "public.city.id", gnp? numeric, population integer, region text, code character, indep_year? smallint, life_expectancy? real, code2 character, head_of_state? text, surface_area real, local_name text, government_form text, gnp_old? numeric, name text ]
+public.country_language [ language text, country_code -> "public.country.code", percentage real, is_official boolean ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country" --compact',
+}
+`;
+
+snapshot[`sqlr CLI 14`] = `
+{
+  code: 0,
+  output: 'PostgresError: syntax error at or near "INVALID"
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "INVALID SQL QUERY"',
+}
+`;
