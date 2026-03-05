@@ -26,8 +26,8 @@ Commands:
                                         'add-connection' command                                            
   connections                         - List all defined connections                                        
   describe                            - Describe all tables and columns available in database               
-  query                 [queryArg]    - Run query against specified database
-  update                              - Update sqlr to the latest version
+  query                 [queryArg]    - Run query against specified database                                
+  update                              - Update sqlr to the latest version                                   
 
 ",
   outputError: "",
