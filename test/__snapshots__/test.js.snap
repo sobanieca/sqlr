@@ -5,7 +5,7 @@ snapshot[`sqlr CLI 1`] = `
   code: 0,
   output: "
 Usage:   sqlr 
-Version: 0.3.0
+Version: 0.4.0
 
 Description:
 
@@ -60,7 +60,7 @@ snapshot[`sqlr CLI 3`] = `
   code: 0,
   output: '
 Usage:   sqlr query [queryArg]
-Version: 0.3.0                
+Version: 0.4.0                
 
 Description:
 
@@ -90,7 +90,7 @@ snapshot[`sqlr CLI 4`] = `
   code: 0,
   output: '
 Usage:   sqlr describe
-Version: 0.3.0        
+Version: 0.4.0        
 
 Description:
 
