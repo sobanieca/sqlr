@@ -21,6 +21,7 @@ export const run = async (cmd, cwd) => {
 
   const removeVaryingOutput = (input) => {
     return input
+      .replace(/Version: \d+\.\d+\.\d+/g, "Version: *")
       .replace(/Query executed in: \d+ms/g, "Query executed in: *ms")
       .replace(/Rows affected: \d+/g, "Rows affected: *");
   };
