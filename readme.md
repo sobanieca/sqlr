@@ -14,6 +14,8 @@ your SQL database (currently only Postgres database is supported).
   files
 - :abacus: CI/CD friendly - commands can be executed directly, without
   `interactive` prompts
+- :robot: AI agent friendly - agents can query databases by connection name
+  without exposing connection strings in their context
 
 ![image](./sqlr.png)
 
@@ -26,7 +28,7 @@ Deno runtime environment `https://deno.land`
 
 ## Installation
 
-`deno install -f -r --allow-env --allow-net --allow-read --allow-write https://deno.land/x/sqlr/main.js`
+`deno install -g -f -r --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr`
 
 `--allow-write` permission is needed only if you are planning to use `-o`
 parameter (write results to json file, check `sqlr query --help` for details)
@@ -34,13 +36,21 @@ parameter (write results to json file, check `sqlr query --help` for details)
 If your queries are failing due to certificate validation errors (and you trust
 target server) you can install using following command:
 
-`deno install -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write https://deno.land/x/sqlr/main.js`
+`deno install -g -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr`
 
 This means however, that you are no longer protected from MITM attacks for other
 servers. You can consider introducing `sqlr-unsafe` sitting next to your main
 `sqlr` instance to work with trusted servers with problematic certificates:
 
-`deno install -n sqlr-unsafe -f -r --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write https://deno.land/x/sqlr/main.js`
+`deno install -g -f -r -n sqlr-unsafe --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr`
+
+## Using with AI agents
+
+Sqlr stores database connections locally by name. This makes it a great fit for
+AI agents that need to query databases — the agent only needs to know the
+connection name (e.g. `sqlr query -n mydb -q "SELECT ..."`), and never has
+access to the actual connection string. Connection strings stay on your machine
+and are never exposed in the agent's context.
 
 ## Hints
 
