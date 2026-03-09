@@ -10,7 +10,7 @@
     }
   },
   "tasks": {
-    "test": "deno test -A test_postgresql.js test_mysql.js test_mssql.js test_clickhouse.js",
-    "update-snapshots": "deno test -A test_postgresql.js test_mysql.js test_mssql.js test_clickhouse.js -- --update"
+    "test": "deno test -A test_*.js",
+    "update-snapshots": "deno test -A test_*.js -- --update"
   }
 }
