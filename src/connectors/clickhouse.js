@@ -48,6 +48,7 @@ More details: https://clickhouse.com/docs/en/interfaces/http
     const client = createClient({
       url: baseUrl,
       database: database,
+      log: { LoggerClass: null },
     });
 
     try {
@@ -115,6 +116,7 @@ More details: https://clickhouse.com/docs/en/interfaces/http
     const client = createClient({
       url: baseUrl,
       database: database,
+      log: { LoggerClass: null },
     });
 
     try {

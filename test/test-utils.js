@@ -41,6 +41,14 @@ export const run = async (cmd, cwd) => {
   output = removeVaryingOutput(removeAnsi(output));
   outputError = removeAnsi(outputError);
   outputError = outputError.replace(/Download https?:\/\/[^\n]*\n?/g, "");
+  outputError = outputError.replace(
+    /\[\d{4}-\d{2}-\d{2}T[\d:.]+Z\]/g,
+    "[*]",
+  );
+  outputError = outputError.replace(
+    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g,
+    "*",
+  );
 
   return {
     code,
@@ -113,7 +121,20 @@ export const stopMysql = () => stopService("mysql");
 
 export const startMssql = async () => {
   await startService("mssql");
-  await startService("mssql-init");
+
+  const testDir = getTestDir();
+  const init = new Deno.Command("docker", {
+    args: ["compose", "up", "mssql-init"],
+    cwd: testDir,
+    stdout: "piped",
+    stderr: "piped",
+  });
+
+  const { code, stderr } = await init.output();
+  if (code !== 0) {
+    const err = new TextDecoder().decode(stderr);
+    throw new Error(`Failed to init mssql: ${err}`);
+  }
 };
 export const stopMssql = () => stopService("mssql");
 

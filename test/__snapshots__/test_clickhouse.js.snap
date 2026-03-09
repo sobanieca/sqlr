@@ -1,0 +1,243 @@
+export const snapshot = {};
+
+snapshot[`sqlr ClickHouse 1`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr ClickHouse 2`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+}
+`;
+
+snapshot[`sqlr ClickHouse 3`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+}
+`;
+
+snapshot[`sqlr ClickHouse 4`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+}
+`;
+
+snapshot[`sqlr ClickHouse 5`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { input_file_test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -i test-query.sql',
+}
+`;
+
+snapshot[`sqlr ClickHouse 6`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+Results saved to /tmp/sqlr-test-output-clickhouse.json
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-clickhouse.json',
+}
+`;
+
+snapshot[`sqlr ClickHouse 7`] = `
+{
+  code: 0,
+  output: 'Database schema:
+[
+  {
+    schema: "world",
+    name: "country",
+    columns: [
+      { name: "code", type: "String", nullable: false },
+      { name: "name", type: "String", nullable: false },
+      { name: "continent", type: "String", nullable: false },
+      { name: "region", type: "String", nullable: false },
+      { name: "surface_area", type: "Float32", nullable: false },
+      { name: "indep_year", type: "Int16", nullable: true },
+      { name: "population", type: "UInt32", nullable: false },
+      { name: "life_expectancy", type: "Float32", nullable: true },
+      { name: "gnp", type: "Decimal(10, 2)", nullable: true },
+      { name: "gnp_old", type: "Decimal(10, 2)", nullable: true },
+      { name: "local_name", type: "String", nullable: false },
+      { name: "government_form", type: "String", nullable: false },
+      { name: "head_of_state", type: "String", nullable: true },
+      { name: "capital", type: "UInt32", nullable: true },
+      { name: "code2", type: "String", nullable: false }
+    ]
+  },
+  {
+    schema: "world",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "String", nullable: false },
+      { name: "emoji", type: "String", nullable: false },
+      { name: "unicode", type: "String", nullable: true }
+    ]
+  },
+  {
+    schema: "world",
+    name: "country_language",
+    columns: [
+      { name: "country_code", type: "String", nullable: false },
+      { name: "language", type: "String", nullable: false },
+      { name: "is_official", type: "UInt8", nullable: false },
+      { name: "percentage", type: "Float32", nullable: false }
+    ]
+  }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country"',
+}
+`;
+
+snapshot[`sqlr ClickHouse 8`] = `
+{
+  code: 0,
+  output: "Database schema:
+  ┌──────────────────────────┐
+  │ world.country            │
+  ├──────────────────────────┤
+  │ code String              │
+  ├──────────────────────────┤
+  │ name String              │
+  ├──────────────────────────┤
+  │ continent String         │
+  ├──────────────────────────┤
+  │ region String            │
+  ├──────────────────────────┤
+  │ surface_area Float32     │
+  ├──────────────────────────┤
+  │ indep_year? Int16        │
+  ├──────────────────────────┤
+  │ population UInt32        │
+  ├──────────────────────────┤
+  │ life_expectancy? Float32 │
+  ├──────────────────────────┤
+  │ gnp? Decimal(10, 2)      │
+  ├──────────────────────────┤
+  │ gnp_old? Decimal(10, 2)  │
+  ├──────────────────────────┤
+  │ local_name String        │
+  ├──────────────────────────┤
+  │ government_form String   │
+  ├──────────────────────────┤
+  │ head_of_state? String    │
+  ├──────────────────────────┤
+  │ capital? UInt32          │
+  ├──────────────────────────┤
+  │ code2 String             │
+  └──────────────────────────┘
+  ┌────────────────────┐
+  │ world.country_flag │
+  ├────────────────────┤
+  │ code2 String       │
+  ├────────────────────┤
+  │ emoji String       │
+  ├────────────────────┤
+  │ unicode? String    │
+  └────────────────────┘
+  ┌────────────────────────┐
+  │ world.country_language │
+  ├────────────────────────┤
+  │ country_code String    │
+  ├────────────────────────┤
+  │ language String        │
+  ├────────────────────────┤
+  │ is_official UInt8      │
+  ├────────────────────────┤
+  │ percentage Float32     │
+  └────────────────────────┘
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --table',
+}
+`;
+
+snapshot[`sqlr ClickHouse 9`] = `
+{
+  code: 0,
+  output: "Database schema:
+world.country [ code String, name String, continent String, region String, surface_area Float32, indep_year? Int16, population UInt32, life_expectancy? Float32, gnp? Decimal(10, 2), gnp_old? Decimal(10, 2), local_name String, government_form String, head_of_state? String, capital? UInt32, code2 String ]
+world.country_flag [ code2 String, emoji String, unicode? String ]
+world.country_language [ country_code String, language String, is_official UInt8, percentage Float32 ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --compact',
+}
+`;
+
+snapshot[`sqlr ClickHouse 10`] = `
+{
+  code: 0,
+  output: "ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY. Expected one of: Query, Query with output, EXPLAIN, EXPLAIN, SELECT query, possibly with UNION, list of union elements, SELECT query, subquery, possibly with UNION, SELECT or EXPLAIN subquery, SELECT query, WITH, FROM, SELECT, SHOW CREATE QUOTA query, SHOW CREATE, SHOW [FULL] [TEMPORARY] TABLES|DATABASES|CLUSTERS|CLUSTER|MERGES 'name' [[NOT] [I]LIKE 'str'] [LIMIT expr], SHOW, SHOW COLUMNS query, SHOW ENGINES query, SHOW ENGINES, SHOW FUNCTIONS query, SHOW FUNCTIONS, SHOW INDEXES query, SHOW SETTING query, SHOW SETTING, EXISTS or SHOW CREATE query, EXISTS, DESCRIBE FILESYSTEM CACHE query, DESCRIBE, DESC, DESCRIBE query, SHOW PROCESSLIST query, SHOW PROCESSLIST, CREATE TABLE or ATTACH TABLE query, CREATE, ATTACH, REPLACE, CREATE DATABASE query, CREATE VIEW query, CREATE DICTIONARY, CREATE WINDOW VIEW query, ALTER query, ALTER TABLE, ALTER TEMPORARY TABLE, ALTER DATABASE, RENAME query, RENAME DATABASE, RENAME TABLE, EXCHANGE TABLES, RENAME DICTIONARY, EXCHANGE DICTIONARIES, RENAME, DROP query, DROP, DETACH, TRUNCATE, UNDROP query, UNDROP, CHECK ALL TABLES, CHECK TABLE, KILL QUERY query, KILL, OPTIMIZE query, OPTIMIZE TABLE, WATCH query, WATCH, SHOW ACCESS query, SHOW ACCESS, ShowAccessEntitiesQuery, SHOW GRANTS query, SHOW GRANTS, SHOW PRIVILEGES query, SHOW PRIVILEGES, BACKUP or RESTORE query, BACKUP, RESTORE, INSERT query, INSERT INTO, USE query, USE, SET ROLE or SET DEFAULT ROLE query, SET ROLE DEFAULT, SET ROLE, SET DEFAULT ROLE, SET query, SET, SYSTEM query, SYSTEM, CREATE USER or ALTER USER query, ALTER USER, CREATE USER, CREATE ROLE or ALTER ROLE query, ALTER ROLE, CREATE ROLE, CREATE QUOTA or ALTER QUOTA query, ALTER QUOTA, CREATE QUOTA, CREATE ROW POLICY or ALTER ROW POLICY query, ALTER POLICY, ALTER ROW POLICY, CREATE POLICY, CREATE ROW POLICY, CREATE MASKING POLICY or ALTER MASKING POLICY query, ATTACH MASKING POLICY, ALTER MASKING POLICY, CREATE MASKING POLICY, CREATE SETTINGS PROFILE or ALTER SETTINGS PROFILE query, ALTER SETTINGS PROFILE, ALTER PROFILE, CREATE SETTINGS PROFILE, CREATE PROFILE, CREATE FUNCTION query, DROP FUNCTION query, CREATE WORKLOAD query, DROP WORKLOAD query, CREATE RESOURCE query, DROP RESOURCE query, CREATE NAMED COLLECTION, DROP NAMED COLLECTION query, Alter NAMED COLLECTION query, ALTER, CREATE INDEX query, DROP INDEX query, DROP access entity query, MOVE access entity query, MOVE, GRANT or REVOKE query, REVOKE, GRANT, CHECK GRANT, CHECK GRANT, TCL query, BEGIN TRANSACTION, START TRANSACTION, COMMIT, ROLLBACK, SET TRANSACTION SNAPSHOT, Delete query, DELETE, Update query, UPDATE, COPY query, COPY, EXECUTE AS query, EXECUTE AS. 
+",
+  outputError: \`[*][ERROR][@clickhouse/client][Connection] Command: HTTP request error. 
+Arguments: {
+  operation: "Command",
+  connection_id: "*",
+  query_id: "*",
+  with_abort_signal: false,
+  session_id: undefined,
+  clickhouse_settings: {}
+} 
+Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY. Expected one of: Query, Query with output, EXPLAIN, EXPLAIN, SELECT query, possibly with UNION, list of union elements, SELECT query, subquery, possibly with UNION, SELECT or EXPLAIN subquery, SELECT query, WITH, FROM, SELECT, SHOW CREATE QUOTA query, SHOW CREATE, SHOW [FULL] [TEMPORARY] TABLES|DATABASES|CLUSTERS|CLUSTER|MERGES 'name' [[NOT] [I]LIKE 'str'] [LIMIT expr], SHOW, SHOW COLUMNS query, SHOW ENGINES query, SHOW ENGINES, SHOW FUNCTIONS query, SHOW FUNCTIONS, SHOW INDEXES query, SHOW SETTING query, SHOW SETTING, EXISTS or SHOW CREATE query, EXISTS, DESCRIBE FILESYSTEM CACHE query, DESCRIBE, DESC, DESCRIBE query, SHOW PROCESSLIST query, SHOW PROCESSLIST, CREATE TABLE or ATTACH TABLE query, CREATE, ATTACH, REPLACE, CREATE DATABASE query, CREATE VIEW query, CREATE DICTIONARY, CREATE WINDOW VIEW query, ALTER query, ALTER TABLE, ALTER TEMPORARY TABLE, ALTER DATABASE, RENAME query, RENAME DATABASE, RENAME TABLE, EXCHANGE TABLES, RENAME DICTIONARY, EXCHANGE DICTIONARIES, RENAME, DROP query, DROP, DETACH, TRUNCATE, UNDROP query, UNDROP, CHECK ALL TABLES, CHECK TABLE, KILL QUERY query, KILL, OPTIMIZE query, OPTIMIZE TABLE, WATCH query, WATCH, SHOW ACCESS query, SHOW ACCESS, ShowAccessEntitiesQuery, SHOW GRANTS query, SHOW GRANTS, SHOW PRIVILEGES query, SHOW PRIVILEGES, BACKUP or RESTORE query, BACKUP, RESTORE, INSERT query, INSERT INTO, USE query, USE, SET ROLE or SET DEFAULT ROLE query, SET ROLE DEFAULT, SET ROLE, SET DEFAULT ROLE, SET query, SET, SYSTEM query, SYSTEM, CREATE USER or ALTER USER query, ALTER USER, CREATE USER, CREATE ROLE or ALTER ROLE query, ALTER ROLE, CREATE ROLE, CREATE QUOTA or ALTER QUOTA query, ALTER QUOTA, CREATE QUOTA, CREATE ROW POLICY or ALTER ROW POLICY query, ALTER POLICY, ALTER ROW POLICY, CREATE POLICY, CREATE ROW POLICY, CREATE MASKING POLICY or ALTER MASKING POLICY query, ATTACH MASKING POLICY, ALTER MASKING POLICY, CREATE MASKING POLICY, CREATE SETTINGS PROFILE or ALTER SETTINGS PROFILE query, ALTER SETTINGS PROFILE, ALTER PROFILE, CREATE SETTINGS PROFILE, CREATE PROFILE, CREATE FUNCTION query, DROP FUNCTION query, CREATE WORKLOAD query, DROP WORKLOAD query, CREATE RESOURCE query, DROP RESOURCE query, CREATE NAMED COLLECTION, DROP NAMED COLLECTION query, Alter NAMED COLLECTION query, ALTER, CREATE INDEX query, DROP INDEX query, DROP access entity query, MOVE access entity query, MOVE, GRANT or REVOKE query, REVOKE, GRANT, CHECK GRANT, CHECK GRANT, TCL query, BEGIN TRANSACTION, START TRANSACTION, COMMIT, ROLLBACK, SET TRANSACTION SNAPSHOT, Delete query, DELETE, Update query, UPDATE, COPY query, COPY, EXECUTE AS query, EXECUTE AS. 
+    at parseError (file:///home/sobanieca/.cache/deno/npm/registry.npmjs.org/@clickhouse/client-common/1.18.2/dist/error/error.js:28:16)
+    at ClientRequest.onResponse (file:///home/sobanieca/.cache/deno/npm/registry.npmjs.org/@clickhouse/client/1.18.2/dist/connection/node_base_connection.js:617:107)
+    at Object.runMicrotasks (ext:core/01_core.js:716:26)
+    at Array.processTicksAndRejections (ext:deno_node/_next_tick.ts:59:10) {
+  code: "62",
+  type: "SYNTAX_ERROR"
+}
+\`,
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "INVALID SQL QUERY"',
+}
+`;

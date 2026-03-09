@@ -1,0 +1,236 @@
+export const snapshot = {};
+
+snapshot[`sqlr MSSQL 1`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MSSQL 2`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT TOP 3 code, name FROM country ORDER BY code"',
+}
+`;
+
+snapshot[`sqlr MSSQL 3`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT TOP 3 code, name FROM country ORDER BY code" --table',
+}
+`;
+
+snapshot[`sqlr MSSQL 4`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT TOP 3 code, name FROM country ORDER BY code" --compact',
+}
+`;
+
+snapshot[`sqlr MSSQL 5`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { input_file_test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -i test-query.sql',
+}
+`;
+
+snapshot[`sqlr MSSQL 6`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+Results saved to /tmp/sqlr-test-output-mssql.json
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-mssql.json',
+}
+`;
+
+snapshot[`sqlr MSSQL 7`] = `
+{
+  code: 0,
+  output: 'Database schema:
+[
+  {
+    schema: "dbo",
+    name: "country",
+    columns: [
+      { name: "code", type: "char", nullable: false },
+      { name: "name", type: "nvarchar", nullable: false },
+      { name: "continent", type: "nvarchar", nullable: false },
+      { name: "region", type: "nvarchar", nullable: false },
+      { name: "surface_area", type: "float", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "int", nullable: false },
+      { name: "life_expectancy", type: "float", nullable: true },
+      { name: "gnp", type: "decimal", nullable: true },
+      { name: "gnp_old", type: "decimal", nullable: true },
+      { name: "local_name", type: "nvarchar", nullable: false },
+      { name: "government_form", type: "nvarchar", nullable: false },
+      { name: "head_of_state", type: "nvarchar", nullable: true },
+      {
+        name: "capital",
+        type: "int",
+        nullable: true,
+        relation: "dbo.city.id"
+      },
+      { name: "code2", type: "char", nullable: false }
+    ]
+  },
+  {
+    schema: "dbo",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "char",
+        nullable: false,
+        relation: "dbo.country.code"
+      },
+      { name: "language", type: "nvarchar", nullable: false },
+      { name: "is_official", type: "bit", nullable: false },
+      { name: "percentage", type: "float", nullable: false }
+    ]
+  },
+  {
+    schema: "dbo",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "char", nullable: false },
+      { name: "emoji", type: "nvarchar", nullable: false },
+      { name: "unicode", type: "nvarchar", nullable: true }
+    ]
+  }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country"',
+}
+`;
+
+snapshot[`sqlr MSSQL 8`] = `
+{
+  code: 0,
+  output: 'Database schema:
+  ┌──────────────────────────┐
+  │ dbo.country              │
+  ├──────────────────────────┤
+  │ code char                │
+  ├──────────────────────────┤
+  │ name nvarchar            │
+  ├──────────────────────────┤
+  │ continent nvarchar       │
+  ├──────────────────────────┤
+  │ region nvarchar          │
+  ├──────────────────────────┤
+  │ surface_area float       │
+  ├──────────────────────────┤
+  │ indep_year? smallint     │
+  ├──────────────────────────┤
+  │ population int           │
+  ├──────────────────────────┤
+  │ life_expectancy? float   │
+  ├──────────────────────────┤
+  │ gnp? decimal             │
+  ├──────────────────────────┤
+  │ gnp_old? decimal         │
+  ├──────────────────────────┤
+  │ local_name nvarchar      │
+  ├──────────────────────────┤
+  │ government_form nvarchar │
+  ├──────────────────────────┤
+  │ head_of_state? nvarchar  │
+  ├──────────────────────────┤
+  │ capital -> "dbo.city.id" │
+  ├──────────────────────────┤
+  │ code2 char               │
+  └──────────────────────────┘
+  ┌────────────────────────────────────┐
+  │ dbo.country_language               │
+  ├────────────────────────────────────┤
+  │ country_code -> "dbo.country.code" │
+  ├────────────────────────────────────┤
+  │ language nvarchar                  │
+  ├────────────────────────────────────┤
+  │ is_official bit                    │
+  ├────────────────────────────────────┤
+  │ percentage float                   │
+  └────────────────────────────────────┘
+  ┌───────────────────┐
+  │ dbo.country_flag  │
+  ├───────────────────┤
+  │ code2 char        │
+  ├───────────────────┤
+  │ emoji nvarchar    │
+  ├───────────────────┤
+  │ unicode? nvarchar │
+  └───────────────────┘
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --table',
+}
+`;
+
+snapshot[`sqlr MSSQL 9`] = `
+{
+  code: 0,
+  output: 'Database schema:
+dbo.country [ code char, name nvarchar, continent nvarchar, region nvarchar, surface_area float, indep_year? smallint, population int, life_expectancy? float, gnp? decimal, gnp_old? decimal, local_name nvarchar, government_form nvarchar, head_of_state? nvarchar, capital -> "dbo.city.id", code2 char ]
+dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is_official bit, percentage float ]
+dbo.country_flag [ code2 char, emoji nvarchar, unicode? nvarchar ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --compact',
+}
+`;
+
+snapshot[`sqlr MSSQL 10`] = `
+{
+  code: 0,
+  output: "MSSQLError: Incorrect syntax near 'QUERY'.
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "INVALID SQL QUERY"',
+}
+`;

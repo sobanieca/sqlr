@@ -1,4 +1,6 @@
-CREATE TABLE IF NOT EXISTS city (
+CREATE DATABASE IF NOT EXISTS world;
+
+CREATE TABLE IF NOT EXISTS world.city (
   id UInt32,
   name String,
   country_code String,
@@ -7,7 +9,7 @@ CREATE TABLE IF NOT EXISTS city (
 ) ENGINE = MergeTree()
 ORDER BY id;
 
-CREATE TABLE IF NOT EXISTS country (
+CREATE TABLE IF NOT EXISTS world.country (
   code String,
   name String,
   continent String,
@@ -26,7 +28,7 @@ CREATE TABLE IF NOT EXISTS country (
 ) ENGINE = MergeTree()
 ORDER BY code;
 
-CREATE TABLE IF NOT EXISTS country_language (
+CREATE TABLE IF NOT EXISTS world.country_language (
   country_code String,
   language String,
   is_official UInt8,
@@ -34,24 +36,24 @@ CREATE TABLE IF NOT EXISTS country_language (
 ) ENGINE = MergeTree()
 ORDER BY (country_code, language);
 
-CREATE TABLE IF NOT EXISTS country_flag (
+CREATE TABLE IF NOT EXISTS world.country_flag (
   code2 String,
   emoji String,
   unicode Nullable(String)
 ) ENGINE = MergeTree()
 ORDER BY code2;
 
-INSERT INTO city (id, name, country_code, district, population) VALUES
+INSERT INTO world.city (id, name, country_code, district, population) VALUES
 (129, 'Oranjestad', 'ABW', 'Aruba', 29034),
 (1, 'Kabul', 'AFG', 'Kabol', 1780000),
 (56, 'Luanda', 'AGO', 'Luanda', 2022000);
 
-INSERT INTO country (code, name, continent, region, surface_area, indep_year, population, life_expectancy, gnp, gnp_old, local_name, government_form, head_of_state, capital, code2) VALUES
+INSERT INTO world.country (code, name, continent, region, surface_area, indep_year, population, life_expectancy, gnp, gnp_old, local_name, government_form, head_of_state, capital, code2) VALUES
 ('ABW', 'Aruba', 'North America', 'Caribbean', 193, 1986, 103000, 78.4, 828.00, 793.00, 'Aruba', 'Nonmetropolitan Territory of The Netherlands', 'Willem-Alexander', 129, 'AW'),
 ('AFG', 'Afghanistan', 'Asia', 'Southern and Central Asia', 652090, 1919, 22720000, 45.9, 5976.00, NULL, 'Afganistan/Afqanestan', 'Islamic Emirate', 'Mohammad Omar', 1, 'AF'),
 ('AGO', 'Angola', 'Africa', 'Central Africa', 1246700, 1975, 12878000, 38.3, 6648.00, 7984.00, 'Angola', 'Republic', 'Jose Eduardo dos Santos', 56, 'AO');
 
-INSERT INTO country_language (country_code, language, is_official, percentage) VALUES
+INSERT INTO world.country_language (country_code, language, is_official, percentage) VALUES
 ('ABW', 'Dutch', 1, 5.3),
 ('ABW', 'English', 0, 9.5),
 ('ABW', 'Papiamento', 0, 76.7),
@@ -65,7 +67,7 @@ INSERT INTO country_language (country_code, language, is_official, percentage) V
 ('AGO', 'Mbundu', 0, 22.0),
 ('AGO', 'Ovimbundu', 0, 37.0);
 
-INSERT INTO country_flag (code2, emoji, unicode) VALUES
+INSERT INTO world.country_flag (code2, emoji, unicode) VALUES
 ('AW', '🇦🇼', 'U+1F1E6 U+1F1FC'),
 ('AF', '🇦🇫', 'U+1F1E6 U+1F1EB'),
 ('AO', '🇦🇴', 'U+1F1E6 U+1F1F4');

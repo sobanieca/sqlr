@@ -118,7 +118,7 @@ More details: https://github.com/sidorares/node-mysql2#readme
     });
 
     try {
-      const [rows, _fields] = await connection.execute(query);
+      const [rows, _fields] = await connection.query(query);
 
       if (Array.isArray(rows)) {
         return {
