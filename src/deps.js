@@ -17,7 +17,7 @@ import { Select } from "jsr:@cliffy/prompt@1.0.0/select";
 import { Toggle } from "jsr:@cliffy/prompt@1.0.0/toggle";
 import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
 import { Table } from "jsr:@cliffy/table@1.0.0";
-import { Client, PostgresError } from "jsr:@db/postgres@0.19.5";
+import { Client } from "jsr:@db/postgres@0.19.5";
 
 export {
   BaseHandler,
@@ -34,7 +34,6 @@ export {
   Input,
   log,
   LogLevels,
-  PostgresError,
   Secret,
   Select,
   Table,

@@ -1,4 +1,6 @@
 import { DbClient, Input, Secret } from "../deps.js";
+import { DatabaseError } from "../database-error.js";
+import { PostgresError } from "jsr:@db/postgres@0.19.5";
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
@@ -110,17 +112,24 @@ More details: https://deno-postgres.com/#/?id=url-parameters
     const dbClient = new DbClient(connectionString);
     await dbClient.connect();
 
-    const result = await dbClient.queryObject({
-      camelcase: false,
-      text: query,
-    });
+    try {
+      const result = await dbClient.queryObject({
+        camelcase: false,
+        text: query,
+      });
 
-    await dbClient.end();
-
-    return {
-      rowsAffected: result.rowCount,
-      rows: result.rows,
-    };
+      return {
+        rowsAffected: result.rowCount,
+        rows: result.rows,
+      };
+    } catch (err) {
+      if (err instanceof PostgresError) {
+        throw new DatabaseError(err.toString());
+      }
+      throw err;
+    } finally {
+      await dbClient.end();
+    }
   },
 };
 

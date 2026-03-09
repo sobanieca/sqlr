@@ -48,6 +48,20 @@ snapshot[`sqlr CLI 2`] = `
   │            │ 'options' - additional values for connection                                     │
   │            │ (options=--cluster=your_cluster_name)                                            │
   │            │ More details: https://deno-postgres.com/#/?id=url-parameters                     │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ mysql      │ mysql://user:password@host:port/database_name                                    │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'ssl' - JSON object with SSL options                                             │
+  │            │ More details: https://github.com/sidorares/node-mysql2#readme                    │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ mssql      │ mssql://user:password@host:port/database_name                                    │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'encrypt' - true | false (default: true)                                         │
+  │            │ 'trustServerCertificate' - true | false (default: false)                         │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ clickhouse │ http://user:password@host:port?database=database_name                            │
+  │            │ Default port: 8123 (HTTP interface)                                              │
+  │            │ More details: https://clickhouse.com/docs/en/interfaces/http                     │
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 ",
   outputError: "",
@@ -68,16 +82,16 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                        
-  --debug                                       - Enable debug logs                                                                      
-  -q, --query              [query]              - SQL query to be executed                       (Default: "")                           
-  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                
-  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                          
-  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)
-  -t, --type               [type]               - Type of the connection                         (Values: "postgresql")                  
-  -s, --connection-string  [connection-string]  - Connection string                                                                      
-  --table                                       - Display results as table                       (Conflicts: --compact)                  
-  --compact                                     - Display results in compact form                (Conflicts: --table)                    
+  -h, --help                                    - Show this help.                                                                                      
+  --debug                                       - Enable debug logs                                                                                    
+  -q, --query              [query]              - SQL query to be executed                       (Default: "")                                         
+  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                              
+  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                                        
+  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)              
+  -t, --type               [type]               - Type of the connection                         (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string  [connection-string]  - Connection string                                                                                    
+  --table                                       - Display results as table                       (Conflicts: --compact)                                
+  --compact                                     - Display results in compact form                (Conflicts: --table)                                  
 
 ',
   outputError: "",
@@ -98,14 +112,14 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                              
-  --debug                                       - Enable debug logs                                                            
-  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)
-  -t, --type               [type]               - Type of the connection               (Values: "postgresql")                  
-  -s, --connection-string  [connection-string]  - Connection string                                                            
-  -f, --filter             [filter]             - Filter results by schema/table name                                          
-  --table                                       - Display results in table                                                     
-  --compact                                     - Display results in compact form                                              
+  -h, --help                                    - Show this help.                                                                            
+  --debug                                       - Enable debug logs                                                                          
+  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)              
+  -t, --type               [type]               - Type of the connection               (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string  [connection-string]  - Connection string                                                                          
+  -f, --filter             [filter]             - Filter results by schema/table name                                                        
+  --table                                       - Display results in table                                                                   
+  --compact                                     - Display results in compact form                                                            
 
 ',
   outputError: "",
