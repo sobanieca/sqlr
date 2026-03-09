@@ -52,9 +52,6 @@ connection name (e.g. `sqlr query -n mydb -q "SELECT ..."`), and never has
 access to the actual connection string. Connection strings stay on your machine
 and are never exposed in the agent's context.
 
-For additional security, connections can be encrypted with a password, ensuring
-that even local access to the stored connection data doesn't reveal credentials.
-
 ## Hints
 
 If you want to disable colors (at least for main log messages), you can use:
