@@ -7,7 +7,7 @@ const getConnection = async (connectionName) => {
     const connection = JSON.parse(localStorage.getItem(connectionName));
     if (!connection) {
       logger.error(
-        `Connection ${connectionName} not found. Use connections command to list available connections.`,
+        `Connection ${connectionName} not found. Use get-connections command to list available connections.`,
       );
       Deno.exit(1);
     }

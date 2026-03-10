@@ -8,6 +8,7 @@ import getConnection from "./src/commands/get-connection.js";
 import getConnectionTypes from "./src/commands/get-connection-types.js";
 import query from "./src/commands/query.js";
 import update from "./src/commands/update.js";
+import helpText from "./src/commands/help.js";
 import { version } from "./src/version.js";
 import logger from "./src/logger.js";
 
@@ -28,10 +29,18 @@ try {
     .command("rm-connection", removeConnection)
     .command("get-connection", getConnection)
     .command("get-connection-types", getConnectionTypes)
-    .command("connections", connections)
+    .command("get-connections", connections)
     .command("describe", describe)
     .command("query", query)
     .command("update", update)
+    .command(
+      "help",
+      new Command()
+        .description("Display detailed help text with usage instructions")
+        .action(() => {
+          console.log(helpText.help);
+        }),
+    )
     .parse();
 } catch (err) {
   logger.error(err.message);

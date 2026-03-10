@@ -24,10 +24,11 @@ Commands:
   get-connection        [connection]  - Get details of selected connection                                  
   get-connection-types                - Get available connection types to be used with '--type' parameter in
                                         'add-connection' command                                            
-  connections                         - List all defined connections                                        
+  get-connections                     - List all defined connections                                        
   describe                            - Describe all tables and columns available in database               
   query                 [queryArg]    - Run query against specified database                                
   update                              - Update sqlr to the latest version                                   
+  help                                - Display detailed help text with usage instructions                  
 
 ",
   outputError: "",
