@@ -49,6 +49,14 @@ export const run = async (cmd, cwd) => {
     /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g,
     "*",
   );
+  outputError = outputError.replace(
+    /^ +at .+$/gm,
+    "    at *",
+  );
+  outputError = outputError.replace(
+    /( {4}at \*\n)+/g,
+    "    at *\n",
+  );
 
   return {
     code,

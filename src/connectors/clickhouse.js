@@ -62,7 +62,9 @@ More details: https://clickhouse.com/docs/en/interfaces/http
           WHERE
             database = '${database}'
             AND is_temporary = 0
-            AND name NOT LIKE '.%'`,
+            AND name NOT LIKE '.%'
+          ORDER BY
+            database, name`,
         format: "JSONEachRow",
       });
 
@@ -79,7 +81,9 @@ More details: https://clickhouse.com/docs/en/interfaces/http
           FROM
             system.columns
           WHERE
-            database = '${database}'`,
+            database = '${database}'
+          ORDER BY
+            database, table, position`,
         format: "JSONEachRow",
       });
 

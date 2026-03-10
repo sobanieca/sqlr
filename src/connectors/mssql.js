@@ -52,7 +52,9 @@ Additional url parameters:
           INFORMATION_SCHEMA.TABLES
         WHERE
           table_type = 'BASE TABLE'
-          AND table_schema NOT IN ('sys', 'INFORMATION_SCHEMA')`);
+          AND table_schema NOT IN ('sys', 'INFORMATION_SCHEMA')
+        ORDER BY
+          table_schema, table_name`);
 
       const tables = tablesResult.recordset;
 
@@ -67,7 +69,9 @@ Additional url parameters:
         FROM
           INFORMATION_SCHEMA.COLUMNS
         WHERE
-          table_schema NOT IN ('sys', 'INFORMATION_SCHEMA')`);
+          table_schema NOT IN ('sys', 'INFORMATION_SCHEMA')
+        ORDER BY
+          table_schema, table_name, ORDINAL_POSITION`);
 
       const columns = columnsResult.recordset;
 

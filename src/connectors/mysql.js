@@ -37,7 +37,9 @@ More details: https://github.com/sidorares/node-mysql2#readme
           information_schema.tables
         WHERE
           table_schema = ?
-          AND table_type = 'BASE TABLE'`,
+          AND table_type = 'BASE TABLE'
+        ORDER BY
+          table_schema, table_name`,
         [dbName],
       );
 
@@ -52,7 +54,9 @@ More details: https://github.com/sidorares/node-mysql2#readme
         FROM
           information_schema.columns
         WHERE
-          table_schema = ?`,
+          table_schema = ?
+        ORDER BY
+          table_schema, table_name, ordinal_position`,
         [dbName],
       );
 

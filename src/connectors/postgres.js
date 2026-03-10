@@ -34,7 +34,9 @@ More details: https://deno-postgres.com/#/?id=url-parameters
       from 
         information_schema.tables 
       where 
-        table_schema not in ('pg_catalog', 'information_schema')`);
+        table_schema not in ('pg_catalog', 'information_schema')
+      order by
+        table_schema, table_name`);
 
     const tables = tablesQuery.rows;
 
@@ -46,10 +48,12 @@ More details: https://deno-postgres.com/#/?id=url-parameters
         column_default,
         is_nullable,
         data_type 
-      from 
-        information_schema.columns 
-      where 
-        table_schema not in ('pg_catalog', 'information_schema')`);
+      from
+        information_schema.columns
+      where
+        table_schema not in ('pg_catalog', 'information_schema')
+      order by
+        table_schema, table_name, ordinal_position`);
 
     const columns = columnsQuery.rows;
 

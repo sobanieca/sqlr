@@ -96,26 +96,26 @@ snapshot[`sqlr MySQL 7`] = `
     schema: "world-db",
     name: "country",
     columns: [
+      { name: "code", type: "char", nullable: false },
+      { name: "name", type: "text", nullable: false },
+      { name: "continent", type: "enum", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "float", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "int", nullable: false },
+      { name: "life_expectancy", type: "float", nullable: true },
+      { name: "gnp", type: "decimal", nullable: true },
+      { name: "gnp_old", type: "decimal", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
       {
         name: "capital",
         type: "int",
         nullable: true,
         relation: "world-db.city.id"
       },
-      { name: "code", type: "char", nullable: false },
-      { name: "code2", type: "char", nullable: false },
-      { name: "continent", type: "enum", nullable: false },
-      { name: "gnp", type: "decimal", nullable: true },
-      { name: "gnp_old", type: "decimal", nullable: true },
-      { name: "government_form", type: "text", nullable: false },
-      { name: "head_of_state", type: "text", nullable: true },
-      { name: "indep_year", type: "smallint", nullable: true },
-      { name: "life_expectancy", type: "float", nullable: true },
-      { name: "local_name", type: "text", nullable: false },
-      { name: "name", type: "text", nullable: false },
-      { name: "population", type: "int", nullable: false },
-      { name: "region", type: "text", nullable: false },
-      { name: "surface_area", type: "float", nullable: false }
+      { name: "code2", type: "char", nullable: false }
     ]
   },
   {
@@ -137,8 +137,8 @@ snapshot[`sqlr MySQL 7`] = `
         nullable: false,
         relation: "world-db.country.code"
       },
-      { name: "is_official", type: "tinyint", nullable: false },
       { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "tinyint", nullable: false },
       { name: "percentage", type: "float", nullable: false }
     ]
   }
@@ -156,35 +156,35 @@ snapshot[`sqlr MySQL 8`] = `
   ┌───────────────────────────────┐
   │ world-db.country              │
   ├───────────────────────────────┤
-  │ capital -> "world-db.city.id" │
-  ├───────────────────────────────┤
   │ code char                     │
   ├───────────────────────────────┤
-  │ code2 char                    │
+  │ name text                     │
   ├───────────────────────────────┤
   │ continent enum                │
+  ├───────────────────────────────┤
+  │ region text                   │
+  ├───────────────────────────────┤
+  │ surface_area float            │
+  ├───────────────────────────────┤
+  │ indep_year? smallint          │
+  ├───────────────────────────────┤
+  │ population int                │
+  ├───────────────────────────────┤
+  │ life_expectancy? float        │
   ├───────────────────────────────┤
   │ gnp? decimal                  │
   ├───────────────────────────────┤
   │ gnp_old? decimal              │
   ├───────────────────────────────┤
+  │ local_name text               │
+  ├───────────────────────────────┤
   │ government_form text          │
   ├───────────────────────────────┤
   │ head_of_state? text           │
   ├───────────────────────────────┤
-  │ indep_year? smallint          │
+  │ capital -> "world-db.city.id" │
   ├───────────────────────────────┤
-  │ life_expectancy? float        │
-  ├───────────────────────────────┤
-  │ local_name text               │
-  ├───────────────────────────────┤
-  │ name text                     │
-  ├───────────────────────────────┤
-  │ population int                │
-  ├───────────────────────────────┤
-  │ region text                   │
-  ├───────────────────────────────┤
-  │ surface_area float            │
+  │ code2 char                    │
   └───────────────────────────────┘
   ┌───────────────────────┐
   │ world-db.country_flag │
@@ -200,9 +200,9 @@ snapshot[`sqlr MySQL 8`] = `
   ├─────────────────────────────────────────┤
   │ country_code -> "world-db.country.code" │
   ├─────────────────────────────────────────┤
-  │ is_official tinyint                     │
-  ├─────────────────────────────────────────┤
   │ language text                           │
+  ├─────────────────────────────────────────┤
+  │ is_official tinyint                     │
   ├─────────────────────────────────────────┤
   │ percentage float                        │
   └─────────────────────────────────────────┘
@@ -216,9 +216,9 @@ snapshot[`sqlr MySQL 9`] = `
 {
   code: 0,
   output: 'Database schema:
-world-db.country [ capital -> "world-db.city.id", code char, code2 char, continent enum, gnp? decimal, gnp_old? decimal, government_form text, head_of_state? text, indep_year? smallint, life_expectancy? float, local_name text, name text, population int, region text, surface_area float ]
+world-db.country [ code char, name text, continent enum, region text, surface_area float, indep_year? smallint, population int, life_expectancy? float, gnp? decimal, gnp_old? decimal, local_name text, government_form text, head_of_state? text, capital -> "world-db.city.id", code2 char ]
 world-db.country_flag [ code2 char, emoji text, unicode? text ]
-world-db.country_language [ country_code -> "world-db.country.code", is_official tinyint, language text, percentage float ]
+world-db.country_language [ country_code -> "world-db.country.code", language text, is_official tinyint, percentage float ]
 ',
   outputError: "",
   sqlrCommand: 'sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --compact',

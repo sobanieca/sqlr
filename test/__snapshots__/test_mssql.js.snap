@@ -120,6 +120,15 @@ snapshot[`sqlr MSSQL 7`] = `
   },
   {
     schema: "dbo",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "char", nullable: false },
+      { name: "emoji", type: "nvarchar", nullable: false },
+      { name: "unicode", type: "nvarchar", nullable: true }
+    ]
+  },
+  {
+    schema: "dbo",
     name: "country_language",
     columns: [
       {
@@ -131,15 +140,6 @@ snapshot[`sqlr MSSQL 7`] = `
       { name: "language", type: "nvarchar", nullable: false },
       { name: "is_official", type: "bit", nullable: false },
       { name: "percentage", type: "float", nullable: false }
-    ]
-  },
-  {
-    schema: "dbo",
-    name: "country_flag",
-    columns: [
-      { name: "code2", type: "char", nullable: false },
-      { name: "emoji", type: "nvarchar", nullable: false },
-      { name: "unicode", type: "nvarchar", nullable: true }
     ]
   }
 ]
@@ -186,6 +186,15 @@ snapshot[`sqlr MSSQL 8`] = `
   ├──────────────────────────┤
   │ code2 char               │
   └──────────────────────────┘
+  ┌───────────────────┐
+  │ dbo.country_flag  │
+  ├───────────────────┤
+  │ code2 char        │
+  ├───────────────────┤
+  │ emoji nvarchar    │
+  ├───────────────────┤
+  │ unicode? nvarchar │
+  └───────────────────┘
   ┌────────────────────────────────────┐
   │ dbo.country_language               │
   ├────────────────────────────────────┤
@@ -197,15 +206,6 @@ snapshot[`sqlr MSSQL 8`] = `
   ├────────────────────────────────────┤
   │ percentage float                   │
   └────────────────────────────────────┘
-  ┌───────────────────┐
-  │ dbo.country_flag  │
-  ├───────────────────┤
-  │ code2 char        │
-  ├───────────────────┤
-  │ emoji nvarchar    │
-  ├───────────────────┤
-  │ unicode? nvarchar │
-  └───────────────────┘
 ',
   outputError: "",
   sqlrCommand: 'sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --table',
@@ -217,8 +217,8 @@ snapshot[`sqlr MSSQL 9`] = `
   code: 0,
   output: 'Database schema:
 dbo.country [ code char, name nvarchar, continent nvarchar, region nvarchar, surface_area float, indep_year? smallint, population int, life_expectancy? float, gnp? decimal, gnp_old? decimal, local_name nvarchar, government_form nvarchar, head_of_state? nvarchar, capital -> "dbo.city.id", code2 char ]
-dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is_official bit, percentage float ]
 dbo.country_flag [ code2 char, emoji nvarchar, unicode? nvarchar ]
+dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is_official bit, percentage float ]
 ',
   outputError: "",
   sqlrCommand: 'sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --compact',

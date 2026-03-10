@@ -221,52 +221,52 @@ snapshot[`sqlr CLI 11`] = `
 [
   {
     schema: "public",
-    name: "country_flag",
-    columns: [
-      { name: "emoji", type: "text", nullable: false },
-      { name: "code2", type: "character", nullable: false },
-      { name: "unicode", type: "text", nullable: true }
-    ]
-  },
-  {
-    schema: "public",
     name: "country",
     columns: [
+      { name: "code", type: "character", nullable: false },
+      { name: "name", type: "text", nullable: false },
       { name: "continent", type: "USER-DEFINED", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "real", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "integer", nullable: false },
+      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "gnp", type: "numeric", nullable: true },
+      { name: "gnp_old", type: "numeric", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
       {
         name: "capital",
         type: "integer",
         nullable: true,
         relation: "public.city.id"
       },
-      { name: "gnp", type: "numeric", nullable: true },
-      { name: "population", type: "integer", nullable: false },
-      { name: "region", type: "text", nullable: false },
-      { name: "code", type: "character", nullable: false },
-      { name: "indep_year", type: "smallint", nullable: true },
-      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "code2", type: "character", nullable: false }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_flag",
+    columns: [
       { name: "code2", type: "character", nullable: false },
-      { name: "head_of_state", type: "text", nullable: true },
-      { name: "surface_area", type: "real", nullable: false },
-      { name: "local_name", type: "text", nullable: false },
-      { name: "government_form", type: "text", nullable: false },
-      { name: "gnp_old", type: "numeric", nullable: true },
-      { name: "name", type: "text", nullable: false }
+      { name: "emoji", type: "text", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
     ]
   },
   {
     schema: "public",
     name: "country_language",
     columns: [
-      { name: "language", type: "text", nullable: false },
       {
         name: "country_code",
         type: "character",
         nullable: false,
         relation: "public.country.code"
       },
-      { name: "percentage", type: "real", nullable: false },
-      { name: "is_official", type: "boolean", nullable: false }
+      { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "boolean", nullable: false },
+      { name: "percentage", type: "real", nullable: false }
     ]
   }
 ]
@@ -280,58 +280,58 @@ snapshot[`sqlr CLI 12`] = `
 {
   code: 0,
   output: 'Database schema:
-  ┌─────────────────────┐
-  │ public.country_flag │
-  ├─────────────────────┤
-  │ emoji text          │
-  ├─────────────────────┤
-  │ code2 character     │
-  ├─────────────────────┤
-  │ unicode? text       │
-  └─────────────────────┘
   ┌─────────────────────────────┐
   │ public.country              │
   ├─────────────────────────────┤
+  │ code character              │
+  ├─────────────────────────────┤
+  │ name text                   │
+  ├─────────────────────────────┤
   │ continent USER-DEFINED      │
-  ├─────────────────────────────┤
-  │ capital -> "public.city.id" │
-  ├─────────────────────────────┤
-  │ gnp? numeric                │
-  ├─────────────────────────────┤
-  │ population integer          │
   ├─────────────────────────────┤
   │ region text                 │
   ├─────────────────────────────┤
-  │ code character              │
+  │ surface_area real           │
   ├─────────────────────────────┤
   │ indep_year? smallint        │
   ├─────────────────────────────┤
+  │ population integer          │
+  ├─────────────────────────────┤
   │ life_expectancy? real       │
   ├─────────────────────────────┤
-  │ code2 character             │
+  │ gnp? numeric                │
   ├─────────────────────────────┤
-  │ head_of_state? text         │
-  ├─────────────────────────────┤
-  │ surface_area real           │
+  │ gnp_old? numeric            │
   ├─────────────────────────────┤
   │ local_name text             │
   ├─────────────────────────────┤
   │ government_form text        │
   ├─────────────────────────────┤
-  │ gnp_old? numeric            │
+  │ head_of_state? text         │
   ├─────────────────────────────┤
-  │ name text                   │
+  │ capital -> "public.city.id" │
+  ├─────────────────────────────┤
+  │ code2 character             │
   └─────────────────────────────┘
+  ┌─────────────────────┐
+  │ public.country_flag │
+  ├─────────────────────┤
+  │ code2 character     │
+  ├─────────────────────┤
+  │ emoji text          │
+  ├─────────────────────┤
+  │ unicode? text       │
+  └─────────────────────┘
   ┌───────────────────────────────────────┐
   │ public.country_language               │
   ├───────────────────────────────────────┤
-  │ language text                         │
-  ├───────────────────────────────────────┤
   │ country_code -> "public.country.code" │
   ├───────────────────────────────────────┤
-  │ percentage real                       │
+  │ language text                         │
   ├───────────────────────────────────────┤
   │ is_official boolean                   │
+  ├───────────────────────────────────────┤
+  │ percentage real                       │
   └───────────────────────────────────────┘
 ',
   outputError: "",
@@ -343,9 +343,9 @@ snapshot[`sqlr CLI 13`] = `
 {
   code: 0,
   output: 'Database schema:
-public.country_flag [ emoji text, code2 character, unicode? text ]
-public.country [ continent USER-DEFINED, capital -> "public.city.id", gnp? numeric, population integer, region text, code character, indep_year? smallint, life_expectancy? real, code2 character, head_of_state? text, surface_area real, local_name text, government_form text, gnp_old? numeric, name text ]
-public.country_language [ language text, country_code -> "public.country.code", percentage real, is_official boolean ]
+public.country [ code character, name text, continent USER-DEFINED, region text, surface_area real, indep_year? smallint, population integer, life_expectancy? real, gnp? numeric, gnp_old? numeric, local_name text, government_form text, head_of_state? text, capital -> "public.city.id", code2 character ]
+public.country_flag [ code2 character, emoji text, unicode? text ]
+public.country_language [ country_code -> "public.country.code", language text, is_official boolean, percentage real ]
 ',
   outputError: "",
   sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country" --compact',

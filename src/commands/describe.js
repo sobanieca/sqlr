@@ -39,7 +39,11 @@ const describe = async (
       targetConnectionString,
     );
 
-    if (tables) tables?.sort((a, b) => a.schema.localeCompare(b.schema));
+    if (tables) {
+      tables?.sort((a, b) =>
+        a.schema.localeCompare(b.schema) || a.name.localeCompare(b.name)
+      );
+    }
     if (filter) {
       tables = tables.filter((table) =>
         `${table.schema}.${table.name}`.includes(filter)
