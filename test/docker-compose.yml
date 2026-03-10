@@ -23,7 +23,11 @@ services:
     volumes:
       - ./init-mysql:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost && mysql -u world -pworld123 world-db -e 'SELECT 1 FROM country LIMIT 1'",
+        ]
       interval: 2s
       timeout: 5s
       retries: 15
@@ -64,7 +68,11 @@ services:
     volumes:
       - ./init-clickhouse:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1'"]
+      test:
+        [
+          "CMD-SHELL",
+          "clickhouse-client --query 'SELECT 1 FROM world.country LIMIT 1'",
+        ]
       interval: 2s
       timeout: 5s
       retries: 15
