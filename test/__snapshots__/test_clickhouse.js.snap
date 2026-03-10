@@ -238,3 +238,50 @@ Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALI
   sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "INVALID SQL QUERY"',
 }
 `;
+
+snapshot[`sqlr ClickHouse 11`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n test-clickhouse -t clickhouse -s "http://world:world123@localhost:8123?database=world"',
+}
+`;
+
+snapshot[`sqlr ClickHouse 12`] = `
+{
+  code: 0,
+  output: "  ┌─────────────────┬────────────┐
+  │ Name            │ Type       │
+  ├─────────────────┼────────────┤
+  │ test-clickhouse │ clickhouse │
+  ├─────────────────┼────────────┤
+  │ testdb-enc      │ postgresql │
+  └─────────────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr ClickHouse 13`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-clickhouse -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr ClickHouse 14`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm-connection -n test-clickhouse",
+}
+`;

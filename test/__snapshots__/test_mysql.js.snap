@@ -234,3 +234,50 @@ snapshot[`sqlr MySQL 10`] = `
   sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "INVALID SQL QUERY"',
 }
 `;
+
+snapshot[`sqlr MySQL 11`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
+}
+`;
+
+snapshot[`sqlr MySQL 12`] = `
+{
+  code: 0,
+  output: "  ┌────────────┬────────────┐
+  │ Name       │ Type       │
+  ├────────────┼────────────┤
+  │ test-mysql │ mysql      │
+  ├────────────┼────────────┤
+  │ testdb-enc │ postgresql │
+  └────────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr MySQL 13`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[ { test: "1" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-mysql -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MySQL 14`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm-connection -n test-mysql",
+}
+`;

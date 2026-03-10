@@ -234,3 +234,50 @@ snapshot[`sqlr MSSQL 10`] = `
   sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "INVALID SQL QUERY"',
 }
 `;
+
+snapshot[`sqlr MSSQL 11`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true"',
+}
+`;
+
+snapshot[`sqlr MSSQL 12`] = `
+{
+  code: 0,
+  output: "  ┌────────────┬────────────┐
+  │ Name       │ Type       │
+  ├────────────┼────────────┤
+  │ test-mssql │ mssql      │
+  ├────────────┼────────────┤
+  │ testdb-enc │ postgresql │
+  └────────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr MSSQL 13`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-mssql -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MSSQL 14`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm-connection -n test-mssql",
+}
+`;

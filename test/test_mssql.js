@@ -51,6 +51,18 @@ Deno.test("sqlr MSSQL", async (t) => {
     await test(
       `sqlr query -t mssql -s "${CS}" -q "INVALID SQL QUERY"`,
     );
+
+    await test(
+      `sqlr add-connection -n test-mssql -t mssql -s "${CS}"`,
+    );
+
+    await test("sqlr get-connections");
+
+    await test(
+      `sqlr query -n test-mssql -q "SELECT 1 as test"`,
+    );
+
+    await test("sqlr rm-connection -n test-mssql");
   } finally {
     await stopMssql();
   }

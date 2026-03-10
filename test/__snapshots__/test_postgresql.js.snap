@@ -362,3 +362,50 @@ snapshot[`sqlr CLI 14`] = `
   sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "INVALID SQL QUERY"',
 }
 `;
+
+snapshot[`sqlr CLI 15`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
+}
+`;
+
+snapshot[`sqlr CLI 16`] = `
+{
+  code: 0,
+  output: "  ┌────────────┬────────────┐
+  │ Name       │ Type       │
+  ├────────────┼────────────┤
+  │ test-pg    │ postgresql │
+  ├────────────┼────────────┤
+  │ testdb-enc │ postgresql │
+  └────────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr CLI 17`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-pg -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr CLI 18`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm-connection -n test-pg",
+}
+`;
