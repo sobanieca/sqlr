@@ -375,13 +375,11 @@ snapshot[`sqlr CLI 15`] = `
 snapshot[`sqlr CLI 16`] = `
 {
   code: 0,
-  output: "  ┌────────────┬────────────┐
-  │ Name       │ Type       │
-  ├────────────┼────────────┤
-  │ test-pg    │ postgresql │
-  ├────────────┼────────────┤
-  │ testdb-enc │ postgresql │
-  └────────────┴────────────┘
+  output: "  ┌─────────┬────────────┐
+  │ Name    │ Type       │
+  ├─────────┼────────────┤
+  │ test-pg │ postgresql │
+  └─────────┴────────────┘
 ",
   outputError: "",
   sqlrCommand: "sqlr get-connections",

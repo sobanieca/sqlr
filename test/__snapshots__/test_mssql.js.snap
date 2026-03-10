@@ -247,13 +247,11 @@ snapshot[`sqlr MSSQL 11`] = `
 snapshot[`sqlr MSSQL 12`] = `
 {
   code: 0,
-  output: "  ┌────────────┬────────────┐
-  │ Name       │ Type       │
-  ├────────────┼────────────┤
-  │ test-mssql │ mssql      │
-  ├────────────┼────────────┤
-  │ testdb-enc │ postgresql │
-  └────────────┴────────────┘
+  output: "  ┌────────────┬───────┐
+  │ Name       │ Type  │
+  ├────────────┼───────┤
+  │ test-mssql │ mssql │
+  └────────────┴───────┘
 ",
   outputError: "",
   sqlrCommand: "sqlr get-connections",
