@@ -125,6 +125,11 @@ Additional url parameters:
               )?.relation,
           })),
       }));
+    } catch (err) {
+      if (err.name === "RequestError" || err.name === "MSSQLError") {
+        throw new DatabaseError(`MSSQLError: ${err.message}`);
+      }
+      throw err;
     } finally {
       await pool.close();
     }

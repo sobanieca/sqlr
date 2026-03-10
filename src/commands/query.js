@@ -127,7 +127,6 @@ export default new Command()
   .option("--compact", "Display results in compact form", {
     conflicts: ["table"],
   })
-  .description("Run provided SQL query against selected database")
   .description("Run query against specified database")
   .action(
     async (

@@ -60,12 +60,13 @@ More details: https://clickhouse.com/docs/en/interfaces/http
           FROM
             system.tables
           WHERE
-            database = '${database}'
+            database = {database: String}
             AND is_temporary = 0
             AND name NOT LIKE '.%'
           ORDER BY
             database, name`,
         format: "JSONEachRow",
+        query_params: { database },
       });
 
       const tables = await tablesResult.json();
@@ -81,10 +82,11 @@ More details: https://clickhouse.com/docs/en/interfaces/http
           FROM
             system.columns
           WHERE
-            database = '${database}'
+            database = {database: String}
           ORDER BY
             database, table, position`,
         format: "JSONEachRow",
+        query_params: { database },
       });
 
       const columns = await columnsResult.json();
@@ -111,6 +113,10 @@ More details: https://clickhouse.com/docs/en/interfaces/http
             };
           }),
       }));
+    } catch (err) {
+      throw new DatabaseError(
+        `ClickHouseError: ${err.message || err.toString()}`,
+      );
     } finally {
       await client.close();
     }
@@ -145,9 +151,11 @@ More details: https://clickhouse.com/docs/en/interfaces/http
         rows: [],
       };
     } catch (err) {
-      throw new DatabaseError(
-        `ClickHouseError: ${err.message || err.toString()}`,
-      );
+      const msg = err.message || err.toString();
+      const truncated = msg.includes("Expected one of:")
+        ? msg.slice(0, msg.indexOf("Expected one of:")).trim()
+        : msg;
+      throw new DatabaseError(`ClickHouseError: ${truncated}`);
     } finally {
       await client.close();
     }
