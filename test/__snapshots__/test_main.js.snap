@@ -1,0 +1,57 @@
+export const snapshot = {};
+
+snapshot[`sqlr main 1`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"',
+}
+`;
+
+snapshot[`sqlr main 2`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n conn-two -t mysql -s "mysql://u:p@localhost:3306/db2"',
+}
+`;
+
+snapshot[`sqlr main 3`] = `
+{
+  code: 0,
+  output: "  ┌──────────┬────────────┐
+  │ Name     │ Type       │
+  ├──────────┼────────────┤
+  │ conn-one │ postgresql │
+  ├──────────┼────────────┤
+  │ conn-two │ mysql      │
+  └──────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr main 4`] = `
+{
+  code: 0,
+  output: "All connections removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr clear-connections",
+}
+`;
+
+snapshot[`sqlr main 5`] = `
+{
+  code: 0,
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;

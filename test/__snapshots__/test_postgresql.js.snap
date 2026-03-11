@@ -25,6 +25,7 @@ Commands:
   get-connection-types                - Get available connection types to be used with '--type' parameter in
                                         'add-connection' command                                            
   get-connections                     - List all defined connections                                        
+  clear-connections                   - Remove all connections                                              
   describe                            - Describe all tables and columns available in database               
   query                 [queryArg]    - Run query against specified database                                
   update                              - Update sqlr to the latest version                                   

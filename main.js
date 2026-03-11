@@ -8,6 +8,7 @@ import getConnection from "./src/commands/get-connection.js";
 import getConnectionTypes from "./src/commands/get-connection-types.js";
 import query from "./src/commands/query.js";
 import update from "./src/commands/update.js";
+import clearConnections from "./src/commands/clear-connections.js";
 import helpText from "./src/commands/help.js";
 import { version } from "./src/version.js";
 import logger from "./src/logger.js";
@@ -30,6 +31,7 @@ try {
     .command("get-connection", getConnection)
     .command("get-connection-types", getConnectionTypes)
     .command("get-connections", connections)
+    .command("clear-connections", clearConnections)
     .command("describe", describe)
     .command("query", query)
     .command("update", update)

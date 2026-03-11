@@ -52,6 +52,29 @@ connection name (e.g. `sqlr query -n mydb -q "SELECT ..."`), and never has
 access to the actual connection string. Connection strings stay on your machine
 and are never exposed in the agent's context.
 
+## SQL file collections
+
+You can maintain a collection of `.sql` files and execute them with sqlr whenever
+needed. This is useful for queries you run repeatedly — health checks, reports,
+data fixes, etc.
+
+```
+queries/
+  health-check.sql
+  daily-report.sql
+  cleanup-stale-sessions.sql
+```
+
+Run any file from the collection using the `-i` flag:
+
+```
+sqlr query -n mydb -i queries/health-check.sql
+sqlr query -n mydb -i queries/daily-report.sql
+```
+
+This way your queries are version-controlled, reusable, and don't need to be
+typed out or remembered each time.
+
 ## Hints
 
 If you want to disable colors (at least for main log messages), you can use:
