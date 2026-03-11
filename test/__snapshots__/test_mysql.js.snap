@@ -238,7 +238,8 @@ snapshot[`sqlr MySQL 10`] = `
 snapshot[`sqlr MySQL 11`] = `
 {
   code: 0,
-  output: "",
+  output: "Connection has been added
+",
   outputError: "",
   sqlrCommand: 'sqlr add-connection -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
 }

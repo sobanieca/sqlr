@@ -238,7 +238,8 @@ snapshot[`sqlr MSSQL 10`] = `
 snapshot[`sqlr MSSQL 11`] = `
 {
   code: 0,
-  output: "",
+  output: "Connection has been added
+",
   outputError: "",
   sqlrCommand: 'sqlr add-connection -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true"',
 }

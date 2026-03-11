@@ -74,6 +74,7 @@ const addConnection = async (name, type, connectionString) => {
   }
 
   localStorage.setItem(connection.name, JSON.stringify(connection));
+  logger.info("Connection has been added");
 };
 
 export default new Command()

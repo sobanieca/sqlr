@@ -367,7 +367,8 @@ snapshot[`sqlr CLI 14`] = `
 snapshot[`sqlr CLI 15`] = `
 {
   code: 0,
-  output: "",
+  output: "Connection has been added
+",
   outputError: "",
   sqlrCommand: 'sqlr add-connection -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
 }

@@ -242,7 +242,8 @@ Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALI
 snapshot[`sqlr ClickHouse 11`] = `
 {
   code: 0,
-  output: "",
+  output: "Connection has been added
+",
   outputError: "",
   sqlrCommand: 'sqlr add-connection -n test-clickhouse -t clickhouse -s "http://world:world123@localhost:8123?database=world"',
 }
