@@ -54,9 +54,9 @@ and are never exposed in the agent's context.
 
 ## SQL file collections
 
-You can maintain a collection of `.sql` files and execute them with sqlr whenever
-needed. This is useful for queries you run repeatedly — health checks, reports,
-data fixes, etc.
+You can maintain a collection of `.sql` files and execute them with sqlr
+whenever needed. This is useful for queries you run repeatedly — health checks,
+reports, data fixes, etc.
 
 ```
 queries/
