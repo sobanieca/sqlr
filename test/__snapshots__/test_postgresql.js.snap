@@ -24,10 +24,11 @@ Commands:
   get-connection        [connection]  - Get details of selected connection                                  
   get-connection-types                - Get available connection types to be used with '--type' parameter in
                                         'add-connection' command                                            
-  connections                         - List all defined connections                                        
+  get-connections                     - List all defined connections                                        
   describe                            - Describe all tables and columns available in database               
   query                 [queryArg]    - Run query against specified database                                
   update                              - Update sqlr to the latest version                                   
+  help                                - Display detailed help text with usage instructions                  
 
 ",
   outputError: "",
@@ -48,6 +49,20 @@ snapshot[`sqlr CLI 2`] = `
   │            │ 'options' - additional values for connection                                     │
   │            │ (options=--cluster=your_cluster_name)                                            │
   │            │ More details: https://deno-postgres.com/#/?id=url-parameters                     │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ mysql      │ mysql://user:password@host:port/database_name                                    │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'ssl' - JSON object with SSL options                                             │
+  │            │ More details: https://github.com/sidorares/node-mysql2#readme                    │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ mssql      │ mssql://user:password@host:port/database_name                                    │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'encrypt' - true | false (default: true)                                         │
+  │            │ 'trustServerCertificate' - true | false (default: false)                         │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ clickhouse │ http://user:password@host:port?database=database_name                            │
+  │            │ Default port: 8123 (HTTP interface)                                              │
+  │            │ More details: https://clickhouse.com/docs/en/interfaces/http                     │
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 ",
   outputError: "",
@@ -68,16 +83,16 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                        
-  --debug                                       - Enable debug logs                                                                      
-  -q, --query              [query]              - SQL query to be executed                       (Default: "")                           
-  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                
-  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                          
-  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)
-  -t, --type               [type]               - Type of the connection                         (Values: "postgresql")                  
-  -s, --connection-string  [connection-string]  - Connection string                                                                      
-  --table                                       - Display results as table                       (Conflicts: --compact)                  
-  --compact                                     - Display results in compact form                (Conflicts: --table)                    
+  -h, --help                                    - Show this help.                                                                                      
+  --debug                                       - Enable debug logs                                                                                    
+  -q, --query              [query]              - SQL query to be executed                       (Default: "")                                         
+  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                              
+  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                                        
+  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)              
+  -t, --type               [type]               - Type of the connection                         (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string  [connection-string]  - Connection string                                                                                    
+  --table                                       - Display results as table                       (Conflicts: --compact)                                
+  --compact                                     - Display results in compact form                (Conflicts: --table)                                  
 
 ',
   outputError: "",
@@ -98,14 +113,14 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                              
-  --debug                                       - Enable debug logs                                                            
-  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)
-  -t, --type               [type]               - Type of the connection               (Values: "postgresql")                  
-  -s, --connection-string  [connection-string]  - Connection string                                                            
-  -f, --filter             [filter]             - Filter results by schema/table name                                          
-  --table                                       - Display results in table                                                     
-  --compact                                     - Display results in compact form                                              
+  -h, --help                                    - Show this help.                                                                            
+  --debug                                       - Enable debug logs                                                                          
+  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)              
+  -t, --type               [type]               - Type of the connection               (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string  [connection-string]  - Connection string                                                                          
+  -f, --filter             [filter]             - Filter results by schema/table name                                                        
+  --table                                       - Display results in table                                                                   
+  --compact                                     - Display results in compact form                                                            
 
 ',
   outputError: "",
@@ -207,52 +222,52 @@ snapshot[`sqlr CLI 11`] = `
 [
   {
     schema: "public",
-    name: "country_flag",
-    columns: [
-      { name: "emoji", type: "text", nullable: false },
-      { name: "code2", type: "character", nullable: false },
-      { name: "unicode", type: "text", nullable: true }
-    ]
-  },
-  {
-    schema: "public",
     name: "country",
     columns: [
+      { name: "code", type: "character", nullable: false },
+      { name: "name", type: "text", nullable: false },
       { name: "continent", type: "USER-DEFINED", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "real", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "integer", nullable: false },
+      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "gnp", type: "numeric", nullable: true },
+      { name: "gnp_old", type: "numeric", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
       {
         name: "capital",
         type: "integer",
         nullable: true,
         relation: "public.city.id"
       },
-      { name: "gnp", type: "numeric", nullable: true },
-      { name: "population", type: "integer", nullable: false },
-      { name: "region", type: "text", nullable: false },
-      { name: "code", type: "character", nullable: false },
-      { name: "indep_year", type: "smallint", nullable: true },
-      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "code2", type: "character", nullable: false }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_flag",
+    columns: [
       { name: "code2", type: "character", nullable: false },
-      { name: "head_of_state", type: "text", nullable: true },
-      { name: "surface_area", type: "real", nullable: false },
-      { name: "local_name", type: "text", nullable: false },
-      { name: "government_form", type: "text", nullable: false },
-      { name: "gnp_old", type: "numeric", nullable: true },
-      { name: "name", type: "text", nullable: false }
+      { name: "emoji", type: "text", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
     ]
   },
   {
     schema: "public",
     name: "country_language",
     columns: [
-      { name: "language", type: "text", nullable: false },
       {
         name: "country_code",
         type: "character",
         nullable: false,
         relation: "public.country.code"
       },
-      { name: "percentage", type: "real", nullable: false },
-      { name: "is_official", type: "boolean", nullable: false }
+      { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "boolean", nullable: false },
+      { name: "percentage", type: "real", nullable: false }
     ]
   }
 ]
@@ -266,58 +281,58 @@ snapshot[`sqlr CLI 12`] = `
 {
   code: 0,
   output: 'Database schema:
-  ┌─────────────────────┐
-  │ public.country_flag │
-  ├─────────────────────┤
-  │ emoji text          │
-  ├─────────────────────┤
-  │ code2 character     │
-  ├─────────────────────┤
-  │ unicode? text       │
-  └─────────────────────┘
   ┌─────────────────────────────┐
   │ public.country              │
   ├─────────────────────────────┤
+  │ code character              │
+  ├─────────────────────────────┤
+  │ name text                   │
+  ├─────────────────────────────┤
   │ continent USER-DEFINED      │
-  ├─────────────────────────────┤
-  │ capital -> "public.city.id" │
-  ├─────────────────────────────┤
-  │ gnp? numeric                │
-  ├─────────────────────────────┤
-  │ population integer          │
   ├─────────────────────────────┤
   │ region text                 │
   ├─────────────────────────────┤
-  │ code character              │
+  │ surface_area real           │
   ├─────────────────────────────┤
   │ indep_year? smallint        │
   ├─────────────────────────────┤
+  │ population integer          │
+  ├─────────────────────────────┤
   │ life_expectancy? real       │
   ├─────────────────────────────┤
-  │ code2 character             │
+  │ gnp? numeric                │
   ├─────────────────────────────┤
-  │ head_of_state? text         │
-  ├─────────────────────────────┤
-  │ surface_area real           │
+  │ gnp_old? numeric            │
   ├─────────────────────────────┤
   │ local_name text             │
   ├─────────────────────────────┤
   │ government_form text        │
   ├─────────────────────────────┤
-  │ gnp_old? numeric            │
+  │ head_of_state? text         │
   ├─────────────────────────────┤
-  │ name text                   │
+  │ capital -> "public.city.id" │
+  ├─────────────────────────────┤
+  │ code2 character             │
   └─────────────────────────────┘
+  ┌─────────────────────┐
+  │ public.country_flag │
+  ├─────────────────────┤
+  │ code2 character     │
+  ├─────────────────────┤
+  │ emoji text          │
+  ├─────────────────────┤
+  │ unicode? text       │
+  └─────────────────────┘
   ┌───────────────────────────────────────┐
   │ public.country_language               │
   ├───────────────────────────────────────┤
-  │ language text                         │
-  ├───────────────────────────────────────┤
   │ country_code -> "public.country.code" │
   ├───────────────────────────────────────┤
-  │ percentage real                       │
+  │ language text                         │
   ├───────────────────────────────────────┤
   │ is_official boolean                   │
+  ├───────────────────────────────────────┤
+  │ percentage real                       │
   └───────────────────────────────────────┘
 ',
   outputError: "",
@@ -329,9 +344,9 @@ snapshot[`sqlr CLI 13`] = `
 {
   code: 0,
   output: 'Database schema:
-public.country_flag [ emoji text, code2 character, unicode? text ]
-public.country [ continent USER-DEFINED, capital -> "public.city.id", gnp? numeric, population integer, region text, code character, indep_year? smallint, life_expectancy? real, code2 character, head_of_state? text, surface_area real, local_name text, government_form text, gnp_old? numeric, name text ]
-public.country_language [ language text, country_code -> "public.country.code", percentage real, is_official boolean ]
+public.country [ code character, name text, continent USER-DEFINED, region text, surface_area real, indep_year? smallint, population integer, life_expectancy? real, gnp? numeric, gnp_old? numeric, local_name text, government_form text, head_of_state? text, capital -> "public.city.id", code2 character ]
+public.country_flag [ code2 character, emoji text, unicode? text ]
+public.country_language [ country_code -> "public.country.code", language text, is_official boolean, percentage real ]
 ',
   outputError: "",
   sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country" --compact',
@@ -345,5 +360,50 @@ snapshot[`sqlr CLI 14`] = `
 ',
   outputError: "",
   sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "INVALID SQL QUERY"',
+}
+`;
+
+snapshot[`sqlr CLI 15`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
+}
+`;
+
+snapshot[`sqlr CLI 16`] = `
+{
+  code: 0,
+  output: "  ┌─────────┬────────────┐
+  │ Name    │ Type       │
+  ├─────────┼────────────┤
+  │ test-pg │ postgresql │
+  └─────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr CLI 17`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-pg -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr CLI 18`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm-connection -n test-pg",
 }
 `;

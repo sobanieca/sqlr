@@ -1,15 +1,9 @@
-import {
-  brightGreen,
-  Command,
-  EnumType,
-  gray,
-  PostgresError,
-  Table,
-} from "../deps.js";
+import { brightGreen, Command, EnumType, gray, Table } from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
 import { maxTableColumnWidth } from "../const.js";
+import { DatabaseError } from "../database-error.js";
 
 const runQuery = async (
   query,
@@ -101,8 +95,8 @@ const runQuery = async (
       logger.info(jsonResult);
     }
   } catch (err) {
-    if (err instanceof PostgresError) {
-      logger.error(err.toString());
+    if (err instanceof DatabaseError) {
+      logger.error(err.message);
     } else {
       logger.debug(err);
       logger.error(
@@ -133,7 +127,6 @@ export default new Command()
   .option("--compact", "Display results in compact form", {
     conflicts: ["table"],
   })
-  .description("Run provided SQL query against selected database")
   .description("Run query against specified database")
   .action(
     async (

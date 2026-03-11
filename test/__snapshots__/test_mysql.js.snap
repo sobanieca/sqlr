@@ -1,0 +1,281 @@
+export const snapshot = {};
+
+snapshot[`sqlr MySQL 1`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[ { test: "1" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MySQL 2`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+}
+`;
+
+snapshot[`sqlr MySQL 3`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+}
+`;
+
+snapshot[`sqlr MySQL 4`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+}
+`;
+
+snapshot[`sqlr MySQL 5`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[ { input_file_test: "1" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -i test-query.sql',
+}
+`;
+
+snapshot[`sqlr MySQL 6`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+Results saved to /tmp/sqlr-test-output-mysql.json
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-mysql.json',
+}
+`;
+
+snapshot[`sqlr MySQL 7`] = `
+{
+  code: 0,
+  output: 'Database schema:
+[
+  {
+    schema: "world-db",
+    name: "country",
+    columns: [
+      { name: "code", type: "char", nullable: false },
+      { name: "name", type: "text", nullable: false },
+      { name: "continent", type: "enum", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "float", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "int", nullable: false },
+      { name: "life_expectancy", type: "float", nullable: true },
+      { name: "gnp", type: "decimal", nullable: true },
+      { name: "gnp_old", type: "decimal", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
+      {
+        name: "capital",
+        type: "int",
+        nullable: true,
+        relation: "world-db.city.id"
+      },
+      { name: "code2", type: "char", nullable: false }
+    ]
+  },
+  {
+    schema: "world-db",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "char", nullable: false },
+      { name: "emoji", type: "text", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
+    ]
+  },
+  {
+    schema: "world-db",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "char",
+        nullable: false,
+        relation: "world-db.country.code"
+      },
+      { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "tinyint", nullable: false },
+      { name: "percentage", type: "float", nullable: false }
+    ]
+  }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country"',
+}
+`;
+
+snapshot[`sqlr MySQL 8`] = `
+{
+  code: 0,
+  output: 'Database schema:
+  ┌───────────────────────────────┐
+  │ world-db.country              │
+  ├───────────────────────────────┤
+  │ code char                     │
+  ├───────────────────────────────┤
+  │ name text                     │
+  ├───────────────────────────────┤
+  │ continent enum                │
+  ├───────────────────────────────┤
+  │ region text                   │
+  ├───────────────────────────────┤
+  │ surface_area float            │
+  ├───────────────────────────────┤
+  │ indep_year? smallint          │
+  ├───────────────────────────────┤
+  │ population int                │
+  ├───────────────────────────────┤
+  │ life_expectancy? float        │
+  ├───────────────────────────────┤
+  │ gnp? decimal                  │
+  ├───────────────────────────────┤
+  │ gnp_old? decimal              │
+  ├───────────────────────────────┤
+  │ local_name text               │
+  ├───────────────────────────────┤
+  │ government_form text          │
+  ├───────────────────────────────┤
+  │ head_of_state? text           │
+  ├───────────────────────────────┤
+  │ capital -> "world-db.city.id" │
+  ├───────────────────────────────┤
+  │ code2 char                    │
+  └───────────────────────────────┘
+  ┌───────────────────────┐
+  │ world-db.country_flag │
+  ├───────────────────────┤
+  │ code2 char            │
+  ├───────────────────────┤
+  │ emoji text            │
+  ├───────────────────────┤
+  │ unicode? text         │
+  └───────────────────────┘
+  ┌─────────────────────────────────────────┐
+  │ world-db.country_language               │
+  ├─────────────────────────────────────────┤
+  │ country_code -> "world-db.country.code" │
+  ├─────────────────────────────────────────┤
+  │ language text                           │
+  ├─────────────────────────────────────────┤
+  │ is_official tinyint                     │
+  ├─────────────────────────────────────────┤
+  │ percentage float                        │
+  └─────────────────────────────────────────┘
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --table',
+}
+`;
+
+snapshot[`sqlr MySQL 9`] = `
+{
+  code: 0,
+  output: 'Database schema:
+world-db.country [ code char, name text, continent enum, region text, surface_area float, indep_year? smallint, population int, life_expectancy? float, gnp? decimal, gnp_old? decimal, local_name text, government_form text, head_of_state? text, capital -> "world-db.city.id", code2 char ]
+world-db.country_flag [ code2 char, emoji text, unicode? text ]
+world-db.country_language [ country_code -> "world-db.country.code", language text, is_official tinyint, percentage float ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --compact',
+}
+`;
+
+snapshot[`sqlr MySQL 10`] = `
+{
+  code: 0,
+  output: "MySQL Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INVALID SQL QUERY' at line 1
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "INVALID SQL QUERY"',
+}
+`;
+
+snapshot[`sqlr MySQL 11`] = `
+{
+  code: 0,
+  output: "",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
+}
+`;
+
+snapshot[`sqlr MySQL 12`] = `
+{
+  code: 0,
+  output: "  ┌────────────┬───────┐
+  │ Name       │ Type  │
+  ├────────────┼───────┤
+  │ test-mysql │ mysql │
+  └────────────┴───────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connections",
+}
+`;
+
+snapshot[`sqlr MySQL 13`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[ { test: "1" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-mysql -q "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MySQL 14`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm-connection -n test-mysql",
+}
+`;

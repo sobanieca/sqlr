@@ -3,6 +3,15 @@ import { assertSnapshot } from "jsr:@std/testing@1.0.12/snapshot";
 const CONNECTION_STRING =
   "postgres://world:world123@localhost:5432/world-db?sslmode=disable";
 
+const MYSQL_CONNECTION_STRING =
+  "mysql://world:world123@localhost:3306/world-db";
+
+const MSSQL_CONNECTION_STRING =
+  "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true";
+
+const CLICKHOUSE_CONNECTION_STRING =
+  "http://world:world123@localhost:8123?database=world";
+
 export const run = async (cmd, cwd) => {
   const command = new Deno.Command("sh", {
     args: ["-c", cmd],
@@ -32,6 +41,22 @@ export const run = async (cmd, cwd) => {
   output = removeVaryingOutput(removeAnsi(output));
   outputError = removeAnsi(outputError);
   outputError = outputError.replace(/Download https?:\/\/[^\n]*\n?/g, "");
+  outputError = outputError.replace(
+    /\[\d{4}-\d{2}-\d{2}T[\d:.]+Z\]/g,
+    "[*]",
+  );
+  outputError = outputError.replace(
+    /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g,
+    "*",
+  );
+  outputError = outputError.replace(
+    /^ +at .+$/gm,
+    "    at *",
+  );
+  outputError = outputError.replace(
+    /( {4}at \*\n)+/g,
+    "    at *\n",
+  );
 
   return {
     code,
@@ -57,13 +82,18 @@ export const createTestRunner = (t) => {
   };
 };
 
-export const startPostgres = async () => {
-  const testDir = Deno.cwd().endsWith("/test")
-    ? Deno.cwd()
-    : `${Deno.cwd()}/test`;
+const getTestDir = () =>
+  Deno.cwd().endsWith("/test") ? Deno.cwd() : `${Deno.cwd()}/test`;
+
+export const startService = async (service) => {
+  const testDir = getTestDir();
+
+  const args = service
+    ? ["compose", "up", "-d", "--wait", service]
+    : ["compose", "up", "-d", "--wait"];
 
   const up = new Deno.Command("docker", {
-    args: ["compose", "up", "-d", "--wait"],
+    args: args,
     cwd: testDir,
     stdout: "piped",
     stderr: "piped",
@@ -72,17 +102,17 @@ export const startPostgres = async () => {
   const { code, stderr } = await up.output();
   if (code !== 0) {
     const err = new TextDecoder().decode(stderr);
-    throw new Error(`Failed to start postgres: ${err}`);
+    throw new Error(`Failed to start ${service || "services"}: ${err}`);
   }
 };
 
-export const stopPostgres = async () => {
-  const testDir = Deno.cwd().endsWith("/test")
-    ? Deno.cwd()
-    : `${Deno.cwd()}/test`;
+export const stopService = async (service) => {
+  const testDir = getTestDir();
+
+  const args = service ? ["compose", "stop", service] : ["compose", "down"];
 
   const down = new Deno.Command("docker", {
-    args: ["compose", "down"],
+    args: args,
     cwd: testDir,
     stdout: "piped",
     stderr: "piped",
@@ -91,4 +121,37 @@ export const stopPostgres = async () => {
   await down.output();
 };
 
-export { CONNECTION_STRING };
+export const startPostgres = () => startService("postgres");
+export const stopPostgres = () => stopService("postgres");
+
+export const startMysql = () => startService("mysql");
+export const stopMysql = () => stopService("mysql");
+
+export const startMssql = async () => {
+  await startService("mssql");
+
+  const testDir = getTestDir();
+  const init = new Deno.Command("docker", {
+    args: ["compose", "up", "mssql-init"],
+    cwd: testDir,
+    stdout: "piped",
+    stderr: "piped",
+  });
+
+  const { code, stderr } = await init.output();
+  if (code !== 0) {
+    const err = new TextDecoder().decode(stderr);
+    throw new Error(`Failed to init mssql: ${err}`);
+  }
+};
+export const stopMssql = () => stopService("mssql");
+
+export const startClickhouse = () => startService("clickhouse");
+export const stopClickhouse = () => stopService("clickhouse");
+
+export {
+  CLICKHOUSE_CONNECTION_STRING,
+  CONNECTION_STRING,
+  MSSQL_CONNECTION_STRING,
+  MYSQL_CONNECTION_STRING,
+};
