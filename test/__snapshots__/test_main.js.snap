@@ -94,3 +94,111 @@ snapshot[`sqlr main 6`] = `
   sqlrCommand: "sqlr get-connections",
 }
 `;
+
+snapshot[`sqlr connection string encoding 1`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n enc-mssql -t mssql -s "mssql://sa:World123!%3B@localhost:1433/db?encrypt=true&trustServerCertificate=false"',
+}
+`;
+
+snapshot[`sqlr connection string encoding 2`] = `
+{
+  code: 0,
+  output: "  ┌───────────┬───────┬──────────────────────────────────────────────────────────────────────────────────┐
+  │ Name      │ Type  │ Connection string                                                                │
+  ├───────────┼───────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ enc-mssql │ mssql │ mssql://sa:World123!;@localhost:1433/db?encrypt=true&trustServerCertificate=fals │
+  │           │       │ e                                                                                │
+  └───────────┴───────┴──────────────────────────────────────────────────────────────────────────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connection enc-mssql",
+}
+`;
+
+snapshot[`sqlr connection string encoding 3`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n enc-pg -t postgresql -s "postgres://localhost:5432/db?user=admin&password=p%40ss%3Aw%23rd&application_name=sqlr&sslmode=prefer"',
+}
+`;
+
+snapshot[`sqlr connection string encoding 4`] = `
+{
+  code: 0,
+  output: "  ┌────────┬────────────┬──────────────────────────────────────────────────────────────────────────────────┐
+  │ Name   │ Type       │ Connection string                                                                │
+  ├────────┼────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ enc-pg │ postgresql │ postgres://localhost:5432/db?user=admin&password=p@ss:w#rd&application_name=sqlr │
+  │        │            │ &sslmode=prefer                                                                  │
+  └────────┴────────────┴──────────────────────────────────────────────────────────────────────────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connection enc-pg",
+}
+`;
+
+snapshot[`sqlr connection string encoding 5`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: \`sqlr add-connection -n enc-mysql -t mysql -s 'mysql://u:p%40ss@localhost:3306/db?ssl={"rejectUnauthorized":false}'\`,
+}
+`;
+
+snapshot[`sqlr connection string encoding 6`] = `
+{
+  code: 0,
+  output: '  ┌───────────┬───────┬───────────────────────────────────────────────────────────────────┐
+  │ Name      │ Type  │ Connection string                                                 │
+  ├───────────┼───────┼───────────────────────────────────────────────────────────────────┤
+  │ enc-mysql │ mysql │ mysql://u:p@ss@localhost:3306/db?ssl={"rejectUnauthorized":false} │
+  └───────────┴───────┴───────────────────────────────────────────────────────────────────┘
+',
+  outputError: "",
+  sqlrCommand: "sqlr get-connection enc-mysql",
+}
+`;
+
+snapshot[`sqlr connection string encoding 7`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n enc-ch -t clickhouse -s "https://user:p%40ss%3Bword@localhost:8443?database=mydb"',
+}
+`;
+
+snapshot[`sqlr connection string encoding 8`] = `
+{
+  code: 0,
+  output: "  ┌────────┬────────────┬─────────────────────────────────────────────────────┐
+  │ Name   │ Type       │ Connection string                                   │
+  ├────────┼────────────┼─────────────────────────────────────────────────────┤
+  │ enc-ch │ clickhouse │ https://user:p@ss;word@localhost:8443?database=mydb │
+  └────────┴────────────┴─────────────────────────────────────────────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connection enc-ch",
+}
+`;
+
+snapshot[`sqlr connection string encoding 9`] = `
+{
+  code: 0,
+  output: "All connections removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr clear-connections",
+}
+`;
