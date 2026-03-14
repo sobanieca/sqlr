@@ -3,10 +3,37 @@ export const snapshot = {};
 snapshot[`sqlr main 1`] = `
 {
   code: 0,
-  output: "Connection has been added
+  output: "
+Usage:   sqlr 
+Version: *
+
+Description:
+
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters
+
+Options:
+
+  -h, --help     - Show this help.                            
+  -V, --version  - Show the version number for this program.  
+  --debug        - Enable debug logs                          
+
+Commands:
+
+  add-connection                      - Add new connection. Run without parameters to use wizard.           
+  rm-connection         [connection]  - Remove selected connection                                          
+  get-connection        [connection]  - Get details of selected connection                                  
+  get-connection-types                - Get available connection types to be used with '--type' parameter in
+                                        'add-connection' command                                            
+  get-connections                     - List all defined connections                                        
+  clear-connections                   - Remove all connections                                              
+  describe                            - Describe all tables and columns available in database               
+  query                 [queryArg]    - Run query against specified database                                
+  update                              - Update sqlr to the latest version                                   
+  help                                - Display detailed help text with usage instructions                  
+
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"',
+  sqlrCommand: "sqlr",
 }
 `;
 
@@ -16,11 +43,21 @@ snapshot[`sqlr main 2`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n conn-two -t mysql -s "mysql://u:p@localhost:3306/db2"',
+  sqlrCommand: 'sqlr add-connection -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"',
 }
 `;
 
 snapshot[`sqlr main 3`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n conn-two -t mysql -s "mysql://u:p@localhost:3306/db2"',
+}
+`;
+
+snapshot[`sqlr main 4`] = `
 {
   code: 0,
   output: "  ┌──────────┬────────────┐
@@ -36,7 +73,7 @@ snapshot[`sqlr main 3`] = `
 }
 `;
 
-snapshot[`sqlr main 4`] = `
+snapshot[`sqlr main 5`] = `
 {
   code: 0,
   output: "All connections removed
@@ -46,7 +83,7 @@ snapshot[`sqlr main 4`] = `
 }
 `;
 
-snapshot[`sqlr main 5`] = `
+snapshot[`sqlr main 6`] = `
 {
   code: 0,
   output: "  ┌──────┬──────┐

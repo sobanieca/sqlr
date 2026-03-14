@@ -22,6 +22,7 @@
   "tasks": {
     "run": "deno run --allow-all main.js",
     "check": "deno fmt --check && deno lint && deno check main.js && deno check test/test_*.js && cd test && deno task test",
-    "start-db": "bash test/start-db.sh"
+    "start-db": "bash test/start-db.sh",
+    "stop-db": "docker compose -f test/docker-compose.yml down"
   }
 }
