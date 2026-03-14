@@ -12,7 +12,11 @@ const showConnection = async (connectionName) => {
   logger.info(
     new Table()
       .header(["Name", "Type", "Connection string"])
-      .body([[connection.name, connection.type, connection.connectionString]])
+      .body([[
+        connection.name,
+        connection.type,
+        decodeURIComponent(connection.connectionString),
+      ]])
       .maxColWidth(maxTableColumnWidth)
       .padding(1)
       .indent(2)

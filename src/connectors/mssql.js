@@ -1,4 +1,4 @@
-import { Input, Secret } from "../deps.js";
+import { Input, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 import mssql from "npm:mssql@11";
 
@@ -36,8 +36,22 @@ Additional url parameters:
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
+    const encrypt = await Select.prompt({
+      message: "Encrypt connection (default: true)",
+      options: [
+        { name: "true", value: "true" },
+        { name: "false", value: "false" },
+      ],
+    });
+    const trustServerCertificate = await Select.prompt({
+      message: "Trust server certificate (default: false)",
+      options: [
+        { name: "false", value: "false" },
+        { name: "true", value: "true" },
+      ],
+    });
 
-    return `mssql://${user}:${password}@${host}:${port}/${dbName}?encrypt=true&trustServerCertificate=false`;
+    return `mssql://${user}:${password}@${host}:${port}/${dbName}?encrypt=${encrypt}&trustServerCertificate=${trustServerCertificate}`;
   },
   getTables: async (connectionString) => {
     const config = parseConnectionString(connectionString);

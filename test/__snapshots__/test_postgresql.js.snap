@@ -40,7 +40,7 @@ Commands:
 snapshot[`sqlr CLI 2`] = `
 {
   code: 0,
-  output: "  ┌────────────┬──────────────────────────────────────────────────────────────────────────────────┐
+  output: \`  ┌────────────┬──────────────────────────────────────────────────────────────────────────────────┐
   │ Type       │ Connection string hint                                                           │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ postgresql │ postgres://host:port/database_name?user=user&password=password(urlencoded)&appli │
@@ -53,7 +53,7 @@ snapshot[`sqlr CLI 2`] = `
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mysql      │ mysql://user:password@host:port/database_name                                    │
   │            │ Additional url parameters:                                                       │
-  │            │ 'ssl' - JSON object with SSL options                                             │
+  │            │ 'ssl' - {"rejectUnauthorized":true|false}                                        │
   │            │ More details: https://github.com/sidorares/node-mysql2#readme                    │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mssql      │ mssql://user:password@host:port/database_name                                    │
@@ -61,11 +61,11 @@ snapshot[`sqlr CLI 2`] = `
   │            │ 'encrypt' - true | false (default: true)                                         │
   │            │ 'trustServerCertificate' - true | false (default: false)                         │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
-  │ clickhouse │ http://user:password@host:port?database=database_name                            │
-  │            │ Default port: 8123 (HTTP interface)                                              │
+  │ clickhouse │ http(s)://user:password@host:port?database=database_name                         │
+  │            │ Default port: 8123 (HTTP), 8443 (HTTPS)                                          │
   │            │ More details: https://clickhouse.com/docs/en/interfaces/http                     │
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
-",
+\`,
   outputError: "",
   sqlrCommand: "sqlr get-connection-types",
 }

@@ -1,4 +1,4 @@
-import { Input, Secret } from "../deps.js";
+import { Input, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 import mysql from "npm:mysql2@3/promise";
 
@@ -8,7 +8,7 @@ const mysqlConnector = {
     `
 mysql://user:password@host:port/database_name
 Additional url parameters:
-'ssl' - JSON object with SSL options
+'ssl' - {"rejectUnauthorized":true|false}
 More details: https://github.com/sidorares/node-mysql2#readme
   `.trim(),
   getConnectionString: async () => {
@@ -19,8 +19,22 @@ More details: https://github.com/sidorares/node-mysql2#readme
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
+    const ssl = await Select.prompt({
+      message: "SSL mode (default: disabled)",
+      options: [
+        { name: "disabled", value: "disabled" },
+        { name: "enabled (verify certificate)", value: "verify" },
+        { name: "enabled (trust any certificate)", value: "trust" },
+      ],
+    });
 
-    return `mysql://${user}:${password}@${host}:${port}/${dbName}`;
+    const sslParam = ssl === "verify"
+      ? '?ssl={"rejectUnauthorized":true}'
+      : ssl === "trust"
+      ? '?ssl={"rejectUnauthorized":false}'
+      : "";
+
+    return `mysql://${user}:${password}@${host}:${port}/${dbName}${sslParam}`;
   },
   getTables: async (connectionString) => {
     const connection = await mysql.createConnection(connectionString);

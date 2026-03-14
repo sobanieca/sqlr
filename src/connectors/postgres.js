@@ -1,4 +1,4 @@
-import { DbClient, Input, Secret } from "../deps.js";
+import { DbClient, Input, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 import { PostgresError } from "jsr:@db/postgres@0.19.5";
 
@@ -20,8 +20,16 @@ More details: https://deno-postgres.com/#/?id=url-parameters
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
+    const sslmode = await Select.prompt({
+      message: "SSL mode (default: prefer)",
+      options: [
+        { name: "prefer", value: "prefer" },
+        { name: "require", value: "require" },
+        { name: "disable", value: "disable" },
+      ],
+    });
 
-    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=prefer`;
+    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=${sslmode}`;
   },
   getTables: async (connectionString) => {
     const dbClient = new DbClient(connectionString);

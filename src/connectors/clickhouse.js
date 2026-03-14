@@ -1,4 +1,4 @@
-import { Input, Secret } from "../deps.js";
+import { Input, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 import { createClient } from "npm:@clickhouse/client@1";
 
@@ -17,7 +17,11 @@ const parseConnectionString = (connectionString) => {
     url.pathname.replace("/", "") || "default";
 
   const baseUrl = `${url.protocol}//${
-    url.username ? `${url.username}:${url.password}@` : ""
+    url.username
+      ? `${encodeURIComponent(url.username)}:${
+        encodeURIComponent(url.password)
+      }@`
+      : ""
   }${url.host}`;
 
   return { baseUrl, database };
@@ -27,8 +31,8 @@ const clickhouseConnector = {
   getDatabaseName: () => "ClickHouse",
   getConnectionStringHint: () =>
     `
-http://user:password@host:port?database=database_name
-Default port: 8123 (HTTP interface)
+http(s)://user:password@host:port?database=database_name
+Default port: 8123 (HTTP), 8443 (HTTPS)
 More details: https://clickhouse.com/docs/en/interfaces/http
   `.trim(),
   getConnectionString: async () => {
@@ -40,8 +44,15 @@ More details: https://clickhouse.com/docs/en/interfaces/http
       "default";
     const user = await Input.prompt("Username (default: default)") || "default";
     const password = encodeURIComponent(await Secret.prompt("Password"));
+    const protocol = await Select.prompt({
+      message: "Protocol (default: http)",
+      options: [
+        { name: "http", value: "http" },
+        { name: "https", value: "https" },
+      ],
+    });
 
-    return `http://${user}:${password}@${host}:${port}?database=${dbName}`;
+    return `${protocol}://${user}:${password}@${host}:${port}?database=${dbName}`;
   },
   getTables: async (connectionString) => {
     const { baseUrl, database } = parseConnectionString(connectionString);
