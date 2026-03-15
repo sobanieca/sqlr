@@ -49,3 +49,21 @@ Deno.test("sqlr connection string encoding", async (t) => {
 
   await test("sqlr clear-connections");
 });
+
+const ENCRYPTION_ENV = {
+  SQLR_ENCRYPTION_PASSWORD: "test-encryption-password123",
+};
+
+Deno.test("sqlr encrypted connection via env var", async (t) => {
+  const test = createTestRunner(t);
+
+  await test(
+    `sqlr add-connection -n encrypted-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"`,
+    undefined,
+    ENCRYPTION_ENV,
+  );
+
+  await test("sqlr get-connection encrypted-pg", undefined, ENCRYPTION_ENV);
+
+  await test("sqlr clear-connections");
+});

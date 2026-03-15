@@ -12,12 +12,13 @@ const MSSQL_CONNECTION_STRING =
 const CLICKHOUSE_CONNECTION_STRING =
   "http://world:world123@localhost:8123?database=world";
 
-export const run = async (cmd, cwd) => {
+export const run = async (cmd, cwd, env) => {
   const command = new Deno.Command("sh", {
     args: ["-c", cmd],
     stdout: "piped",
     stderr: "piped",
-    cwd: cwd,
+    cwd,
+    env,
   });
 
   const { code, stdout, stderr } = await command.output();
@@ -66,7 +67,7 @@ export const run = async (cmd, cwd) => {
 };
 
 export const createTestRunner = (t) => {
-  return async (sqlrCommand, cwd) => {
+  return async (sqlrCommand, cwd, env) => {
     const projectRoot = Deno.cwd().replace("/test", "");
     const mainPath = `${projectRoot}/main.js`;
     const absoluteCwd = cwd ? `${projectRoot}/${cwd}` : undefined;
@@ -75,6 +76,7 @@ export const createTestRunner = (t) => {
       const { code, output, outputError } = await run(
         sqlrCommand.replace("sqlr", `deno run -A ${mainPath}`),
         absoluteCwd,
+        env,
       );
 
       await assertSnapshot(t, { sqlrCommand, code, output, outputError });

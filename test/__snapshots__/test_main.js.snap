@@ -202,3 +202,37 @@ snapshot[`sqlr connection string encoding 9`] = `
   sqlrCommand: "sqlr clear-connections",
 }
 `;
+
+snapshot[`sqlr encrypted connection via env var 1`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add-connection -n encrypted-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"',
+}
+`;
+
+snapshot[`sqlr encrypted connection via env var 2`] = `
+{
+  code: 0,
+  output: "  ┌──────────────┬────────────┬───────────────────────────────────┐
+  │ Name         │ Type       │ Connection string                 │
+  ├──────────────┼────────────┼───────────────────────────────────┤
+  │ encrypted-pg │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └──────────────┴────────────┴───────────────────────────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr get-connection encrypted-pg",
+}
+`;
+
+snapshot[`sqlr encrypted connection via env var 3`] = `
+{
+  code: 0,
+  output: "All connections removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr clear-connections",
+}
+`;

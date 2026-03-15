@@ -55,3 +55,6 @@ derived from `Deno.hostname()` + `Deno.osRelease()`.
 ## IMPORTANT!
 
 - Don't add comments to the code. Use self-documenting code
+- When updating version update version.js and deno.json file. Update changelog
+  if it's present.
+- Use ES6 shorthand property syntax whenever possible when initiating objects

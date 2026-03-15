@@ -13,9 +13,9 @@ const getConnection = async (connectionName) => {
     }
 
     if (connection.isEncrypted) {
-      const password = await Secret.prompt(
-        "Provide password used to encrypt connection",
-      );
+      const envPassword = Deno.env.get("SQLR_ENCRYPTION_PASSWORD");
+      const password = envPassword ||
+        await Secret.prompt("Provide password used to encrypt connection");
       try {
         connection.connectionString = await guard.decrypt(
           connection.connectionString,

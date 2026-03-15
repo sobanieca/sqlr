@@ -97,6 +97,16 @@ AI agent instructions:
   - Use --compact or --table flags for more parseable output
   - Use -o flag to save large result sets to a JSON file
   - Use --debug global flag for troubleshooting connection issues
+  - For encrypted connections, set SQLR_ENCRYPTION_PASSWORD env var to avoid interactive prompts
+
+Environment variables:
+
+  SQLR_ENCRYPTION_PASSWORD  Password for encrypting/decrypting connections.
+                            When set during 'add-connection' with -s flag, the connection
+                            will be encrypted automatically using this password.
+                            When set during 'get-connection', 'describe', or 'query',
+                            encrypted connections will be decrypted without prompting.
+                            This enables non-interactive usage by AI agents and scripts.
 
 Global options:
 

@@ -52,14 +52,19 @@ const addConnection = async (name, type, connectionString) => {
   connection.connectionString = connectionString ||
     await getConnectionString(connection.type);
 
-  connection.isEncrypted = connectionString ? false : await Toggle.prompt(
-    "Do you want to encrypt connection? (Use for Production connections, each time when connection will be used you will need to specify password",
-  );
+  const envPassword = Deno.env.get("SQLR_ENCRYPTION_PASSWORD");
+
+  if (connectionString && envPassword) {
+    connection.isEncrypted = true;
+  } else {
+    connection.isEncrypted = connectionString ? false : await Toggle.prompt(
+      "Do you want to additionally secure connection settings? (Use for Production connections, each time when connection will be used you will need to specify password.",
+    );
+  }
 
   if (connection.isEncrypted) {
-    const password = await Secret.prompt(
-      "Provide password to encrypt connection",
-    );
+    const password = envPassword ||
+      await Secret.prompt("Provide password to encrypt connection");
     if (password && password.length > MIN_PASSWORD_LENGTH) {
       connection.connectionString = await guard.encrypt(
         connection.connectionString,
