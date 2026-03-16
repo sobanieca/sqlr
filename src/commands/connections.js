@@ -1,6 +1,6 @@
-import { Command } from "../deps.js";
-import { Table } from "../deps.js";
+import { Command, Table } from "../deps.js";
 import logger from "../logger.js";
+import { styledName } from "../connection-style.js";
 
 const showAllConnections = () => {
   const connections = [];
@@ -8,7 +8,7 @@ const showAllConnections = () => {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     const connection = JSON.parse(localStorage.getItem(key));
-    connections.push([connection.name, connection.type]);
+    connections.push([styledName(connection), connection.type]);
   }
 
   logger.info(

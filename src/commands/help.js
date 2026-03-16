@@ -39,13 +39,16 @@ Commands:
                         Use --table or --compact for different output formats.
 
   query                 Run SQL query against specified database.
+                        The argument can be a SQL string or a path to a .sql file
+                        (auto-detected). Use {{variable}} syntax in SQL and provide
+                        values with -i "variable: value".
+
                         Usage: sqlr query "SELECT * FROM users" [-n connection]
-                               sqlr query -q "SELECT 1" -n my-connection
-                               sqlr query -i query.sql -n my-connection
+                               sqlr query query.sql -n my-connection
+                               sqlr query query.sql -n my-connection -i "name: John" -i "status: active"
 
                         Options:
-                          -q, --query              SQL query to execute
-                          -i, --input-file         Path to file containing SQL query
+                          -i, --input-variable     Input variable in "key: value" format for {{key}} substitution
                           -o, --output-file        Save results as JSON to file
                           -n, --name               Connection name
                           -t, --type               Connection type (use instead of -n)
@@ -69,6 +72,7 @@ Typical workflow:
 
   4. Run queries:
      sqlr query "SELECT * FROM users LIMIT 10" -n my-connection
+     sqlr query query.sql -n my-connection -i "status: active"
 
 AI agent instructions:
 
@@ -88,7 +92,8 @@ AI agent instructions:
 
   4. To query data, use:
      sqlr query "SELECT * FROM table LIMIT 10" -n <connection-name>
-     For larger results, save to file: sqlr query -q "SELECT *" -n <name> -o results.json
+     For larger results, save to file: sqlr query "SELECT *" -n <name> -o results.json
+     Use SQL files with variables: sqlr query query.sql -n <name> -i "param: value"
 
   Important notes for AI agents:
   - Always use -n <connection-name> to specify which connection to use

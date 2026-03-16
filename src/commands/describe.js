@@ -1,6 +1,7 @@
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
+import { formatConnectionName } from "../connection-style.js";
 import { maxTableColumnWidth } from "../const.js";
 import {
   brightBlue,
@@ -30,6 +31,7 @@ const describe = async (
 
   if (connectionName) {
     const connection = await getConnection(connectionName);
+    logger.info(formatConnectionName(connection));
     targetConnectionString = connection.connectionString;
     targetType = connection.type;
   }

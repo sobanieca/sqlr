@@ -84,16 +84,15 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                                      
-  --debug                                       - Enable debug logs                                                                                    
-  -q, --query              [query]              - SQL query to be executed                       (Default: "")                                         
-  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                              
-  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                                        
-  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)              
-  -t, --type               [type]               - Type of the connection                         (Values: "postgresql", "mysql", "mssql", "clickhouse")
-  -s, --connection-string  [connection-string]  - Connection string                                                                                    
-  --table                                       - Display results as table                       (Conflicts: --compact)                                
-  --compact                                     - Display results in compact form                (Conflicts: --table)                                  
+  -h, --help                                    - Show this help.                                                                                                              
+  --debug                                       - Enable debug logs                                                                                                            
+  -i, --input-variable     <var>                - Input variable in "key: value" format for {{key}} substitution in SQL                                                        
+  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                                                                
+  -n, --name               [name]               - Name of the connection                                                 (Conflicts: --type, --connection-string)              
+  -t, --type               [type]               - Type of the connection                                                 (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string  [connection-string]  - Connection string                                                                                                            
+  --table                                       - Display results as table                                               (Conflicts: --compact)                                
+  --compact                                     - Display results in compact form                                        (Conflicts: --table)                                  
 
 ',
   outputError: "",
@@ -137,7 +136,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT 1 as test"',
 }
 `;
 
@@ -153,7 +152,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
 }
 `;
 
@@ -173,7 +172,7 @@ Rows affected: *
   └──────┴─────────────┘
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
 }
 `;
 
@@ -188,7 +187,7 @@ AFG,Afghanistan
 AGO,Angola
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
 }
 `;
 
@@ -200,7 +199,7 @@ Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -i test-query.sql',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query.sql',
 }
 `;
 
@@ -209,14 +208,26 @@ snapshot[`sqlr CLI 10`] = `
   code: 0,
   output: "Query executed in: *ms
 Rows affected: *
-Results saved to /tmp/sqlr-test-output.json
+[ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-vars.sql -i "col: 1" -i "alias: test"',
 }
 `;
 
 snapshot[`sqlr CLI 11`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+Results saved to /tmp/sqlr-test-output.json
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
+}
+`;
+
+snapshot[`sqlr CLI 12`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -278,7 +289,7 @@ snapshot[`sqlr CLI 11`] = `
 }
 `;
 
-snapshot[`sqlr CLI 12`] = `
+snapshot[`sqlr CLI 13`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -341,7 +352,7 @@ snapshot[`sqlr CLI 12`] = `
 }
 `;
 
-snapshot[`sqlr CLI 13`] = `
+snapshot[`sqlr CLI 14`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -354,17 +365,17 @@ public.country_language [ country_code -> "public.country.code", language text, 
 }
 `;
 
-snapshot[`sqlr CLI 14`] = `
+snapshot[`sqlr CLI 15`] = `
 {
   code: 0,
   output: 'PostgresError: syntax error at or near "INVALID"
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "INVALID SQL QUERY"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "INVALID SQL QUERY"',
 }
 `;
 
-snapshot[`sqlr CLI 15`] = `
+snapshot[`sqlr CLI 16`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -374,7 +385,7 @@ snapshot[`sqlr CLI 15`] = `
 }
 `;
 
-snapshot[`sqlr CLI 16`] = `
+snapshot[`sqlr CLI 17`] = `
 {
   code: 0,
   output: "  ┌─────────┬────────────┐
@@ -388,19 +399,20 @@ snapshot[`sqlr CLI 16`] = `
 }
 `;
 
-snapshot[`sqlr CLI 17`] = `
+snapshot[`sqlr CLI 18`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "Using connection: test-pg
+Query executed in: *ms
 Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -n test-pg -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -n test-pg "SELECT 1 as test"',
 }
 `;
 
-snapshot[`sqlr CLI 18`] = `
+snapshot[`sqlr CLI 19`] = `
 {
   code: 0,
   output: "Connection removed

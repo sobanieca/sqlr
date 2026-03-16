@@ -18,27 +18,32 @@ Deno.test("sqlr CLI", async (t) => {
   await startPostgres();
 
   try {
-    await test(`sqlr query -t postgresql -s "${CS}" -q "SELECT 1 as test"`);
+    await test(`sqlr query -t postgresql -s "${CS}" "SELECT 1 as test"`);
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
+      `sqlr query -t postgresql -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table`,
+      `sqlr query -t postgresql -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table`,
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact`,
+      `sqlr query -t postgresql -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact`,
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" -i test-query.sql`,
+      `sqlr query -t postgresql -s "${CS}" test-query.sql`,
       "test",
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" -q "SELECT 1 as test" -o /tmp/sqlr-test-output.json`,
+      `sqlr query -t postgresql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test"`,
+      "test",
+    );
+
+    await test(
+      `sqlr query -t postgresql -s "${CS}" "SELECT 1 as test" -o /tmp/sqlr-test-output.json`,
     );
 
     await test(
@@ -54,7 +59,7 @@ Deno.test("sqlr CLI", async (t) => {
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" -q "INVALID SQL QUERY"`,
+      `sqlr query -t postgresql -s "${CS}" "INVALID SQL QUERY"`,
     );
 
     await test(
@@ -64,7 +69,7 @@ Deno.test("sqlr CLI", async (t) => {
     await test("sqlr get-connections");
 
     await test(
-      `sqlr query -n test-pg -q "SELECT 1 as test"`,
+      `sqlr query -n test-pg "SELECT 1 as test"`,
     );
 
     await test("sqlr rm-connection -n test-pg");

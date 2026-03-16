@@ -9,6 +9,7 @@ import {
   brightYellow,
   gray,
   green,
+  rgb24,
   white,
 } from "jsr:@std/fmt@1.0.9/colors";
 import { Command, EnumType } from "jsr:@cliffy/command@1.0.0";
@@ -34,6 +35,7 @@ export {
   Input,
   log,
   LogLevels,
+  rgb24,
   Secret,
   Select,
   Table,

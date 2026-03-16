@@ -13,27 +13,32 @@ Deno.test("sqlr MySQL", async (t) => {
   await startMysql();
 
   try {
-    await test(`sqlr query -t mysql -s "${CS}" -q "SELECT 1 as test"`);
+    await test(`sqlr query -t mysql -s "${CS}" "SELECT 1 as test"`);
 
     await test(
-      `sqlr query -t mysql -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
+      `sqlr query -t mysql -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table`,
+      `sqlr query -t mysql -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table`,
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact`,
+      `sqlr query -t mysql -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact`,
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" -i test-query.sql`,
+      `sqlr query -t mysql -s "${CS}" test-query.sql`,
       "test",
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-mysql.json`,
+      `sqlr query -t mysql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test"`,
+      "test",
+    );
+
+    await test(
+      `sqlr query -t mysql -s "${CS}" "SELECT 1 as test" -o /tmp/sqlr-test-output-mysql.json`,
     );
 
     await test(
@@ -49,7 +54,7 @@ Deno.test("sqlr MySQL", async (t) => {
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" -q "INVALID SQL QUERY"`,
+      `sqlr query -t mysql -s "${CS}" "INVALID SQL QUERY"`,
     );
 
     await test(
@@ -59,7 +64,7 @@ Deno.test("sqlr MySQL", async (t) => {
     await test("sqlr get-connections");
 
     await test(
-      `sqlr query -n test-mysql -q "SELECT 1 as test"`,
+      `sqlr query -n test-mysql "SELECT 1 as test"`,
     );
 
     await test("sqlr rm-connection -n test-mysql");

@@ -2,6 +2,7 @@ import { Command, EnumType, Input, Secret, Select, Toggle } from "../deps.js";
 import logger from "../logger.js";
 import { connectors } from "../connectors.js";
 import guard from "../guard.js";
+import { colors, promptColor, promptEmoji } from "../connection-style.js";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -38,7 +39,7 @@ const getConnectionString = async (connectionType) => {
   return await connectors[connectionType].getConnectionString();
 };
 
-const addConnection = async (name, type, connectionString) => {
+const addConnection = async (name, type, connectionString, color, emoji) => {
   const connection = {};
   const connectionName = name ||
     await Input.prompt("Provide name of the connection");
@@ -51,6 +52,9 @@ const addConnection = async (name, type, connectionString) => {
 
   connection.connectionString = connectionString ||
     await getConnectionString(connection.type);
+
+  connection.color = color || (connectionString ? "none" : await promptColor());
+  connection.emoji = emoji || (connectionString ? "none" : await promptEmoji());
 
   const envPassword = Deno.env.get("SQLR_ENCRYPTION_PASSWORD");
 
@@ -82,16 +86,21 @@ const addConnection = async (name, type, connectionString) => {
   logger.info("Connection has been added");
 };
 
+const colorValues = colors.map((c) => c.value).concat("none");
+
 export default new Command()
   .type("ConnectorType", new EnumType(Object.keys(connectors)))
+  .type("ConnectionColor", new EnumType(colorValues))
   .option("-n, --name [name]", "Name of the connection")
   .option("-t, --type [type:ConnectorType]", "Type of the connection")
   .option("-s, --connection-string [connection-string]", "Connection string")
+  .option("-c, --color [color:ConnectionColor]", "Connection color")
+  .option("-e, --emoji [emoji]", "Connection emoji")
   .description("Add new connection. Run without parameters to use wizard.")
   .meta(
     "Connection Types",
     "Available types and connection string hints can be found using 'get-connection-types' command",
   )
-  .action(async function ({ name, type, connectionString }) {
-    await addConnection(name, type, connectionString);
+  .action(async function ({ name, type, connectionString, color, emoji }) {
+    await addConnection(name, type, connectionString, color, emoji);
   });

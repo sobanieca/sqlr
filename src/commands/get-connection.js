@@ -2,6 +2,7 @@ import { Command, Table } from "../deps.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
 import { maxTableColumnWidth } from "../const.js";
+import { styledName } from "../connection-style.js";
 
 const showConnection = async (connectionName) => {
   if (!connectionName) {
@@ -13,7 +14,7 @@ const showConnection = async (connectionName) => {
     new Table()
       .header(["Name", "Type", "Connection string"])
       .body([[
-        connection.name,
+        styledName(connection),
         connection.type,
         decodeURIComponent(connection.connectionString),
       ]])
