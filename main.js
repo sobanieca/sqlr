@@ -19,7 +19,7 @@ import logger from "./src/logger.js";
 logger.debug("Debug mode enabled");
 
 try {
-  await new Command()
+  const cmd = new Command()
     .name("sqlr")
     .version(version)
     .description(
@@ -52,8 +52,16 @@ try {
         .action(() => {
           console.log(helpText.help);
         }),
-    )
-    .parse();
+    );
+
+  const knownCommands = new Set(cmd.getCommands().map((c) => c.getName()));
+  const firstArg = Deno.args[0];
+  const isImplicitQuery = firstArg &&
+    !firstArg.startsWith("-") &&
+    !knownCommands.has(firstArg);
+  const args = isImplicitQuery ? ["query", ...Deno.args] : Deno.args;
+
+  await cmd.parse(args);
 } catch (err) {
   logger.error(err.message);
   logger.debug(err);
