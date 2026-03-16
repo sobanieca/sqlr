@@ -27,6 +27,7 @@ Commands:
                                         'add-connection' command                                            
   get-connections                     - List all defined connections                                        
   clear-connections                   - Remove all connections                                              
+  set-connection        [connection]  - Set default connection for current scope                            
   set-global                          - Switch to global mode (ignore git repository scope by default)      
   unset-global                        - Switch back to repository-scoped mode for connections               
   describe                            - Describe all tables and columns available in database               

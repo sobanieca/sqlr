@@ -27,6 +27,7 @@ Commands:
                                         'add-connection' command                                            
   get-connections                     - List all defined connections                                        
   clear-connections                   - Remove all connections                                              
+  set-connection        [connection]  - Set default connection for current scope                            
   set-global                          - Switch to global mode (ignore git repository scope by default)      
   unset-global                        - Switch back to repository-scoped mode for connections               
   describe                            - Describe all tables and columns available in database               
@@ -345,5 +346,49 @@ snapshot[`sqlr set-global / unset-global 3`] = `
   └──────┴──────┘
 ",
   step: "after unset-global",
+}
+`;
+
+snapshot[`sqlr set-connection 1`] = `
+{
+  output: "Default connection set to repo-db
+",
+  step: "set-connection output",
+}
+`;
+
+snapshot[`sqlr set-connection 2`] = `
+{
+  output: "  ┌─────────┬────────────┬───────────────────────────────────┐
+  │ Name    │ Type       │ Connection string                 │
+  ├─────────┼────────────┼───────────────────────────────────┤
+  │ repo-db │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └─────────┴────────────┴───────────────────────────────────┘
+",
+  step: "get-connection uses default",
+}
+`;
+
+snapshot[`sqlr set-connection 3`] = `
+{
+  output: "  ┌──────────┬───────┬────────────────────────────────┐
+  │ Name     │ Type  │ Connection string              │
+  ├──────────┼───────┼────────────────────────────────┤
+  │ other-db │ mysql │ mysql://u:p@localhost:3306/db2 │
+  └──────────┴───────┴────────────────────────────────┘
+",
+  step: "default in other repo is other-db",
+}
+`;
+
+snapshot[`sqlr set-connection 4`] = `
+{
+  output: "  ┌───────────┬────────────┬───────────────────────────────────┐
+  │ Name      │ Type       │ Connection string                 │
+  ├───────────┼────────────┼───────────────────────────────────┤
+  │ global-db │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └───────────┴────────────┴───────────────────────────────────┘
+",
+  step: "global default used from another repo",
 }
 `;

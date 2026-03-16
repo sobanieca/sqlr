@@ -2,6 +2,7 @@ import logger from "./logger.js";
 import guard from "./guard.js";
 import { Secret, Select } from "./deps.js";
 import storage from "./scoped-storage.js";
+import { getDefaultConnection } from "./scope.js";
 
 const getConnection = async (connectionName, isGlobal) => {
   try {
@@ -43,6 +44,11 @@ const getConnection = async (connectionName, isGlobal) => {
 };
 
 const getConnectionName = async (isGlobal) => {
+  const defaultConnection = getDefaultConnection(isGlobal);
+  if (defaultConnection && storage.getItem(defaultConnection, isGlobal)) {
+    return defaultConnection;
+  }
+
   const keys = storage.getAllKeys(isGlobal);
   const options = [];
 

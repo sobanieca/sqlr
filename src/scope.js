@@ -48,15 +48,30 @@ const getScopePrefix = (isGlobal) => {
   return `scope:${scope}:`;
 };
 
+const getDefaultConnectionKey = (isGlobal) => {
+  const effective = isGlobal || isGlobalModeEnabled();
+  const scope = effective ? "global" : resolveScope();
+  return `sqlr:default-connection:${scope}`;
+};
+
+const getDefaultConnection = (isGlobal) =>
+  localStorage.getItem(getDefaultConnectionKey(isGlobal));
+
+const setDefaultConnection = (connectionName, isGlobal) => {
+  localStorage.setItem(getDefaultConnectionKey(isGlobal), connectionName);
+};
+
 const resetScopeCache = () => {
   cachedScope = null;
 };
 
 export {
+  getDefaultConnection,
   getScopePrefix,
   GLOBAL_MODE_KEY,
   isGlobalModeEnabled,
   resetScopeCache,
   resolveScope,
+  setDefaultConnection,
   setGlobalMode,
 };

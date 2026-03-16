@@ -9,6 +9,7 @@ import getConnectionTypes from "./src/commands/get-connection-types.js";
 import query from "./src/commands/query.js";
 import update from "./src/commands/update.js";
 import clearConnections from "./src/commands/clear-connections.js";
+import setConnection from "./src/commands/set-connection.js";
 import setGlobal from "./src/commands/set-global.js";
 import unsetGlobal from "./src/commands/unset-global.js";
 import helpText from "./src/commands/help.js";
@@ -38,6 +39,7 @@ try {
     .command("get-connection-types", getConnectionTypes)
     .command("get-connections", connections)
     .command("clear-connections", clearConnections)
+    .command("set-connection", setConnection)
     .command("set-global", setGlobal)
     .command("unset-global", unsetGlobal)
     .command("describe", describe)

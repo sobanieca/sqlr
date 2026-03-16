@@ -46,6 +46,16 @@ Commands:
   clear-connections     Remove all connections in current scope.
                         Usage: sqlr clear-connections [-g]
 
+  set-connection        Set default connection for current scope. When set,
+                        query and describe commands will use it automatically
+                        without requiring -n flag or interactive selection.
+                        Usage: sqlr set-connection [connection]
+                               sqlr set-connection -n my-connection
+                               sqlr set-connection -n shared-db -g
+
+                        When used with -g, also enables global mode so the
+                        default connection applies everywhere.
+
   set-global            Switch to global mode. All connection commands will use
                         global scope by default without needing -g flag.
                         Usage: sqlr set-global
@@ -98,7 +108,11 @@ Typical workflow:
      sqlr query "SELECT * FROM users LIMIT 10" -n my-connection
      sqlr query query.sql -n my-connection -i "status: active"
 
-  5. Use global connections across projects:
+  5. Set a default connection to skip -n flag:
+     sqlr set-connection -n my-connection
+     sqlr query "SELECT 1"
+
+  6. Use global connections across projects:
      sqlr add-connection -n shared-db -t postgresql -s "..." -g
      sqlr get-connections -g
 
@@ -124,7 +138,8 @@ AI agent instructions:
      Use SQL files with variables: sqlr query query.sql -n <name> -i "param: value"
 
   Important notes for AI agents:
-  - Always use -n <connection-name> to specify which connection to use
+  - Use 'sqlr set-connection -n <name>' to set a default, then omit -n in subsequent commands
+  - Alternatively, use -n <connection-name> to specify which connection to use
   - Use 'sqlr describe' to discover schema before writing queries
   - Use LIMIT in SELECT queries to avoid overwhelming output
   - Use --compact or --table flags for more parseable output

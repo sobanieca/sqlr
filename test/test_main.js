@@ -216,3 +216,85 @@ Deno.test("sqlr set-global / unset-global", async (t) => {
     await Deno.remove(tempDir, { recursive: true });
   }
 });
+
+Deno.test("sqlr set-connection", async (t) => {
+  const projectRoot = Deno.cwd().replace("/test", "");
+  const mainPath = `${projectRoot}/main.js`;
+  const sqlr = (cmd, cwd) =>
+    run(cmd.replace("sqlr", `deno run -A ${mainPath}`), cwd);
+
+  const tempDir = await Deno.makeTempDir();
+  await Deno.mkdir(`${tempDir}/.git`);
+
+  const tempDir2 = await Deno.makeTempDir();
+  await Deno.mkdir(`${tempDir2}/.git`);
+
+  try {
+    await sqlr(
+      `sqlr add-connection -n repo-db -t postgresql -s "postgres://u:p@localhost:5432/db1"`,
+      tempDir,
+    );
+
+    await t.step("set-connection sets default", async () => {
+      const setResult = await sqlr(
+        "sqlr set-connection -n repo-db",
+        tempDir,
+      );
+      await assertSnapshot(t, {
+        step: "set-connection output",
+        output: setResult.output,
+      });
+    });
+
+    await t.step(
+      "get-connection uses default without -n",
+      async () => {
+        const result = await sqlr("sqlr get-connection", tempDir);
+        await assertSnapshot(t, {
+          step: "get-connection uses default",
+          output: result.output,
+        });
+      },
+    );
+
+    await t.step(
+      "default connection is scoped to repo",
+      async () => {
+        await sqlr(
+          `sqlr add-connection -n other-db -t mysql -s "mysql://u:p@localhost:3306/db2"`,
+          tempDir2,
+        );
+        await sqlr("sqlr set-connection -n other-db", tempDir2);
+        const result = await sqlr("sqlr get-connection", tempDir2);
+        await assertSnapshot(t, {
+          step: "default in other repo is other-db",
+          output: result.output,
+        });
+      },
+    );
+
+    await t.step(
+      "set-connection with -g enables global mode",
+      async () => {
+        await sqlr(
+          `sqlr add-connection -n global-db -t postgresql -s "postgres://u:p@localhost:5432/db1" -g`,
+          tempDir,
+        );
+        await sqlr("sqlr set-connection -n global-db -g", tempDir);
+        const result = await sqlr("sqlr get-connection", tempDir2);
+        await assertSnapshot(t, {
+          step: "global default used from another repo",
+          output: result.output,
+        });
+      },
+    );
+
+    await sqlr("sqlr unset-global", tempDir);
+    await sqlr("sqlr clear-connections", tempDir);
+    await sqlr("sqlr clear-connections", tempDir2);
+    await sqlr("sqlr clear-connections -g", tempDir);
+  } finally {
+    await Deno.remove(tempDir, { recursive: true });
+    await Deno.remove(tempDir2, { recursive: true });
+  }
+});

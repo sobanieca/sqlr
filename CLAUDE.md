@@ -15,6 +15,8 @@ deno task stop-db                # Stop test databases
 cd test && deno test -A test_main.js              # Run specific test file
 cd test && deno test -A test_main.js -- --update   # Update snapshots after changes
 cd test && deno task test                          # Run all tests
+
+When running single test file to ensure that db containers run, use deno task start-db and deno task stop-db
 ```
 
 ## Architecture
