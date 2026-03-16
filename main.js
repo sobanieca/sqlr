@@ -9,6 +9,8 @@ import getConnectionTypes from "./src/commands/get-connection-types.js";
 import query from "./src/commands/query.js";
 import update from "./src/commands/update.js";
 import clearConnections from "./src/commands/clear-connections.js";
+import setGlobal from "./src/commands/set-global.js";
+import unsetGlobal from "./src/commands/unset-global.js";
 import helpText from "./src/commands/help.js";
 import { version } from "./src/version.js";
 import logger from "./src/logger.js";
@@ -26,12 +28,18 @@ try {
       this.showHelp();
     })
     .globalOption("--debug", "Enable debug logs")
+    .globalOption(
+      "-g, --global",
+      "Use global scope for connections (ignore git repository scope)",
+    )
     .command("add-connection", addConnection)
     .command("rm-connection", removeConnection)
     .command("get-connection", getConnection)
     .command("get-connection-types", getConnectionTypes)
     .command("get-connections", connections)
     .command("clear-connections", clearConnections)
+    .command("set-global", setGlobal)
+    .command("unset-global", unsetGlobal)
     .command("describe", describe)
     .command("query", query)
     .command("update", update)

@@ -5,12 +5,25 @@ Usage:
 
   sqlr [command] [options]
 
+Connection scoping:
+
+  Connections are automatically scoped to the nearest git repository.
+  When you run sqlr inside a git repository, connections are stored and
+  retrieved only for that repository. If no git repository is found
+  (searching up to HOME directory), connections are stored in global scope.
+
+  Use -g (--global) flag with any connection command to explicitly use
+  global scope regardless of the current directory.
+
+  Use 'set-global' to permanently switch to global mode (no need for -g).
+  Use 'unset-global' to switch back to repository-scoped mode.
+
 Commands:
 
   help                  Display this help text
   version               Display version info
   add-connection        Add new connection. Run without parameters to use interactive wizard.
-                        Usage: sqlr add-connection [-n name] [-t type] [-s connection-string]
+                        Usage: sqlr add-connection [-n name] [-t type] [-s connection-string] [-g]
 
                         Supported types can be listed using 'get-connection-types' command.
                         Connections are stored locally and can be reused across commands.
@@ -28,7 +41,17 @@ Commands:
                         Usage: sqlr get-connection-types
 
   get-connections       List all defined connections (names and types).
-                        Usage: sqlr get-connections
+                        Usage: sqlr get-connections [-g]
+
+  clear-connections     Remove all connections in current scope.
+                        Usage: sqlr clear-connections [-g]
+
+  set-global            Switch to global mode. All connection commands will use
+                        global scope by default without needing -g flag.
+                        Usage: sqlr set-global
+
+  unset-global          Switch back to repository-scoped mode.
+                        Usage: sqlr unset-global
 
   describe              Describe all tables and columns available in database.
                         Usage: sqlr describe [-n connection] [--table] [--compact] [-f filter]
@@ -75,6 +98,10 @@ Typical workflow:
      sqlr query "SELECT * FROM users LIMIT 10" -n my-connection
      sqlr query query.sql -n my-connection -i "status: active"
 
+  5. Use global connections across projects:
+     sqlr add-connection -n shared-db -t postgresql -s "..." -g
+     sqlr get-connections -g
+
 AI agent instructions:
 
   When using sqlr as an AI agent, follow these steps:
@@ -104,6 +131,7 @@ AI agent instructions:
   - Use -o flag to save large result sets to a JSON file
   - Use --debug global flag for troubleshooting connection issues
   - For encrypted connections, set SQLR_ENCRYPTION_PASSWORD env var to avoid interactive prompts
+  - Connections are scoped to the git repository. Use -g flag to access global connections
 
 Environment variables:
 
@@ -118,6 +146,7 @@ Global options:
 
   --help                Display help for a command
   --debug               Enable debug logs
+  -g, --global          Use global scope for connections (ignore git repository scope)
 
 For each command use '--help' flag for details on additional options and arguments.
 `;

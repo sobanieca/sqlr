@@ -63,16 +63,17 @@ const runQuery = async (
   type,
   connectionString,
   ignoreInputValidation,
+  isGlobal,
 ) => {
   if (!connectionName && !connectionString) {
-    connectionName = await getConnectionName();
+    connectionName = await getConnectionName(isGlobal);
   }
 
   let targetType = type;
   let targetConnectionString = connectionString;
 
   if (connectionName) {
-    const connection = await getConnection(connectionName);
+    const connection = await getConnection(connectionName, isGlobal);
     logger.info(formatConnectionName(connection));
     targetConnectionString = connection.connectionString;
     targetType = connection.type;
@@ -193,6 +194,7 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
+        global: g,
       },
       queryArg,
     ) => {
@@ -206,6 +208,7 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
+        g,
       );
     },
   );

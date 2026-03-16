@@ -1,10 +1,11 @@
 import logger from "./logger.js";
 import guard from "./guard.js";
 import { Secret, Select } from "./deps.js";
+import storage from "./scoped-storage.js";
 
-const getConnection = async (connectionName) => {
+const getConnection = async (connectionName, isGlobal) => {
   try {
-    const connection = JSON.parse(localStorage.getItem(connectionName));
+    const connection = JSON.parse(storage.getItem(connectionName, isGlobal));
     if (!connection) {
       logger.error(
         `Connection ${connectionName} not found. Use get-connections command to list available connections.`,
@@ -41,16 +42,16 @@ const getConnection = async (connectionName) => {
   }
 };
 
-const getConnectionName = async () => {
+const getConnectionName = async (isGlobal) => {
+  const keys = storage.getAllKeys(isGlobal);
   const options = [];
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const connection = JSON.parse(localStorage.getItem(key));
+  for (const key of keys) {
+    const connection = JSON.parse(storage.getItem(key, isGlobal));
     options.push({ name: connection.name, value: connection.name });
   }
 
-  if (localStorage.length == 0) {
+  if (keys.length === 0) {
     throw new Error("No connections defined. Add new connection first.");
   }
 

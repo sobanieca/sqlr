@@ -1,13 +1,14 @@
 import { Command, Table } from "../deps.js";
 import logger from "../logger.js";
 import { styledName } from "../connection-style.js";
+import storage from "../scoped-storage.js";
 
-const showAllConnections = () => {
+const showAllConnections = (isGlobal) => {
+  const keys = storage.getAllKeys(isGlobal);
   const connections = [];
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const connection = JSON.parse(localStorage.getItem(key));
+  for (const key of keys) {
+    const connection = JSON.parse(storage.getItem(key, isGlobal));
     connections.push([styledName(connection), connection.type]);
   }
 
@@ -25,4 +26,4 @@ const showAllConnections = () => {
 
 export default new Command()
   .description("List all defined connections")
-  .action(showAllConnections);
+  .action(({ global: g }) => showAllConnections(g));
