@@ -84,15 +84,17 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                                                              
-  --debug                                       - Enable debug logs                                                                                                            
-  -i, --input-variable     <var>                - Input variable in "key: value" format for {{key}} substitution in SQL                                                        
-  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                                                                
-  -n, --name               [name]               - Name of the connection                                                 (Conflicts: --type, --connection-string)              
-  -t, --type               [type]               - Type of the connection                                                 (Values: "postgresql", "mysql", "mssql", "clickhouse")
-  -s, --connection-string  [connection-string]  - Connection string                                                                                                            
-  --table                                       - Display results as table                                               (Conflicts: --compact)                                
-  --compact                                     - Display results in compact form                                        (Conflicts: --table)                                  
+  -h, --help                                      - Show this help.                                                                                                                       
+  --debug                                         - Enable debug logs                                                                                                                     
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}} substitution in SQL                                                                 
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                                                         
+  -n, --name                 [name]               - Name of the connection                                                          (Conflicts: --type, --connection-string)              
+  -t, --type                 [type]               - Type of the connection                                                          (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string    [connection-string]  - Connection string                                                                                                                     
+  --table                                         - Display results as table                                                        (Conflicts: --compact)                                
+  --compact                                       - Display results in compact form                                                 (Conflicts: --table)                                  
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing {{handlebars}} syntax to                                                        
+                                                    pass through to the database                                                                                                          
 
 ',
   outputError: "",
@@ -368,6 +370,28 @@ public.country_language [ country_code -> "public.country.code", language text, 
 snapshot[`sqlr CLI 15`] = `
 {
   code: 0,
+  output: 'Missing input variables: template. Use -i "name: value" to provide them.
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql',
+}
+`;
+
+snapshot[`sqlr CLI 16`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[ { handlebars_value: "{{template}}" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql --ignore-input-validation',
+}
+`;
+
+snapshot[`sqlr CLI 17`] = `
+{
+  code: 0,
   output: 'PostgresError: syntax error at or near "INVALID"
 ',
   outputError: "",
@@ -375,7 +399,7 @@ snapshot[`sqlr CLI 15`] = `
 }
 `;
 
-snapshot[`sqlr CLI 16`] = `
+snapshot[`sqlr CLI 18`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -385,7 +409,7 @@ snapshot[`sqlr CLI 16`] = `
 }
 `;
 
-snapshot[`sqlr CLI 17`] = `
+snapshot[`sqlr CLI 19`] = `
 {
   code: 0,
   output: "  ┌─────────┬────────────┐
@@ -399,7 +423,7 @@ snapshot[`sqlr CLI 17`] = `
 }
 `;
 
-snapshot[`sqlr CLI 18`] = `
+snapshot[`sqlr CLI 20`] = `
 {
   code: 0,
   output: "Using connection: test-pg
@@ -412,7 +436,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 19`] = `
+snapshot[`sqlr CLI 21`] = `
 {
   code: 0,
   output: "Connection removed

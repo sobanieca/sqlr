@@ -55,6 +55,7 @@ Commands:
                           -s, --connection-string   Connection string (use instead of -n)
                           --table                  Display results as table
                           --compact                Display results in compact CSV-like form
+                          --ignore-input-validation  Skip validation for missing input variables
 
   update                Display instructions for updating sqlr to the latest version.
                         Usage: sqlr update [--deno]

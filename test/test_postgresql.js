@@ -59,6 +59,16 @@ Deno.test("sqlr CLI", async (t) => {
     );
 
     await test(
+      `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql`,
+      "test",
+    );
+
+    await test(
+      `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql --ignore-input-validation`,
+      "test",
+    );
+
+    await test(
       `sqlr query -t postgresql -s "${CS}" "INVALID SQL QUERY"`,
     );
 

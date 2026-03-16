@@ -23,20 +23,22 @@ const parseInputVariables = (vars) => {
   return result;
 };
 
-const replaceVariables = (query, variables) => {
+const replaceVariables = (query, variables, ignoreInputValidation) => {
   let result = query;
   for (const [key, value] of Object.entries(variables)) {
     result = result.replaceAll(`{{${key}}}`, value);
   }
 
-  const unreplaced = result.match(/\{\{([^}]+)\}\}/g);
-  if (unreplaced) {
-    const names = [...new Set(unreplaced.map((m) => m.slice(2, -2)))];
-    throw new Error(
-      `Missing input variables: ${
-        names.join(", ")
-      }. Use -i "name: value" to provide them.`,
-    );
+  if (!ignoreInputValidation) {
+    const unreplaced = result.match(/\{\{([^}]+)\}\}/g);
+    if (unreplaced) {
+      const names = [...new Set(unreplaced.map((m) => m.slice(2, -2)))];
+      throw new Error(
+        `Missing input variables: ${
+          names.join(", ")
+        }. Use -i "name: value" to provide them.`,
+      );
+    }
   }
 
   return result;
@@ -60,6 +62,7 @@ const runQuery = async (
   compact,
   type,
   connectionString,
+  ignoreInputValidation,
 ) => {
   if (!connectionName && !connectionString) {
     connectionName = await getConnectionName();
@@ -85,7 +88,7 @@ const runQuery = async (
   }
 
   const variables = parseInputVariables(inputVariables);
-  query = replaceVariables(query, variables);
+  query = replaceVariables(query, variables, ignoreInputValidation);
 
   try {
     const startTime = Date.now();
@@ -174,6 +177,10 @@ export default new Command()
   .option("--compact", "Display results in compact form", {
     conflicts: ["table"],
   })
+  .option(
+    "--ignore-input-validation",
+    "Skip validation for missing input variables, allowing {{handlebars}} syntax to pass through to the database",
+  )
   .description("Run query against specified database")
   .action(
     async (
@@ -185,6 +192,7 @@ export default new Command()
         compact,
         type,
         connectionString,
+        ignoreInputValidation,
       },
       queryArg,
     ) => {
@@ -197,6 +205,7 @@ export default new Command()
         compact,
         type,
         connectionString,
+        ignoreInputValidation,
       );
     },
   );
