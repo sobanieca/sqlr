@@ -1,4 +1,11 @@
-import { brightGreen, Command, EnumType, gray, Table } from "../deps.js";
+import {
+  brightGreen,
+  Command,
+  Confirm,
+  EnumType,
+  gray,
+  Table,
+} from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
@@ -63,6 +70,7 @@ const runQuery = async (
   type,
   connectionString,
   ignoreInputValidation,
+  force,
   isGlobal,
 ) => {
   if (!connectionName && !connectionString) {
@@ -84,12 +92,28 @@ const runQuery = async (
   }
 
   let query = queryArg;
-  if (await isFilePath(queryArg)) {
+  const isFile = await isFilePath(queryArg);
+  if (isFile) {
     query = await Deno.readTextFile(queryArg);
   }
 
   const variables = parseInputVariables(inputVariables);
   query = replaceVariables(query, variables, ignoreInputValidation);
+
+  if (isFile) {
+    const lines = query.split("\n");
+    const preview = lines.length > 10
+      ? [...lines.slice(0, 10), "..."].join("\n")
+      : query;
+    logger.info(`${gray("SQL to execute:")}\n${preview}`);
+    if (!force) {
+      const confirmed = await Confirm.prompt("Proceed with execution?");
+      if (!confirmed) {
+        logger.info("Query execution cancelled.");
+        return;
+      }
+    }
+  }
 
   try {
     const startTime = Date.now();
@@ -182,6 +206,10 @@ export default new Command()
     "--ignore-input-validation",
     "Skip validation for missing input variables, allowing {{handlebars}} syntax to pass through to the database",
   )
+  .option(
+    "-f, --force",
+    "Skip confirmation prompt when executing SQL from a file",
+  )
   .description("Run query against specified database")
   .action(
     async (
@@ -194,6 +222,7 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
+        force,
         global: g,
       },
       queryArg,
@@ -208,6 +237,7 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
+        force,
         g,
       );
     },

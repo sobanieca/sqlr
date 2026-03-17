@@ -71,7 +71,7 @@ Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query.sql',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query.sql -f',
 }
 `;
 
@@ -83,7 +83,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-vars.sql -i "col: 1" -i "alias: test"',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-vars.sql -i "col: 1" -i "alias: test" -f',
 }
 `;
 

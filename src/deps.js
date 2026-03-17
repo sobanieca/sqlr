@@ -16,6 +16,7 @@ import { Command, EnumType } from "jsr:@cliffy/command@1.0.0";
 import { Input } from "jsr:@cliffy/prompt@1.0.0/input";
 import { Select } from "jsr:@cliffy/prompt@1.0.0/select";
 import { Toggle } from "jsr:@cliffy/prompt@1.0.0/toggle";
+import { Confirm } from "jsr:@cliffy/prompt@1.0.0/confirm";
 import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
 import { Table } from "jsr:@cliffy/table@1.0.0";
 import { Client } from "jsr:@db/postgres@0.19.5";
@@ -29,6 +30,7 @@ export {
   brightYellow,
   Client as DbClient,
   Command,
+  Confirm,
   EnumType,
   gray,
   green,

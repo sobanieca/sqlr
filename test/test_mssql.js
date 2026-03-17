@@ -28,12 +28,12 @@ Deno.test("sqlr MSSQL", async (t) => {
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" test-query.sql`,
+      `sqlr query -t mssql -s "${CS}" test-query.sql -f`,
       "test",
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test"`,
+      `sqlr query -t mssql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test" -f`,
       "test",
     );
 
