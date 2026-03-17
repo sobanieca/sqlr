@@ -3,6 +3,7 @@ import {
   Command,
   Confirm,
   EnumType,
+  EOL,
   gray,
   Table,
 } from "../deps.js";
@@ -101,9 +102,9 @@ const runQuery = async (
   query = replaceVariables(query, variables, ignoreInputValidation);
 
   if (isFile) {
-    const lines = query.split("\n");
+    const lines = query.split(EOL);
     const preview = lines.length > 10
-      ? [...lines.slice(0, 10), "..."].join("\n")
+      ? [...lines.slice(0, 10), "..."].join(EOL)
       : query;
     logger.info(`${gray("SQL to execute:")}\n${preview}`);
     if (!force) {

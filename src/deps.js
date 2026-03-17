@@ -19,6 +19,7 @@ import { Toggle } from "jsr:@cliffy/prompt@1.0.0/toggle";
 import { Confirm } from "jsr:@cliffy/prompt@1.0.0/confirm";
 import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
 import { Table } from "jsr:@cliffy/table@1.0.0";
+import { EOL } from "jsr:@std/fs@1/eol";
 import { Client } from "jsr:@db/postgres@0.19.5";
 
 export {
@@ -32,6 +33,7 @@ export {
   Command,
   Confirm,
   EnumType,
+  EOL,
   gray,
   green,
   Input,

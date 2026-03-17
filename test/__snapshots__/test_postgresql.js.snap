@@ -203,7 +203,10 @@ AGO,Angola
 snapshot[`sqlr CLI 9`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
 Rows affected: *
 [ { input_file_test: 1 } ]
 ",
@@ -215,7 +218,10 @@ Rows affected: *
 snapshot[`sqlr CLI 10`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
 Rows affected: *
 [ { test: 1 } ]
 ",
@@ -387,10 +393,13 @@ snapshot[`sqlr CLI 15`] = `
 snapshot[`sqlr CLI 16`] = `
 {
   code: 0,
-  output: 'Query executed in: *ms
+  output: \`SQL to execute:
+SELECT '{{template}}' as handlebars_value;
+
+Query executed in: *ms
 Rows affected: *
 [ { handlebars_value: "{{template}}" } ]
-',
+\`,
   outputError: "",
   sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql --ignore-input-validation -f',
 }

@@ -66,7 +66,10 @@ AGO,Angola
 snapshot[`sqlr MSSQL 5`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
 Rows affected: *
 [ { input_file_test: 1 } ]
 ",
@@ -78,7 +81,10 @@ Rows affected: *
 snapshot[`sqlr MSSQL 6`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
 Rows affected: *
 [ { test: 1 } ]
 ",
