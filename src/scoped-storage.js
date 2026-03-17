@@ -1,25 +1,5 @@
 import { getScopePrefix } from "./scope.js";
 
-const SETTINGS_PREFIX = "sqlr:";
-
-const migrateUnprefixedKeys = () => {
-  const keysToMigrate = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (!key.startsWith("scope:") && !key.startsWith(SETTINGS_PREFIX)) {
-      keysToMigrate.push(key);
-    }
-  }
-
-  for (const key of keysToMigrate) {
-    const value = localStorage.getItem(key);
-    localStorage.setItem(`scope:global:${key}`, value);
-    localStorage.removeItem(key);
-  }
-};
-
-migrateUnprefixedKeys();
-
 const getItem = (name, isGlobal) => {
   const prefix = getScopePrefix(isGlobal);
   return localStorage.getItem(`${prefix}${name}`);
