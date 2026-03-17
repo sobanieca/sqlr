@@ -20,20 +20,20 @@ Options:
 
 Commands:
 
-  add-connection                      - Add new connection. Run without parameters to use wizard.           
-  rm-connection         [connection]  - Remove selected connection                                          
-  get-connection        [connection]  - Get details of selected connection                                  
-  get-connection-types                - Get available connection types to be used with '--type' parameter in
-                                        'add-connection' command                                            
-  get-connections                     - List all defined connections                                        
-  clear-connections                   - Remove all connections                                              
-  set-connection        [connection]  - Set default connection for current scope                            
-  set-global                          - Switch to global mode (ignore git repository scope by default)      
-  unset-global                        - Switch back to repository-scoped mode for connections               
-  describe                            - Describe all tables and columns available in database               
-  query                 [queryArg]    - Run query against specified database                                
-  update                              - Update sqlr to the latest version                                   
-  help                                - Display detailed help text with usage instructions                  
+  add                       - Add new connection. Run without parameters to use wizard.                     
+  rm          [connection]  - Remove selected connection                                                    
+  get         [connection]  - Get details of selected connection                                            
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add'    
+                              command                                                                       
+  ls                        - List all defined connections                                                  
+  clear                     - Remove all connections                                                        
+  set         [connection]  - Set default connection for current scope                                      
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository
+                              scope)                                                                        
+  describe                  - Describe all tables and columns available in database                         
+  query       [queryArg]    - Run query against specified database                                          
+  update                    - Update sqlr to the latest version                                             
+  help                      - Display detailed help text with usage instructions                            
 
 ",
   outputError: "",
@@ -71,7 +71,7 @@ snapshot[`sqlr CLI 2`] = `
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 \`,
   outputError: "",
-  sqlrCommand: "sqlr get-connection-types",
+  sqlrCommand: "sqlr ls-types",
 }
 `;
 
@@ -421,7 +421,7 @@ snapshot[`sqlr CLI 18`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
+  sqlrCommand: 'sqlr add -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
 }
 `;
 
@@ -435,7 +435,7 @@ snapshot[`sqlr CLI 19`] = `
   └─────────┴────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
@@ -458,6 +458,6 @@ snapshot[`sqlr CLI 21`] = `
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-pg",
+  sqlrCommand: "sqlr rm -n test-pg",
 }
 `;

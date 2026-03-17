@@ -263,7 +263,7 @@ snapshot[`sqlr ClickHouse 12`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-clickhouse -t clickhouse -s "http://world:world123@localhost:8123?database=world"',
+  sqlrCommand: 'sqlr add -n test-clickhouse -t clickhouse -s "http://world:world123@localhost:8123?database=world"',
 }
 `;
 
@@ -277,7 +277,7 @@ snapshot[`sqlr ClickHouse 13`] = `
   └─────────────────┴────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
@@ -300,6 +300,6 @@ snapshot[`sqlr ClickHouse 15`] = `
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-clickhouse",
+  sqlrCommand: "sqlr rm -n test-clickhouse",
 }
 `;

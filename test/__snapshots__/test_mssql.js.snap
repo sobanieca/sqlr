@@ -259,7 +259,7 @@ snapshot[`sqlr MSSQL 12`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true"',
+  sqlrCommand: 'sqlr add -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true"',
 }
 `;
 
@@ -273,7 +273,7 @@ snapshot[`sqlr MSSQL 13`] = `
   └────────────┴───────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
@@ -296,6 +296,6 @@ snapshot[`sqlr MSSQL 15`] = `
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-mssql",
+  sqlrCommand: "sqlr rm -n test-mssql",
 }
 `;

@@ -259,7 +259,7 @@ snapshot[`sqlr MySQL 12`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
+  sqlrCommand: 'sqlr add -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
 }
 `;
 
@@ -273,7 +273,7 @@ snapshot[`sqlr MySQL 13`] = `
   └────────────┴───────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
@@ -296,6 +296,6 @@ snapshot[`sqlr MySQL 15`] = `
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-mysql",
+  sqlrCommand: "sqlr rm -n test-mysql",
 }
 `;
