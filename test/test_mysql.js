@@ -58,16 +58,16 @@ Deno.test("sqlr MySQL", async (t) => {
     );
 
     await test(
-      `sqlr add-connection -n test-mysql -t mysql -s "${CS}"`,
+      `sqlr add -n test-mysql -t mysql -s "${CS}"`,
     );
 
-    await test("sqlr get-connections");
+    await test("sqlr ls");
 
     await test(
       `sqlr query -n test-mysql "SELECT 1 as test"`,
     );
 
-    await test("sqlr rm-connection -n test-mysql");
+    await test("sqlr rm -n test-mysql");
   } finally {
     await stopMysql();
   }

@@ -15,7 +15,7 @@ const setConnection = async (connectionName, isGlobal) => {
 
   if (!storage.getItem(connectionName, isGlobal)) {
     logger.error(
-      `Connection ${connectionName} not found. Use get-connections command to list available connections.`,
+      `Connection ${connectionName} not found. Use ls command to list available connections.`,
     );
     Deno.exit(1);
   }

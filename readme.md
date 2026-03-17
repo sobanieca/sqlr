@@ -70,8 +70,8 @@ Sqlr stores database connections locally. Once you set a default connection with
 without ever needing access to the actual connection string. Connection strings
 stay on your machine and are never exposed in the agent's context.
 
-To let the agent learn about all available sqlr commands and options, have it run
-`sqlr help`.
+To let the agent learn about all available sqlr commands and options, have it
+run `sqlr help`.
 
 ## SQL file collections
 

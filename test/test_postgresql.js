@@ -11,7 +11,7 @@ Deno.test("sqlr CLI", async (t) => {
   const test = createTestRunner(t);
 
   await test("sqlr --help");
-  await test("sqlr get-connection-types");
+  await test("sqlr ls-types");
   await test("sqlr query --help");
   await test("sqlr describe --help");
 
@@ -73,16 +73,16 @@ Deno.test("sqlr CLI", async (t) => {
     );
 
     await test(
-      `sqlr add-connection -n test-pg -t postgresql -s "${CS}"`,
+      `sqlr add -n test-pg -t postgresql -s "${CS}"`,
     );
 
-    await test("sqlr get-connections");
+    await test("sqlr ls");
 
     await test(
       `sqlr query -n test-pg "SELECT 1 as test"`,
     );
 
-    await test("sqlr rm-connection -n test-pg");
+    await test("sqlr rm -n test-pg");
   } finally {
     await stopPostgres();
   }

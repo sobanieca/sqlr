@@ -22,36 +22,36 @@ Commands:
 
   help                  Display this help text
   version               Display version info
-  add-connection        Add new connection. Run without parameters to use interactive wizard.
-                        Usage: sqlr add-connection [-n name] [-t type] [-s connection-string] [-g]
+  add                   Add new connection. Run without parameters to use interactive wizard.
+                        Usage: sqlr add [-n name] [-t type] [-s connection-string] [-g]
 
-                        Supported types can be listed using 'get-connection-types' command.
+                        Supported types can be listed using 'ls-types' command.
                         Connections are stored locally and can be reused across commands.
                         Optionally encrypt sensitive connections with a password.
 
-  rm-connection         Remove selected connection.
-                        Usage: sqlr rm-connection [connection]
-                               sqlr rm-connection -n my-connection
+  rm                    Remove selected connection.
+                        Usage: sqlr rm [connection]
+                               sqlr rm -n my-connection
 
-  get-connection        Get details of selected connection (name, type, connection string).
-                        Usage: sqlr get-connection [connection]
-                               sqlr get-connection -n my-connection
+  get                   Get details of selected connection (name, type, connection string).
+                        Usage: sqlr get [connection]
+                               sqlr get -n my-connection
 
-  get-connection-types  Get available connection types and connection string hints.
-                        Usage: sqlr get-connection-types
+  ls-types              Get available connection types and connection string hints.
+                        Usage: sqlr ls-types
 
-  get-connections       List all defined connections (names and types).
-                        Usage: sqlr get-connections [-g]
+  ls                    List all defined connections (names and types).
+                        Usage: sqlr ls [-g]
 
-  clear-connections     Remove all connections in current scope.
-                        Usage: sqlr clear-connections [-g]
+  clear                 Remove all connections in current scope.
+                        Usage: sqlr clear [-g]
 
-  set-connection        Set default connection for current scope. When set,
+  set                   Set default connection for current scope. When set,
                         query and describe commands will use it automatically
                         without requiring -n flag or interactive selection.
-                        Usage: sqlr set-connection [connection]
-                               sqlr set-connection -n my-connection
-                               sqlr set-connection -n shared-db -g
+                        Usage: sqlr set [connection]
+                               sqlr set -n my-connection
+                               sqlr set -n shared-db -g
 
                         When used with -g, also enables global mode so the
                         default connection applies everywhere.
@@ -102,10 +102,10 @@ Commands:
 Typical workflow:
 
   1. Configure a connection:
-     sqlr add-connection
+     sqlr add
 
   2. Set a default connection:
-     sqlr set-connection my-connection
+     sqlr set my-connection
 
   3. Explore database schema:
      sqlr describe
@@ -115,22 +115,22 @@ Typical workflow:
      sqlr query.sql -i "status: active"
 
   5. Use global connections across projects:
-     sqlr add-connection -n shared-db -t postgresql -s "..." -g
-     sqlr set-connection shared-db -g
+     sqlr add -n shared-db -t postgresql -s "..." -g
+     sqlr set shared-db -g
 
 AI agent instructions:
 
   When using sqlr as an AI agent, follow these steps:
 
   1. First, check available connections:
-     sqlr get-connections
+     sqlr ls
 
   2. If no connections are configured, add one using:
-     sqlr add-connection -n <name> -t <type> -s <connection-string>
-     Use 'sqlr get-connection-types' to see supported database types and connection string formats.
+     sqlr add -n <name> -t <type> -s <connection-string>
+     Use 'sqlr ls-types' to see supported database types and connection string formats.
 
   3. Set a default connection to avoid passing -n on every command:
-     sqlr set-connection <connection-name>
+     sqlr set <connection-name>
 
   4. To understand the database schema, run:
      sqlr describe --compact
@@ -156,9 +156,9 @@ AI agent instructions:
 Environment variables:
 
   SQLR_ENCRYPTION_PASSWORD  Password for encrypting/decrypting connections.
-                            When set during 'add-connection' with -s flag, the connection
+                            When set during 'add' with -s flag, the connection
                             will be encrypted automatically using this password.
-                            When set during 'get-connection', 'describe', or 'query',
+                            When set during 'get', 'describe', or 'query',
                             encrypted connections will be decrypted without prompting.
                             This enables non-interactive usage by AI agents and scripts.
 

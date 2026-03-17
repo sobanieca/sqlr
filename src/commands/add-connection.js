@@ -107,7 +107,7 @@ export default new Command()
   .description("Add new connection. Run without parameters to use wizard.")
   .meta(
     "Connection Types",
-    "Available types and connection string hints can be found using 'get-connection-types' command",
+    "Available types and connection string hints can be found using 'ls-types' command",
   )
   .action(
     async function ({ name, type, connectionString, color, emoji, global: g }) {

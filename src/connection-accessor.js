@@ -9,7 +9,7 @@ const getConnection = async (connectionName, isGlobal) => {
     const connection = JSON.parse(storage.getItem(connectionName, isGlobal));
     if (!connection) {
       logger.error(
-        `Connection ${connectionName} not found. Use get-connections command to list available connections.`,
+        `Connection ${connectionName} not found. Use ls command to list available connections.`,
       );
       Deno.exit(1);
     }

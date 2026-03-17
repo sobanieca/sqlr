@@ -58,16 +58,16 @@ Deno.test("sqlr ClickHouse", async (t) => {
     );
 
     await test(
-      `sqlr add-connection -n test-clickhouse -t clickhouse -s "${CS}"`,
+      `sqlr add -n test-clickhouse -t clickhouse -s "${CS}"`,
     );
 
-    await test("sqlr get-connections");
+    await test("sqlr ls");
 
     await test(
       `sqlr query -n test-clickhouse "SELECT 1 as test"`,
     );
 
-    await test("sqlr rm-connection -n test-clickhouse");
+    await test("sqlr rm -n test-clickhouse");
   } finally {
     await stopClickhouse();
   }

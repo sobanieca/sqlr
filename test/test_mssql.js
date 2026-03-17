@@ -58,16 +58,16 @@ Deno.test("sqlr MSSQL", async (t) => {
     );
 
     await test(
-      `sqlr add-connection -n test-mssql -t mssql -s "${CS}"`,
+      `sqlr add -n test-mssql -t mssql -s "${CS}"`,
     );
 
-    await test("sqlr get-connections");
+    await test("sqlr ls");
 
     await test(
       `sqlr query -n test-mssql "SELECT 1 as test"`,
     );
 
-    await test("sqlr rm-connection -n test-mssql");
+    await test("sqlr rm -n test-mssql");
   } finally {
     await stopMssql();
   }

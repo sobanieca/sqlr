@@ -22,7 +22,7 @@ const getConnectionTypes = () => {
 
 export default new Command()
   .description(
-    "Get available connection types to be used with '--type' parameter in 'add-connection' command",
+    "Get available connection types to be used with '--type' parameter in 'add' command",
   )
   .action(() => {
     getConnectionTypes();
