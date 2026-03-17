@@ -11,7 +11,6 @@ import update from "./src/commands/update.js";
 import clearConnections from "./src/commands/clear-connections.js";
 import setConnection from "./src/commands/set-connection.js";
 import setGlobal from "./src/commands/set-global.js";
-import unsetGlobal from "./src/commands/unset-global.js";
 import helpText from "./src/commands/help.js";
 import { version } from "./src/version.js";
 import logger from "./src/logger.js";
@@ -41,7 +40,6 @@ try {
     .command("clear", clearConnections)
     .command("set", setConnection)
     .command("set-global", setGlobal)
-    .command("unset-global", unsetGlobal)
     .command("describe", describe)
     .command("query", query)
     .command("update", update)

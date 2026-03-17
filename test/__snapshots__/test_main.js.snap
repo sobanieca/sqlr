@@ -20,20 +20,20 @@ Options:
 
 Commands:
 
-  add                         - Add new connection. Run without parameters to use wizard.                 
-  rm            [connection]  - Remove selected connection                                                
-  get           [connection]  - Get details of selected connection                                        
-  ls-types                    - Get available connection types to be used with '--type' parameter in 'add'
-                                command                                                                   
-  ls                          - List all defined connections                                              
-  clear                       - Remove all connections                                                    
-  set           [connection]  - Set default connection for current scope                                  
-  set-global                  - Switch to global mode (ignore git repository scope by default)            
-  unset-global                - Switch back to repository-scoped mode for connections                     
-  describe                    - Describe all tables and columns available in database                     
-  query         [queryArg]    - Run query against specified database                                      
-  update                      - Update sqlr to the latest version                                         
-  help                        - Display detailed help text with usage instructions                        
+  add                       - Add new connection. Run without parameters to use wizard.                     
+  rm          [connection]  - Remove selected connection                                                    
+  get         [connection]  - Get details of selected connection                                            
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add'    
+                              command                                                                       
+  ls                        - List all defined connections                                                  
+  clear                     - Remove all connections                                                        
+  set         [connection]  - Set default connection for current scope                                      
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository
+                              scope)                                                                        
+  describe                  - Describe all tables and columns available in database                         
+  query       [queryArg]    - Run query against specified database                                          
+  update                    - Update sqlr to the latest version                                             
+  help                      - Display detailed help text with usage instructions                            
 
 ",
   outputError: "",
@@ -317,7 +317,7 @@ snapshot[`sqlr scoped connections 6`] = `
 }
 `;
 
-snapshot[`sqlr set-global / unset-global 1`] = `
+snapshot[`sqlr set-global 1`] = `
 {
   output: "  ┌──────┬──────┐
   │ Name │ Type │
@@ -327,7 +327,7 @@ snapshot[`sqlr set-global / unset-global 1`] = `
 }
 `;
 
-snapshot[`sqlr set-global / unset-global 2`] = `
+snapshot[`sqlr set-global 2`] = `
 {
   output: "  ┌───────────┬────────────┐
   │ Name      │ Type       │
@@ -339,13 +339,13 @@ snapshot[`sqlr set-global / unset-global 2`] = `
 }
 `;
 
-snapshot[`sqlr set-global / unset-global 3`] = `
+snapshot[`sqlr set-global 3`] = `
 {
   output: "  ┌──────┬──────┐
   │ Name │ Type │
   └──────┴──────┘
 ",
-  step: "after unset-global",
+  step: "after set-global false",
 }
 `;
 

@@ -15,8 +15,8 @@ Connection scoping:
   Use -g (--global) flag with any connection command to explicitly use
   global scope regardless of the current directory.
 
-  Use 'set-global' to permanently switch to global mode (no need for -g).
-  Use 'unset-global' to switch back to repository-scoped mode.
+  Use 'set-global true' to switch to global mode (no need for -g).
+  Use 'set-global false' to switch back to repository-scoped mode.
 
 Commands:
 
@@ -56,12 +56,9 @@ Commands:
                         When used with -g, also enables global mode so the
                         default connection applies everywhere.
 
-  set-global            Switch to global mode. All connection commands will use
-                        global scope by default without needing -g flag.
-                        Usage: sqlr set-global
-
-  unset-global          Switch back to repository-scoped mode.
-                        Usage: sqlr unset-global
+  set-global            Toggle global mode for connections.
+                        Usage: sqlr set-global true    (use global scope by default)
+                               sqlr set-global false   (use repository scope)
 
   describe              Describe all tables and columns available in database.
                         Usage: sqlr describe [-n connection] [--table] [--compact] [-f filter]

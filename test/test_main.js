@@ -164,7 +164,7 @@ Deno.test("sqlr scoped connections", async (t) => {
   }
 });
 
-Deno.test("sqlr set-global / unset-global", async (t) => {
+Deno.test("sqlr set-global", async (t) => {
   const projectRoot = Deno.cwd().replace("/test", "");
   const mainPath = `${projectRoot}/main.js`;
   const sqlr = (cmd, cwd) =>
@@ -191,7 +191,7 @@ Deno.test("sqlr set-global / unset-global", async (t) => {
     );
 
     await t.step("set-global makes global connections visible", async () => {
-      await sqlr("sqlr set-global", tempDir);
+      await sqlr("sqlr set-global true", tempDir);
       const result = await sqlr("sqlr ls", tempDir);
       await assertSnapshot(t, {
         step: "after set-global",
@@ -200,12 +200,12 @@ Deno.test("sqlr set-global / unset-global", async (t) => {
     });
 
     await t.step(
-      "unset-global restores repo scope",
+      "set-global false restores repo scope",
       async () => {
-        await sqlr("sqlr unset-global", tempDir);
+        await sqlr("sqlr set-global false", tempDir);
         const result = await sqlr("sqlr ls", tempDir);
         await assertSnapshot(t, {
-          step: "after unset-global",
+          step: "after set-global false",
           output: result.output,
         });
       },
@@ -289,7 +289,7 @@ Deno.test("sqlr set", async (t) => {
       },
     );
 
-    await sqlr("sqlr unset-global", tempDir);
+    await sqlr("sqlr set-global false", tempDir);
     await sqlr("sqlr clear", tempDir);
     await sqlr("sqlr clear", tempDir2);
     await sqlr("sqlr clear -g", tempDir);
