@@ -1,8 +1,5 @@
 # About
 
-Sqlr is a simple CLI utility that allows you to execute simple queries against
-your SQL database (currently only Postgres database is supported).
-
 - :zap: Don't wait for your GUI tools to load, when you need to run simple SQL
   query
 - :lock: Connection encryption for enhanced security (recommended for remote
@@ -14,48 +11,69 @@ your SQL database (currently only Postgres database is supported).
   files
 - :abacus: CI/CD friendly - commands can be executed directly, without
   `interactive` prompts
-- :robot: AI agent friendly - agents can query databases by connection name
-  without exposing connection strings in their context
+- :robot: AI agent friendly - agents can query databases without exposing
+  connection strings in their context
 
-![image](./sqlr.png)
+Supported databases: PostgreSQL, MySQL, MSSQL, ClickHouse.
 
-Run `sqlr` for details on available commands. For each command use `--help` flag
-for details on additional options and arguments.
+## Usage
 
-## Prerequisites
+**1. Add a database connection**
 
-Deno runtime environment `https://deno.land`
+```bash
+sqlr add-connection
+# ? Provide name of the connection: mydb
+# ? Select database type: PostgreSQL
+# ? Provide connection details...
+# ? Do you want to additionally secure connection settings? No
+# Connection has been added
+```
 
-## Installation
+**2. Set default connection for current scope**
 
-`deno install -g -f -r --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr`
+```bash
+sqlr set-connection mydb
+# Default connection set to mydb
+```
 
-`--allow-write` permission is needed only if you are planning to use `-o`
-parameter (write results to json file, check `sqlr query --help` for details)
+**3. Run queries directly**
 
-If your queries are failing due to certificate validation errors (and you trust
-target server) you can install using following command:
+```bash
+sqlr "select id, name, email from users limit 3"
+# 🟢 mydb
+# Query executed in: 42ms
+# Rows affected: 3
+# [
+#   { id: 1, name: "Alice", email: "alice@example.com" },
+#   { id: 2, name: "Bob", email: "bob@example.com" },
+#   { id: 3, name: "Charlie", email: "charlie@example.com" }
+# ]
+```
 
-`deno install -g -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr`
+**4. Use SQL files with input variables**
 
-This means however, that you are no longer protected from MITM attacks for other
-servers. You can consider introducing `sqlr-unsafe` sitting next to your main
-`sqlr` instance to work with trusted servers with problematic certificates:
+```sql
+-- queries/users-by-status.sql
+SELECT id, name, email FROM users WHERE status = '{{status}}' LIMIT {{limit}}
+```
 
-`deno install -g -f -r -n sqlr-unsafe --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr`
+```bash
+sqlr queries/users-by-status.sql -i "status: active" -i "limit: 10"
+```
+
+Variables use `{{key}}` syntax in SQL and are provided via `-i "key: value"`.
 
 ## Using with AI agents
 
-Sqlr stores database connections locally by name. This makes it a great fit for
-AI agents that need to query databases — the agent only needs to know the
-connection name (e.g. `sqlr query -n mydb -q "SELECT ..."`), and never has
-access to the actual connection string. Connection strings stay on your machine
-and are never exposed in the agent's context.
+Sqlr stores database connections locally. Once you set a default connection with
+`set-connection`, agents can run queries directly (e.g. `sqlr "SELECT ..."`),
+without ever needing access to the actual connection string. Connection strings
+stay on your machine and are never exposed in the agent's context.
 
 ## SQL file collections
 
 You can maintain a collection of `.sql` files and execute them with sqlr
-whenever needed. This is useful for queries you run repeatedly — health checks,
+whenever needed. This is useful for queries you run repeatedly - health checks,
 reports, data fixes, etc.
 
 ```
@@ -65,21 +83,97 @@ queries/
   cleanup-stale-sessions.sql
 ```
 
-Run any file from the collection using the `-i` flag:
+Run any file from the collection:
 
-```
-sqlr query -n mydb -i queries/health-check.sql
-sqlr query -n mydb -i queries/daily-report.sql
+```bash
+sqlr queries/health-check.sql
+sqlr queries/daily-report.sql
 ```
 
 This way your queries are version-controlled, reusable, and don't need to be
 typed out or remembered each time.
 
+## Learn More
+
+Run `sqlr` for details on available commands. For each command use `--help` flag
+for details on additional options and arguments.
+
+## Installation
+
+### Option 1: Install via Deno (Recommended)
+
+> Prerequisites
+>
+> Deno runtime environment `https://deno.com`
+
+```bash
+deno install -g -f -r --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr
+```
+
+**Permissions:**
+
+- `--allow-write` - Required for writing results to files (`-o` flag)
+- `--allow-net` - Required for connecting to databases
+- `--allow-read` - Required for reading `.sql` files
+- `--allow-env` - Required for encryption and hostname detection
+
+### Option 2: Quick Install Script (Standalone Binary)
+
+If you don't have Deno installed, you can install the pre-compiled binary with a
+single command:
+
+```bash
+curl -fsSL sobanieca.github.io/sqlr/install.sh | bash
+```
+
+This script automatically detects your OS and architecture (Linux/macOS,
+x64/arm64) and installs the appropriate binary to `/usr/local/bin`.
+
+To install to a custom location:
+
+```bash
+curl -fsSL sobanieca.github.io/sqlr/install.sh | INSTALL_DIR=~/bin bash
+```
+
+### Option 3: Manual Binary Installation
+
+Download the latest pre-compiled binary for your operating system from the
+[releases page](https://github.com/sobanieca/sqlr/releases/latest):
+
+**Example for Linux x64:**
+
+```bash
+curl -L -o sqlr https://github.com/sobanieca/sqlr/releases/latest/download/sqlr-linux-x64
+chmod +x sqlr
+sudo mv sqlr /usr/local/bin/
+```
+
+Available binaries: `sqlr-linux-x64`, `sqlr-linux-arm64`, `sqlr-macos-x64`,
+`sqlr-macos-arm64`
+
+## Updating
+
+Use `sqlr update` command and follow presented instructions to update.
+
 ## Hints
 
-If you want to disable colors (at least for main log messages), you can use:
+- If your queries are failing due to certificate validation errors (and you trust
+  target server) you can install using following command:
 
+```bash
+deno install -g -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr
 ```
+
+You can consider introducing `sqlr-unsafe` sitting next to your main `sqlr`
+instance to work with trusted servers with problematic certificates:
+
+```bash
+deno install -g -f -r -n sqlr-unsafe --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr
+```
+
+- If you want to disable colors (at least for main log messages), you can use:
+
+```bash
 NO_COLOR=1 sqlr ...
 ```
 
