@@ -10,13 +10,7 @@ MySQL, MSSQL, and ClickHouse. Published as `@sobanieca/sqlr` on JSR.
 deno task check                  # Format check + lint + type check + tests
 deno task start-db               # Start all test databases via Docker
 deno task stop-db                # Stop test databases
-
-# Tests (run from test/ directory)
-cd test && deno test -A test_main.js              # Run specific test file
-cd test && deno task test                          # Run all tests
 cd test && deno task update-snapshots             # Update snapshots after changes
-
-When running single test file to ensure that db containers run, use deno task start-db and deno task stop-db
 ```
 
 ## Architecture
