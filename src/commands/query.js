@@ -71,7 +71,7 @@ const runQuery = async (
   type,
   connectionString,
   ignoreInputValidation,
-  force,
+  yes,
   isGlobal,
 ) => {
   if (!connectionName && !connectionString) {
@@ -107,7 +107,7 @@ const runQuery = async (
       ? [...lines.slice(0, 10), "..."].join(EOL)
       : query;
     logger.info(`${gray("SQL to execute:")}\n${preview}`);
-    if (!force) {
+    if (!yes) {
       const confirmed = await Confirm.prompt("Proceed with execution?");
       if (!confirmed) {
         logger.info("Query execution cancelled.");
@@ -208,7 +208,7 @@ export default new Command()
     "Skip validation for missing input variables, allowing {{handlebars}} syntax to pass through to the database",
   )
   .option(
-    "-f, --force",
+    "-y, --yes",
     "Skip confirmation prompt when executing SQL from a file",
   )
   .description("Run query against specified database")
@@ -223,7 +223,7 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
-        force,
+        yes,
         global: g,
       },
       queryArg,
@@ -238,7 +238,7 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
-        force,
+        yes,
         g,
       );
     },

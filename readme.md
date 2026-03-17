@@ -70,6 +70,9 @@ Sqlr stores database connections locally. Once you set a default connection with
 without ever needing access to the actual connection string. Connection strings
 stay on your machine and are never exposed in the agent's context.
 
+To let the agent learn about all available sqlr commands and options, have it run
+`sqlr help`.
+
 ## SQL file collections
 
 You can maintain a collection of `.sql` files and execute them with sqlr
@@ -157,8 +160,8 @@ Use `sqlr update` command and follow presented instructions to update.
 
 ## Hints
 
-- If your queries are failing due to certificate validation errors (and you trust
-  target server) you can install using following command:
+- If your queries are failing due to certificate validation errors (and you
+  trust target server) you can install using following command:
 
 ```bash
 deno install -g -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr

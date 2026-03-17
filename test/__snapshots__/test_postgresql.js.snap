@@ -100,7 +100,7 @@ Options:
   --compact                                       - Display results in compact form                                                 (Conflicts: --table)                                  
   --ignore-input-validation                       - Skip validation for missing input variables, allowing {{handlebars}} syntax to                                                        
                                                     pass through to the database                                                                                                          
-  -f, --force                                     - Skip confirmation prompt when executing SQL from a file                                                                               
+  -y, --yes                                       - Skip confirmation prompt when executing SQL from a file                                                                               
 
 ',
   outputError: "",
@@ -211,7 +211,7 @@ Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query.sql -f',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query.sql -y',
 }
 `;
 
@@ -226,7 +226,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-vars.sql -i "col: 1" -i "alias: test" -f',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
 }
 `;
 
@@ -386,7 +386,7 @@ snapshot[`sqlr CLI 15`] = `
   output: 'Missing input variables: template. Use -i "name: value" to provide them.
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql -f',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql -y',
 }
 `;
 
@@ -401,7 +401,7 @@ Rows affected: *
 [ { handlebars_value: "{{template}}" } ]
 \`,
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql --ignore-input-validation -f',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql --ignore-input-validation -y',
 }
 `;
 

@@ -76,9 +76,14 @@ Commands:
                         (auto-detected). Use {{variable}} syntax in SQL and provide
                         values with -i "variable: value".
 
-                        Usage: sqlr query "SELECT * FROM users" [-n connection]
-                               sqlr query query.sql -n my-connection
-                               sqlr query query.sql -n my-connection -i "name: John" -i "status: active"
+                        The 'query' keyword is optional — any unrecognized argument
+                        is treated as a query automatically:
+                          sqlr "SELECT * FROM users"
+                          sqlr query.sql -i "status: active"
+
+                        Usage: sqlr "SELECT * FROM users"
+                               sqlr query.sql -i "name: John" -i "status: active"
+                               sqlr query "SELECT * FROM users" -n my-connection
 
                         Options:
                           -i, --input-variable     Input variable in "key: value" format for {{key}} substitution
@@ -89,6 +94,7 @@ Commands:
                           --table                  Display results as table
                           --compact                Display results in compact CSV-like form
                           --ignore-input-validation  Skip validation for missing input variables
+                          -y, --yes                Skip confirmation prompt when executing SQL from a file
 
   update                Display instructions for updating sqlr to the latest version.
                         Usage: sqlr update [--deno]
@@ -98,23 +104,19 @@ Typical workflow:
   1. Configure a connection:
      sqlr add-connection
 
-  2. List available connections:
-     sqlr get-connections
+  2. Set a default connection:
+     sqlr set-connection my-connection
 
   3. Explore database schema:
-     sqlr describe -n my-connection
+     sqlr describe
 
   4. Run queries:
-     sqlr query "SELECT * FROM users LIMIT 10" -n my-connection
-     sqlr query query.sql -n my-connection -i "status: active"
+     sqlr "SELECT * FROM users LIMIT 10"
+     sqlr query.sql -i "status: active"
 
-  5. Set a default connection to skip -n flag:
-     sqlr set-connection -n my-connection
-     sqlr query "SELECT 1"
-
-  6. Use global connections across projects:
+  5. Use global connections across projects:
      sqlr add-connection -n shared-db -t postgresql -s "..." -g
-     sqlr get-connections -g
+     sqlr set-connection shared-db -g
 
 AI agent instructions:
 
@@ -127,23 +129,26 @@ AI agent instructions:
      sqlr add-connection -n <name> -t <type> -s <connection-string>
      Use 'sqlr get-connection-types' to see supported database types and connection string formats.
 
-  3. To understand the database schema, run:
-     sqlr describe -n <connection-name> --compact
-     This returns a compact list of all tables and columns.
-     Use --filter to narrow results: sqlr describe -n <connection-name> -f "users"
+  3. Set a default connection to avoid passing -n on every command:
+     sqlr set-connection <connection-name>
 
-  4. To query data, use:
-     sqlr query "SELECT * FROM table LIMIT 10" -n <connection-name>
-     For larger results, save to file: sqlr query "SELECT *" -n <name> -o results.json
-     Use SQL files with variables: sqlr query query.sql -n <name> -i "param: value"
+  4. To understand the database schema, run:
+     sqlr describe --compact
+     This returns a compact list of all tables and columns.
+     Use --filter to narrow results: sqlr describe -f "users"
+
+  5. To query data, use:
+     sqlr "SELECT * FROM table LIMIT 10"
+     For larger results, save to file: sqlr "SELECT *" -o results.json
+     Use SQL files with variables: sqlr query.sql -i "param: value"
+     To skip file confirmation prompt: sqlr query.sql -y
 
   Important notes for AI agents:
-  - Use 'sqlr set-connection -n <name>' to set a default, then omit -n in subsequent commands
-  - Alternatively, use -n <connection-name> to specify which connection to use
   - Use 'sqlr describe' to discover schema before writing queries
   - Use LIMIT in SELECT queries to avoid overwhelming output
   - Use --compact or --table flags for more parseable output
   - Use -o flag to save large result sets to a JSON file
+  - Use -y flag to skip confirmation prompt when executing SQL from files
   - Use --debug global flag for troubleshooting connection issues
   - For encrypted connections, set SQLR_ENCRYPTION_PASSWORD env var to avoid interactive prompts
   - Connections are scoped to the git repository. Use -g flag to access global connections
