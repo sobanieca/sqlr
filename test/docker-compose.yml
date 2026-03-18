@@ -71,7 +71,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "clickhouse-client --query 'SELECT 1 FROM world.country LIMIT 1'",
+          "wget -qO- 'http://localhost:8123/?query=SELECT+1+FROM+world.country+LIMIT+1&user=world&password=world123' || exit 1",
         ]
       interval: 2s
       timeout: 5s
