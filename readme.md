@@ -183,4 +183,7 @@ NO_COLOR=1 sqlr ...
 ## Contribution
 
 If you want to implement/request new features you are more than welcome to
-contribute.
+contribute. Before you start working on some new features please keep in mind
+that this tool is supposed to be extremely simple to use and cover most of the
+daily use cases without handling edge cases. For edge cases proper database GUI
+app may be required.
