@@ -13,27 +13,32 @@ Deno.test("sqlr MSSQL", async (t) => {
   await startMssql();
 
   try {
-    await test(`sqlr query -t mssql -s "${CS}" -q "SELECT 1 as test"`);
+    await test(`sqlr query -t mssql -s "${CS}" "SELECT 1 as test"`);
 
     await test(
-      `sqlr query -t mssql -s "${CS}" -q "SELECT TOP 3 code, name FROM country ORDER BY code"`,
+      `sqlr query -t mssql -s "${CS}" "SELECT TOP 3 code, name FROM country ORDER BY code"`,
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" -q "SELECT TOP 3 code, name FROM country ORDER BY code" --table`,
+      `sqlr query -t mssql -s "${CS}" "SELECT TOP 3 code, name FROM country ORDER BY code" --table`,
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" -q "SELECT TOP 3 code, name FROM country ORDER BY code" --compact`,
+      `sqlr query -t mssql -s "${CS}" "SELECT TOP 3 code, name FROM country ORDER BY code" --compact`,
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" -i test-query.sql`,
+      `sqlr query -t mssql -s "${CS}" test-query.sql -y`,
       "test",
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-mssql.json`,
+      `sqlr query -t mssql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test" -y`,
+      "test",
+    );
+
+    await test(
+      `sqlr query -t mssql -s "${CS}" "SELECT 1 as test" -o /tmp/sqlr-test-output-mssql.json`,
     );
 
     await test(
@@ -49,20 +54,20 @@ Deno.test("sqlr MSSQL", async (t) => {
     );
 
     await test(
-      `sqlr query -t mssql -s "${CS}" -q "INVALID SQL QUERY"`,
+      `sqlr query -t mssql -s "${CS}" "INVALID SQL QUERY"`,
     );
 
     await test(
-      `sqlr add-connection -n test-mssql -t mssql -s "${CS}"`,
+      `sqlr add -n test-mssql -t mssql -s "${CS}"`,
     );
 
-    await test("sqlr get-connections");
+    await test("sqlr ls");
 
     await test(
-      `sqlr query -n test-mssql -q "SELECT 1 as test"`,
+      `sqlr query -n test-mssql "SELECT 1 as test"`,
     );
 
-    await test("sqlr rm-connection -n test-mssql");
+    await test("sqlr rm -n test-mssql");
   } finally {
     await stopMssql();
   }

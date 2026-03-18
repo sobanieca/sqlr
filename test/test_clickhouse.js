@@ -13,27 +13,32 @@ Deno.test("sqlr ClickHouse", async (t) => {
   await startClickhouse();
 
   try {
-    await test(`sqlr query -t clickhouse -s "${CS}" -q "SELECT 1 as test"`);
+    await test(`sqlr query -t clickhouse -s "${CS}" "SELECT 1 as test"`);
 
     await test(
-      `sqlr query -t clickhouse -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
+      `sqlr query -t clickhouse -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
     );
 
     await test(
-      `sqlr query -t clickhouse -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table`,
+      `sqlr query -t clickhouse -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table`,
     );
 
     await test(
-      `sqlr query -t clickhouse -s "${CS}" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact`,
+      `sqlr query -t clickhouse -s "${CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact`,
     );
 
     await test(
-      `sqlr query -t clickhouse -s "${CS}" -i test-query.sql`,
+      `sqlr query -t clickhouse -s "${CS}" test-query.sql -y`,
       "test",
     );
 
     await test(
-      `sqlr query -t clickhouse -s "${CS}" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-clickhouse.json`,
+      `sqlr query -t clickhouse -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test" -y`,
+      "test",
+    );
+
+    await test(
+      `sqlr query -t clickhouse -s "${CS}" "SELECT 1 as test" -o /tmp/sqlr-test-output-clickhouse.json`,
     );
 
     await test(
@@ -49,20 +54,20 @@ Deno.test("sqlr ClickHouse", async (t) => {
     );
 
     await test(
-      `sqlr query -t clickhouse -s "${CS}" -q "INVALID SQL QUERY"`,
+      `sqlr query -t clickhouse -s "${CS}" "INVALID SQL QUERY"`,
     );
 
     await test(
-      `sqlr add-connection -n test-clickhouse -t clickhouse -s "${CS}"`,
+      `sqlr add -n test-clickhouse -t clickhouse -s "${CS}"`,
     );
 
-    await test("sqlr get-connections");
+    await test("sqlr ls");
 
     await test(
-      `sqlr query -n test-clickhouse -q "SELECT 1 as test"`,
+      `sqlr query -n test-clickhouse "SELECT 1 as test"`,
     );
 
-    await test("sqlr rm-connection -n test-clickhouse");
+    await test("sqlr rm -n test-clickhouse");
   } finally {
     await stopClickhouse();
   }

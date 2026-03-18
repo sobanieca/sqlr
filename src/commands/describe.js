@@ -1,6 +1,7 @@
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
+import { formatConnectionName } from "../connection-style.js";
 import { maxTableColumnWidth } from "../const.js";
 import {
   brightBlue,
@@ -20,16 +21,18 @@ const describe = async (
   type,
   filter,
   connectionString,
+  isGlobal,
 ) => {
   if (!connectionName && !connectionString) {
-    connectionName = await getConnectionName();
+    connectionName = await getConnectionName(isGlobal);
   }
 
   let targetType = type;
   let targetConnectionString = connectionString;
 
   if (connectionName) {
-    const connection = await getConnection(connectionName);
+    const connection = await getConnection(connectionName, isGlobal);
+    logger.info(formatConnectionName(connection));
     targetConnectionString = connection.connectionString;
     targetType = connection.type;
   }
@@ -143,6 +146,10 @@ export default new Command()
   .option("--table", "Display results in table")
   .option("--compact", "Display results in compact form")
   .description("Describe all tables and columns available in database")
-  .action(async ({ name, table, compact, type, filter, connectionString }) => {
-    await describe(name, table, compact, type, filter, connectionString);
-  });
+  .action(
+    async (
+      { name, table, compact, type, filter, connectionString, global: g },
+    ) => {
+      await describe(name, table, compact, type, filter, connectionString, g);
+    },
+  );

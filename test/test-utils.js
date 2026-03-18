@@ -152,6 +152,7 @@ export const startClickhouse = () => startService("clickhouse");
 export const stopClickhouse = () => stopService("clickhouse");
 
 export {
+  assertSnapshot,
   CLICKHOUSE_CONNECTION_STRING,
   CONNECTION_STRING,
   MSSQL_CONNECTION_STRING,

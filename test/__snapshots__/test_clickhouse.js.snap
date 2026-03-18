@@ -8,7 +8,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT 1 as test"',
 }
 `;
 
@@ -24,7 +24,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
 }
 `;
 
@@ -44,7 +44,7 @@ Rows affected: *
   └──────┴─────────────┘
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
 }
 `;
 
@@ -59,23 +59,41 @@ AFG,Afghanistan
 AGO,Angola
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
 }
 `;
 
 snapshot[`sqlr ClickHouse 5`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
 Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -i test-query.sql',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query.sql -y',
 }
 `;
 
 snapshot[`sqlr ClickHouse 6`] = `
+{
+  code: 0,
+  output: "SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+}
+`;
+
+snapshot[`sqlr ClickHouse 7`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -83,11 +101,11 @@ Rows affected: *
 Results saved to /tmp/sqlr-test-output-clickhouse.json
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-clickhouse.json',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT 1 as test" -o /tmp/sqlr-test-output-clickhouse.json',
 }
 `;
 
-snapshot[`sqlr ClickHouse 7`] = `
+snapshot[`sqlr ClickHouse 8`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -139,7 +157,7 @@ snapshot[`sqlr ClickHouse 7`] = `
 }
 `;
 
-snapshot[`sqlr ClickHouse 8`] = `
+snapshot[`sqlr ClickHouse 9`] = `
 {
   code: 0,
   output: "Database schema:
@@ -202,7 +220,7 @@ snapshot[`sqlr ClickHouse 8`] = `
 }
 `;
 
-snapshot[`sqlr ClickHouse 9`] = `
+snapshot[`sqlr ClickHouse 10`] = `
 {
   code: 0,
   output: "Database schema:
@@ -215,7 +233,7 @@ world.country_language [ country_code String, language String, is_official UInt8
 }
 `;
 
-snapshot[`sqlr ClickHouse 10`] = `
+snapshot[`sqlr ClickHouse 11`] = `
 {
   code: 0,
   output: "ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY.
@@ -235,21 +253,21 @@ Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALI
   type: "SYNTAX_ERROR"
 }
 \`,
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" -q "INVALID SQL QUERY"',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "INVALID SQL QUERY"',
 }
 `;
 
-snapshot[`sqlr ClickHouse 11`] = `
+snapshot[`sqlr ClickHouse 12`] = `
 {
   code: 0,
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-clickhouse -t clickhouse -s "http://world:world123@localhost:8123?database=world"',
+  sqlrCommand: 'sqlr add -n test-clickhouse -t clickhouse -s "http://world:world123@localhost:8123?database=world"',
 }
 `;
 
-snapshot[`sqlr ClickHouse 12`] = `
+snapshot[`sqlr ClickHouse 13`] = `
 {
   code: 0,
   output: "  ┌─────────────────┬────────────┐
@@ -259,28 +277,29 @@ snapshot[`sqlr ClickHouse 12`] = `
   └─────────────────┴────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
-}
-`;
-
-snapshot[`sqlr ClickHouse 13`] = `
-{
-  code: 0,
-  output: "Query executed in: *ms
-Rows affected: *
-[ { test: 1 } ]
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -n test-clickhouse -q "SELECT 1 as test"',
+  sqlrCommand: "sqlr ls",
 }
 `;
 
 snapshot[`sqlr ClickHouse 14`] = `
 {
   code: 0,
+  output: "Using connection: test-clickhouse
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-clickhouse "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr ClickHouse 15`] = `
+{
+  code: 0,
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-clickhouse",
+  sqlrCommand: "sqlr rm -n test-clickhouse",
 }
 `;

@@ -8,7 +8,7 @@ Rows affected: *
 [ { test: "1" } ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test"',
 }
 `;
 
@@ -24,7 +24,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
 }
 `;
 
@@ -44,7 +44,7 @@ Rows affected: *
   └──────┴─────────────┘
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
 }
 `;
 
@@ -59,23 +59,41 @@ AFG,Afghanistan
 AGO,Angola
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
 }
 `;
 
 snapshot[`sqlr MySQL 5`] = `
 {
   code: 0,
-  output: 'Query executed in: *ms
+  output: 'SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
 Rows affected: *
 [ { input_file_test: "1" } ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -i test-query.sql',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query.sql -y',
 }
 `;
 
 snapshot[`sqlr MySQL 6`] = `
+{
+  code: 0,
+  output: 'SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: *
+[ { test: "1" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+}
+`;
+
+snapshot[`sqlr MySQL 7`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -83,11 +101,11 @@ Rows affected: *
 Results saved to /tmp/sqlr-test-output-mysql.json
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-mysql.json',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test" -o /tmp/sqlr-test-output-mysql.json',
 }
 `;
 
-snapshot[`sqlr MySQL 7`] = `
+snapshot[`sqlr MySQL 8`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -149,7 +167,7 @@ snapshot[`sqlr MySQL 7`] = `
 }
 `;
 
-snapshot[`sqlr MySQL 8`] = `
+snapshot[`sqlr MySQL 9`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -212,7 +230,7 @@ snapshot[`sqlr MySQL 8`] = `
 }
 `;
 
-snapshot[`sqlr MySQL 9`] = `
+snapshot[`sqlr MySQL 10`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -225,27 +243,27 @@ world-db.country_language [ country_code -> "world-db.country.code", language te
 }
 `;
 
-snapshot[`sqlr MySQL 10`] = `
+snapshot[`sqlr MySQL 11`] = `
 {
   code: 0,
   output: "MySQL Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INVALID SQL QUERY' at line 1
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" -q "INVALID SQL QUERY"',
+  sqlrCommand: 'sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "INVALID SQL QUERY"',
 }
 `;
 
-snapshot[`sqlr MySQL 11`] = `
+snapshot[`sqlr MySQL 12`] = `
 {
   code: 0,
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
+  sqlrCommand: 'sqlr add -n test-mysql -t mysql -s "mysql://world:world123@localhost:3306/world-db"',
 }
 `;
 
-snapshot[`sqlr MySQL 12`] = `
+snapshot[`sqlr MySQL 13`] = `
 {
   code: 0,
   output: "  ┌────────────┬───────┐
@@ -255,28 +273,29 @@ snapshot[`sqlr MySQL 12`] = `
   └────────────┴───────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
-}
-`;
-
-snapshot[`sqlr MySQL 13`] = `
-{
-  code: 0,
-  output: 'Query executed in: *ms
-Rows affected: *
-[ { test: "1" } ]
-',
-  outputError: "",
-  sqlrCommand: 'sqlr query -n test-mysql -q "SELECT 1 as test"',
+  sqlrCommand: "sqlr ls",
 }
 `;
 
 snapshot[`sqlr MySQL 14`] = `
 {
   code: 0,
+  output: 'Using connection: test-mysql
+Query executed in: *ms
+Rows affected: *
+[ { test: "1" } ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-mysql "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MySQL 15`] = `
+{
+  code: 0,
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-mysql",
+  sqlrCommand: "sqlr rm -n test-mysql",
 }
 `;

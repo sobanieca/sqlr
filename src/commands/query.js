@@ -1,43 +1,119 @@
-import { brightGreen, Command, EnumType, gray, Table } from "../deps.js";
+import {
+  brightGreen,
+  Command,
+  Confirm,
+  EnumType,
+  EOL,
+  gray,
+  Table,
+} from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
 import { maxTableColumnWidth } from "../const.js";
 import { DatabaseError } from "../database-error.js";
+import { formatConnectionName } from "../connection-style.js";
+
+const parseInputVariables = (vars) => {
+  const result = {};
+  if (!vars) return result;
+  for (const item of vars) {
+    const colonIndex = item.indexOf(":");
+    if (colonIndex === -1) {
+      throw new Error(
+        `Invalid input variable format: "${item}". Expected "key: value".`,
+      );
+    }
+    const key = item.substring(0, colonIndex).trim();
+    const value = item.substring(colonIndex + 1).trim();
+    result[key] = value;
+  }
+  return result;
+};
+
+const replaceVariables = (query, variables, ignoreInputValidation) => {
+  let result = query;
+  for (const [key, value] of Object.entries(variables)) {
+    result = result.replaceAll(`{{${key}}}`, value);
+  }
+
+  if (!ignoreInputValidation) {
+    const unreplaced = result.match(/\{\{([^}]+)\}\}/g);
+    if (unreplaced) {
+      const names = [...new Set(unreplaced.map((m) => m.slice(2, -2)))];
+      throw new Error(
+        `Missing input variables: ${
+          names.join(", ")
+        }. Use -i "name: value" to provide them.`,
+      );
+    }
+  }
+
+  return result;
+};
+
+const isFilePath = async (input) => {
+  try {
+    const stat = await Deno.stat(input);
+    return stat.isFile;
+  } catch {
+    return false;
+  }
+};
 
 const runQuery = async (
-  query,
-  inputFile,
+  queryArg,
+  inputVariables,
   outputFile,
   connectionName,
   table,
   compact,
   type,
   connectionString,
+  ignoreInputValidation,
+  yes,
+  isGlobal,
 ) => {
   if (!connectionName && !connectionString) {
-    connectionName = await getConnectionName();
+    connectionName = await getConnectionName(isGlobal);
   }
 
   let targetType = type;
   let targetConnectionString = connectionString;
 
   if (connectionName) {
-    const connection = await getConnection(connectionName);
+    const connection = await getConnection(connectionName, isGlobal);
+    logger.info(formatConnectionName(connection));
     targetConnectionString = connection.connectionString;
     targetType = connection.type;
   }
 
-  if (inputFile && query) {
-    throw new Error("Option '--input-file' conflicts with option '--query'.");
-  }
-
-  if (inputFile) {
-    query = await Deno.readTextFile(inputFile);
-  }
-
-  if (!query) {
+  if (!queryArg) {
     throw new Error("No SQL query provided");
+  }
+
+  let query = queryArg;
+  const isFile = await isFilePath(queryArg);
+  if (isFile) {
+    query = await Deno.readTextFile(queryArg);
+  }
+
+  const variables = parseInputVariables(inputVariables);
+  query = replaceVariables(query, variables, ignoreInputValidation);
+
+  if (isFile) {
+    const lines = query.split(EOL);
+    const preview = lines.length > 10
+      ? [...lines.slice(0, 10), "..."].join(EOL)
+      : query;
+    logger.info(`${gray("SQL to execute:")}\n${preview}`);
+    if (!yes) {
+      const confirmed = await Confirm.prompt("Proceed with execution?");
+      if (!confirmed) {
+        logger.info("Query execution cancelled.");
+        return;
+      }
+    }
   }
 
   try {
@@ -109,10 +185,10 @@ const runQuery = async (
 export default new Command()
   .type("ConnectorType", new EnumType(Object.keys(connectors)))
   .arguments("[queryArg:string]")
-  .option("-q, --query [query]", "SQL query to be executed", { default: "" })
   .option(
-    "-i, --input-file [input-file]",
-    "Path to input file containing SQL query",
+    "-i, --input-variable <var:string>",
+    'Input variable in "key: value" format for {{key}} substitution in SQL',
+    { collect: true },
   )
   .option(
     "-o, --output-file [output-file]",
@@ -127,30 +203,43 @@ export default new Command()
   .option("--compact", "Display results in compact form", {
     conflicts: ["table"],
   })
+  .option(
+    "--ignore-input-validation",
+    "Skip validation for missing input variables, allowing {{handlebars}} syntax to pass through to the database",
+  )
+  .option(
+    "-y, --yes",
+    "Skip confirmation prompt when executing SQL from a file",
+  )
   .description("Run query against specified database")
   .action(
     async (
       {
-        query,
-        inputFile,
+        inputVariable,
         outputFile,
         name,
         table,
         compact,
         type,
         connectionString,
+        ignoreInputValidation,
+        yes,
+        global: g,
       },
       queryArg,
     ) => {
       await runQuery(
-        query || queryArg,
-        inputFile,
+        queryArg,
+        inputVariable,
         outputFile,
         name,
         table,
         compact,
         type,
         connectionString,
+        ignoreInputValidation,
+        yes,
+        g,
       );
     },
   );

@@ -8,7 +8,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test"',
 }
 `;
 
@@ -24,7 +24,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT TOP 3 code, name FROM country ORDER BY code"',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code"',
 }
 `;
 
@@ -44,7 +44,7 @@ Rows affected: *
   └──────┴─────────────┘
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT TOP 3 code, name FROM country ORDER BY code" --table',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --table',
 }
 `;
 
@@ -59,23 +59,41 @@ AFG,Afghanistan
 AGO,Angola
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT TOP 3 code, name FROM country ORDER BY code" --compact',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --compact',
 }
 `;
 
 snapshot[`sqlr MSSQL 5`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
 Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -i test-query.sql',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query.sql -y',
 }
 `;
 
 snapshot[`sqlr MSSQL 6`] = `
+{
+  code: 0,
+  output: "SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+}
+`;
+
+snapshot[`sqlr MSSQL 7`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -83,11 +101,11 @@ Rows affected: *
 Results saved to /tmp/sqlr-test-output-mssql.json
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "SELECT 1 as test" -o /tmp/sqlr-test-output-mssql.json',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test" -o /tmp/sqlr-test-output-mssql.json',
 }
 `;
 
-snapshot[`sqlr MSSQL 7`] = `
+snapshot[`sqlr MSSQL 8`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -149,7 +167,7 @@ snapshot[`sqlr MSSQL 7`] = `
 }
 `;
 
-snapshot[`sqlr MSSQL 8`] = `
+snapshot[`sqlr MSSQL 9`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -212,7 +230,7 @@ snapshot[`sqlr MSSQL 8`] = `
 }
 `;
 
-snapshot[`sqlr MSSQL 9`] = `
+snapshot[`sqlr MSSQL 10`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -225,27 +243,27 @@ dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is
 }
 `;
 
-snapshot[`sqlr MSSQL 10`] = `
+snapshot[`sqlr MSSQL 11`] = `
 {
   code: 0,
   output: "MSSQLError: Incorrect syntax near 'QUERY'.
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -q "INVALID SQL QUERY"',
+  sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "INVALID SQL QUERY"',
 }
 `;
 
-snapshot[`sqlr MSSQL 11`] = `
+snapshot[`sqlr MSSQL 12`] = `
 {
   code: 0,
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true"',
+  sqlrCommand: 'sqlr add -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true"',
 }
 `;
 
-snapshot[`sqlr MSSQL 12`] = `
+snapshot[`sqlr MSSQL 13`] = `
 {
   code: 0,
   output: "  ┌────────────┬───────┐
@@ -255,28 +273,29 @@ snapshot[`sqlr MSSQL 12`] = `
   └────────────┴───────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
-}
-`;
-
-snapshot[`sqlr MSSQL 13`] = `
-{
-  code: 0,
-  output: "Query executed in: *ms
-Rows affected: *
-[ { test: 1 } ]
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -n test-mssql -q "SELECT 1 as test"',
+  sqlrCommand: "sqlr ls",
 }
 `;
 
 snapshot[`sqlr MSSQL 14`] = `
 {
   code: 0,
+  output: "Using connection: test-mssql
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-mssql "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr MSSQL 15`] = `
+{
+  code: 0,
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-mssql",
+  sqlrCommand: "sqlr rm -n test-mssql",
 }
 `;

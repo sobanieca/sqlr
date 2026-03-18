@@ -13,23 +13,27 @@ Description:
 
 Options:
 
-  -h, --help     - Show this help.                            
-  -V, --version  - Show the version number for this program.  
-  --debug        - Enable debug logs                          
+  -h, --help     - Show this help.                                                 
+  -V, --version  - Show the version number for this program.                       
+  --debug        - Enable debug logs                                               
+  -g, --global   - Use global scope for connections (ignore git repository scope)  
 
 Commands:
 
-  add-connection                      - Add new connection. Run without parameters to use wizard.           
-  rm-connection         [connection]  - Remove selected connection                                          
-  get-connection        [connection]  - Get details of selected connection                                  
-  get-connection-types                - Get available connection types to be used with '--type' parameter in
-                                        'add-connection' command                                            
-  get-connections                     - List all defined connections                                        
-  clear-connections                   - Remove all connections                                              
-  describe                            - Describe all tables and columns available in database               
-  query                 [queryArg]    - Run query against specified database                                
-  update                              - Update sqlr to the latest version                                   
-  help                                - Display detailed help text with usage instructions                  
+  add                       - Add new connection. Run without parameters to use wizard.                     
+  rm          [connection]  - Remove selected connection                                                    
+  get         [connection]  - Get details of selected connection                                            
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add'    
+                              command                                                                       
+  ls                        - List all defined connections                                                  
+  clear                     - Remove all connections                                                        
+  set         [connection]  - Set default connection for current scope                                      
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository
+                              scope)                                                                        
+  describe                  - Describe all tables and columns available in database                         
+  query       [queryArg]    - Run query against specified database                                          
+  update                    - Update sqlr to the latest version                                             
+  help                      - Display detailed help text with usage instructions                            
 
 ",
   outputError: "",
@@ -43,7 +47,7 @@ snapshot[`sqlr main 2`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"',
+  sqlrCommand: 'sqlr add -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"',
 }
 `;
 
@@ -53,7 +57,7 @@ snapshot[`sqlr main 3`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n conn-two -t mysql -s "mysql://u:p@localhost:3306/db2"',
+  sqlrCommand: 'sqlr add -n conn-two -t mysql -s "mysql://u:p@localhost:3306/db2"',
 }
 `;
 
@@ -69,7 +73,7 @@ snapshot[`sqlr main 4`] = `
   └──────────┴────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
@@ -79,7 +83,7 @@ snapshot[`sqlr main 5`] = `
   output: "All connections removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr clear-connections",
+  sqlrCommand: "sqlr clear",
 }
 `;
 
@@ -91,7 +95,7 @@ snapshot[`sqlr main 6`] = `
   └──────┴──────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
@@ -101,7 +105,7 @@ snapshot[`sqlr connection string encoding 1`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n enc-mssql -t mssql -s "mssql://sa:World123!%3B@localhost:1433/db?encrypt=true&trustServerCertificate=false"',
+  sqlrCommand: 'sqlr add -n enc-mssql -t mssql -s "mssql://sa:World123!%3B@localhost:1433/db?encrypt=true&trustServerCertificate=false"',
 }
 `;
 
@@ -116,7 +120,7 @@ snapshot[`sqlr connection string encoding 2`] = `
   └───────────┴───────┴──────────────────────────────────────────────────────────────────────────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connection enc-mssql",
+  sqlrCommand: "sqlr get enc-mssql",
 }
 `;
 
@@ -126,7 +130,7 @@ snapshot[`sqlr connection string encoding 3`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n enc-pg -t postgresql -s "postgres://localhost:5432/db?user=admin&password=p%40ss%3Aw%23rd&application_name=sqlr&sslmode=prefer"',
+  sqlrCommand: 'sqlr add -n enc-pg -t postgresql -s "postgres://localhost:5432/db?user=admin&password=p%40ss%3Aw%23rd&application_name=sqlr&sslmode=prefer"',
 }
 `;
 
@@ -141,7 +145,7 @@ snapshot[`sqlr connection string encoding 4`] = `
   └────────┴────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connection enc-pg",
+  sqlrCommand: "sqlr get enc-pg",
 }
 `;
 
@@ -151,7 +155,7 @@ snapshot[`sqlr connection string encoding 5`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: \`sqlr add-connection -n enc-mysql -t mysql -s 'mysql://u:p%40ss@localhost:3306/db?ssl={"rejectUnauthorized":false}'\`,
+  sqlrCommand: \`sqlr add -n enc-mysql -t mysql -s 'mysql://u:p%40ss@localhost:3306/db?ssl={"rejectUnauthorized":false}'\`,
 }
 `;
 
@@ -165,7 +169,7 @@ snapshot[`sqlr connection string encoding 6`] = `
   └───────────┴───────┴───────────────────────────────────────────────────────────────────┘
 ',
   outputError: "",
-  sqlrCommand: "sqlr get-connection enc-mysql",
+  sqlrCommand: "sqlr get enc-mysql",
 }
 `;
 
@@ -175,7 +179,7 @@ snapshot[`sqlr connection string encoding 7`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n enc-ch -t clickhouse -s "https://user:p%40ss%3Bword@localhost:8443?database=mydb"',
+  sqlrCommand: 'sqlr add -n enc-ch -t clickhouse -s "https://user:p%40ss%3Bword@localhost:8443?database=mydb"',
 }
 `;
 
@@ -189,7 +193,7 @@ snapshot[`sqlr connection string encoding 8`] = `
   └────────┴────────────┴─────────────────────────────────────────────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connection enc-ch",
+  sqlrCommand: "sqlr get enc-ch",
 }
 `;
 
@@ -199,7 +203,7 @@ snapshot[`sqlr connection string encoding 9`] = `
   output: "All connections removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr clear-connections",
+  sqlrCommand: "sqlr clear",
 }
 `;
 
@@ -209,7 +213,7 @@ snapshot[`sqlr encrypted connection via env var 1`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n encrypted-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"',
+  sqlrCommand: 'sqlr add -n encrypted-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"',
 }
 `;
 
@@ -223,7 +227,7 @@ snapshot[`sqlr encrypted connection via env var 2`] = `
   └──────────────┴────────────┴───────────────────────────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connection encrypted-pg",
+  sqlrCommand: "sqlr get encrypted-pg",
 }
 `;
 
@@ -233,6 +237,158 @@ snapshot[`sqlr encrypted connection via env var 3`] = `
   output: "All connections removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr clear-connections",
+  sqlrCommand: "sqlr clear",
+}
+`;
+
+snapshot[`sqlr scoped connections 1`] = `
+{
+  output: "  ┌───────────┬────────────┐
+  │ Name      │ Type       │
+  ├───────────┼────────────┤
+  │ repo-conn │ postgresql │
+  └───────────┴────────────┘
+",
+  step: "repo-scoped connection visible",
+}
+`;
+
+snapshot[`sqlr scoped connections 2`] = `
+{
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  step: "repo-scoped connection not visible in other repo",
+}
+`;
+
+snapshot[`sqlr scoped connections 3`] = `
+{
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  step: "repo-scoped connection not visible globally",
+}
+`;
+
+snapshot[`sqlr scoped connections 4`] = `
+{
+  output1: "  ┌─────────────┬───────┐
+  │ Name        │ Type  │
+  ├─────────────┼───────┤
+  │ global-conn │ mysql │
+  └─────────────┴───────┘
+",
+  output2: "  ┌─────────────┬───────┐
+  │ Name        │ Type  │
+  ├─────────────┼───────┤
+  │ global-conn │ mysql │
+  └─────────────┴───────┘
+",
+  step: "global connection visible from both repos",
+}
+`;
+
+snapshot[`sqlr scoped connections 5`] = `
+{
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  step: "global connection not visible in repo scope",
+}
+`;
+
+snapshot[`sqlr scoped connections 6`] = `
+{
+  globalOutput: "  ┌─────────────┬───────┐
+  │ Name        │ Type  │
+  ├─────────────┼───────┤
+  │ global-conn │ mysql │
+  └─────────────┴───────┘
+",
+  repoOutput: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  step: "clear only affects current scope",
+}
+`;
+
+snapshot[`sqlr set-global 1`] = `
+{
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  step: "before set-global",
+}
+`;
+
+snapshot[`sqlr set-global 2`] = `
+{
+  output: "  ┌───────────┬────────────┐
+  │ Name      │ Type       │
+  ├───────────┼────────────┤
+  │ global-db │ postgresql │
+  └───────────┴────────────┘
+",
+  step: "after set-global",
+}
+`;
+
+snapshot[`sqlr set-global 3`] = `
+{
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  step: "after set-global false",
+}
+`;
+
+snapshot[`sqlr set 1`] = `
+{
+  output: "Default connection set to repo-db
+",
+  step: "set output",
+}
+`;
+
+snapshot[`sqlr set 2`] = `
+{
+  output: "  ┌─────────┬────────────┬───────────────────────────────────┐
+  │ Name    │ Type       │ Connection string                 │
+  ├─────────┼────────────┼───────────────────────────────────┤
+  │ repo-db │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └─────────┴────────────┴───────────────────────────────────┘
+",
+  step: "get uses default",
+}
+`;
+
+snapshot[`sqlr set 3`] = `
+{
+  output: "  ┌──────────┬───────┬────────────────────────────────┐
+  │ Name     │ Type  │ Connection string              │
+  ├──────────┼───────┼────────────────────────────────┤
+  │ other-db │ mysql │ mysql://u:p@localhost:3306/db2 │
+  └──────────┴───────┴────────────────────────────────┘
+",
+  step: "default in other repo is other-db",
+}
+`;
+
+snapshot[`sqlr set 4`] = `
+{
+  output: "  ┌───────────┬────────────┬───────────────────────────────────┐
+  │ Name      │ Type       │ Connection string                 │
+  ├───────────┼────────────┼───────────────────────────────────┤
+  │ global-db │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └───────────┴────────────┴───────────────────────────────────┘
+",
+  step: "global default used from another repo",
 }
 `;

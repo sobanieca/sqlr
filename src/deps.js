@@ -9,14 +9,17 @@ import {
   brightYellow,
   gray,
   green,
+  rgb24,
   white,
 } from "jsr:@std/fmt@1.0.9/colors";
 import { Command, EnumType } from "jsr:@cliffy/command@1.0.0";
 import { Input } from "jsr:@cliffy/prompt@1.0.0/input";
 import { Select } from "jsr:@cliffy/prompt@1.0.0/select";
 import { Toggle } from "jsr:@cliffy/prompt@1.0.0/toggle";
+import { Confirm } from "jsr:@cliffy/prompt@1.0.0/confirm";
 import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
 import { Table } from "jsr:@cliffy/table@1.0.0";
+import { EOL } from "jsr:@std/fs@1/eol";
 import { Client } from "jsr:@db/postgres@0.19.5";
 
 export {
@@ -28,12 +31,15 @@ export {
   brightYellow,
   Client as DbClient,
   Command,
+  Confirm,
   EnumType,
+  EOL,
   gray,
   green,
   Input,
   log,
   LogLevels,
+  rgb24,
   Secret,
   Select,
   Table,

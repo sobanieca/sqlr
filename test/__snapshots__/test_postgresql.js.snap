@@ -13,23 +13,27 @@ Description:
 
 Options:
 
-  -h, --help     - Show this help.                            
-  -V, --version  - Show the version number for this program.  
-  --debug        - Enable debug logs                          
+  -h, --help     - Show this help.                                                 
+  -V, --version  - Show the version number for this program.                       
+  --debug        - Enable debug logs                                               
+  -g, --global   - Use global scope for connections (ignore git repository scope)  
 
 Commands:
 
-  add-connection                      - Add new connection. Run without parameters to use wizard.           
-  rm-connection         [connection]  - Remove selected connection                                          
-  get-connection        [connection]  - Get details of selected connection                                  
-  get-connection-types                - Get available connection types to be used with '--type' parameter in
-                                        'add-connection' command                                            
-  get-connections                     - List all defined connections                                        
-  clear-connections                   - Remove all connections                                              
-  describe                            - Describe all tables and columns available in database               
-  query                 [queryArg]    - Run query against specified database                                
-  update                              - Update sqlr to the latest version                                   
-  help                                - Display detailed help text with usage instructions                  
+  add                       - Add new connection. Run without parameters to use wizard.                     
+  rm          [connection]  - Remove selected connection                                                    
+  get         [connection]  - Get details of selected connection                                            
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add'    
+                              command                                                                       
+  ls                        - List all defined connections                                                  
+  clear                     - Remove all connections                                                        
+  set         [connection]  - Set default connection for current scope                                      
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository
+                              scope)                                                                        
+  describe                  - Describe all tables and columns available in database                         
+  query       [queryArg]    - Run query against specified database                                          
+  update                    - Update sqlr to the latest version                                             
+  help                      - Display detailed help text with usage instructions                            
 
 ",
   outputError: "",
@@ -67,7 +71,7 @@ snapshot[`sqlr CLI 2`] = `
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 \`,
   outputError: "",
-  sqlrCommand: "sqlr get-connection-types",
+  sqlrCommand: "sqlr ls-types",
 }
 `;
 
@@ -84,16 +88,19 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                                      
-  --debug                                       - Enable debug logs                                                                                    
-  -q, --query              [query]              - SQL query to be executed                       (Default: "")                                         
-  -i, --input-file         [input-file]         - Path to input file containing SQL query                                                              
-  -o, --output-file        [output-file]        - Output file where JSON results will be stored                                                        
-  -n, --name               [name]               - Name of the connection                         (Conflicts: --type, --connection-string)              
-  -t, --type               [type]               - Type of the connection                         (Values: "postgresql", "mysql", "mssql", "clickhouse")
-  -s, --connection-string  [connection-string]  - Connection string                                                                                    
-  --table                                       - Display results as table                       (Conflicts: --compact)                                
-  --compact                                     - Display results in compact form                (Conflicts: --table)                                  
+  -h, --help                                      - Show this help.                                                                                                                       
+  --debug                                         - Enable debug logs                                                                                                                     
+  -g, --global                                    - Use global scope for connections (ignore git repository scope)                                                                        
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}} substitution in SQL                                                                 
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                                                         
+  -n, --name                 [name]               - Name of the connection                                                          (Conflicts: --type, --connection-string)              
+  -t, --type                 [type]               - Type of the connection                                                          (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string    [connection-string]  - Connection string                                                                                                                     
+  --table                                         - Display results as table                                                        (Conflicts: --compact)                                
+  --compact                                       - Display results in compact form                                                 (Conflicts: --table)                                  
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing {{handlebars}} syntax to                                                        
+                                                    pass through to the database                                                                                                          
+  -y, --yes                                       - Skip confirmation prompt when executing SQL from a file                                                                               
 
 ',
   outputError: "",
@@ -114,14 +121,15 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                            
-  --debug                                       - Enable debug logs                                                                          
-  -n, --name               [name]               - Name of the connection               (Conflicts: --type, --connection-string)              
-  -t, --type               [type]               - Type of the connection               (Values: "postgresql", "mysql", "mssql", "clickhouse")
-  -s, --connection-string  [connection-string]  - Connection string                                                                          
-  -f, --filter             [filter]             - Filter results by schema/table name                                                        
-  --table                                       - Display results in table                                                                   
-  --compact                                     - Display results in compact form                                                            
+  -h, --help                                    - Show this help.                                                                                                       
+  --debug                                       - Enable debug logs                                                                                                     
+  -g, --global                                  - Use global scope for connections (ignore git repository scope)                                                        
+  -n, --name               [name]               - Name of the connection                                          (Conflicts: --type, --connection-string)              
+  -t, --type               [type]               - Type of the connection                                          (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -s, --connection-string  [connection-string]  - Connection string                                                                                                     
+  -f, --filter             [filter]             - Filter results by schema/table name                                                                                   
+  --table                                       - Display results in table                                                                                              
+  --compact                                     - Display results in compact form                                                                                       
 
 ',
   outputError: "",
@@ -137,7 +145,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT 1 as test"',
 }
 `;
 
@@ -153,7 +161,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
 }
 `;
 
@@ -173,7 +181,7 @@ Rows affected: *
   └──────┴─────────────┘
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
 }
 `;
 
@@ -188,23 +196,41 @@ AFG,Afghanistan
 AGO,Angola
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
 }
 `;
 
 snapshot[`sqlr CLI 9`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
 Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -i test-query.sql',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query.sql -y',
 }
 `;
 
 snapshot[`sqlr CLI 10`] = `
+{
+  code: 0,
+  output: "SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+}
+`;
+
+snapshot[`sqlr CLI 11`] = `
 {
   code: 0,
   output: "Query executed in: *ms
@@ -212,11 +238,11 @@ Rows affected: *
 Results saved to /tmp/sqlr-test-output.json
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
 }
 `;
 
-snapshot[`sqlr CLI 11`] = `
+snapshot[`sqlr CLI 12`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -278,7 +304,7 @@ snapshot[`sqlr CLI 11`] = `
 }
 `;
 
-snapshot[`sqlr CLI 12`] = `
+snapshot[`sqlr CLI 13`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -341,7 +367,7 @@ snapshot[`sqlr CLI 12`] = `
 }
 `;
 
-snapshot[`sqlr CLI 13`] = `
+snapshot[`sqlr CLI 14`] = `
 {
   code: 0,
   output: 'Database schema:
@@ -354,27 +380,52 @@ public.country_language [ country_code -> "public.country.code", language text, 
 }
 `;
 
-snapshot[`sqlr CLI 14`] = `
+snapshot[`sqlr CLI 15`] = `
+{
+  code: 0,
+  output: 'Missing input variables: template. Use -i "name: value" to provide them.
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql -y',
+}
+`;
+
+snapshot[`sqlr CLI 16`] = `
+{
+  code: 0,
+  output: \`SQL to execute:
+SELECT '{{template}}' as handlebars_value;
+
+Query executed in: *ms
+Rows affected: *
+[ { handlebars_value: "{{template}}" } ]
+\`,
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql --ignore-input-validation -y',
+}
+`;
+
+snapshot[`sqlr CLI 17`] = `
 {
   code: 0,
   output: 'PostgresError: syntax error at or near "INVALID"
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -q "INVALID SQL QUERY"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "INVALID SQL QUERY"',
 }
 `;
 
-snapshot[`sqlr CLI 15`] = `
+snapshot[`sqlr CLI 18`] = `
 {
   code: 0,
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add-connection -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
+  sqlrCommand: 'sqlr add -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
 }
 `;
 
-snapshot[`sqlr CLI 16`] = `
+snapshot[`sqlr CLI 19`] = `
 {
   code: 0,
   output: "  ┌─────────┬────────────┐
@@ -384,28 +435,29 @@ snapshot[`sqlr CLI 16`] = `
   └─────────┴────────────┘
 ",
   outputError: "",
-  sqlrCommand: "sqlr get-connections",
+  sqlrCommand: "sqlr ls",
 }
 `;
 
-snapshot[`sqlr CLI 17`] = `
+snapshot[`sqlr CLI 20`] = `
 {
   code: 0,
-  output: "Query executed in: *ms
+  output: "Using connection: test-pg
+Query executed in: *ms
 Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -n test-pg -q "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -n test-pg "SELECT 1 as test"',
 }
 `;
 
-snapshot[`sqlr CLI 18`] = `
+snapshot[`sqlr CLI 21`] = `
 {
   code: 0,
   output: "Connection removed
 ",
   outputError: "",
-  sqlrCommand: "sqlr rm-connection -n test-pg",
+  sqlrCommand: "sqlr rm -n test-pg",
 }
 `;
