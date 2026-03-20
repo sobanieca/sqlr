@@ -1,16 +1,17 @@
-import { DbClient, Input, Secret, Select } from "../deps.js";
+import { Input, pg, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
-import { PostgresError } from "jsr:@db/postgres@0.19.5";
+
+const { Client } = pg;
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
   getConnectionStringHint: () =>
     `
 postgres://host:port/database_name?user=user&password=password(urlencoded)&application_name=sqlr
-Additional url parameters: 
+Additional url parameters:
 'sslmode' - require | prefer | disable
 'options' - additional values for connection (options=--cluster=your_cluster_name)
-More details: https://deno-postgres.com/#/?id=url-parameters
+More details: https://node-postgres.com/features/connecting
   `.trim(),
   getConnectionString: async () => {
     const host = await Input.prompt(
@@ -32,11 +33,14 @@ More details: https://deno-postgres.com/#/?id=url-parameters
     return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=${sslmode}`;
   },
   getTables: async (connectionString) => {
-    const dbClient = new DbClient(connectionString);
+    const dbClient = new Client({
+      connectionString,
+      ssl: parseSsl(connectionString),
+    });
     await dbClient.connect();
 
     try {
-      const tablesQuery = await dbClient.queryObject(`
+      const tablesQuery = await dbClient.query(`
         select
           table_schema,
           table_name
@@ -49,7 +53,7 @@ More details: https://deno-postgres.com/#/?id=url-parameters
 
       const tables = tablesQuery.rows;
 
-      const columnsQuery = await dbClient.queryObject(`
+      const columnsQuery = await dbClient.query(`
         select
           table_schema,
           table_name,
@@ -66,7 +70,7 @@ More details: https://deno-postgres.com/#/?id=url-parameters
 
       const columns = columnsQuery.rows;
 
-      const foreignKeysQuery = await dbClient.queryObject(`
+      const foreignKeysQuery = await dbClient.query(`
         select
           tc.table_schema,
           tc.constraint_name,
@@ -115,7 +119,7 @@ More details: https://deno-postgres.com/#/?id=url-parameters
           })),
       }));
     } catch (err) {
-      if (err instanceof PostgresError) {
+      if (err.severity) {
         throw new DatabaseError(err.toString());
       }
       throw err;
@@ -124,21 +128,21 @@ More details: https://deno-postgres.com/#/?id=url-parameters
     }
   },
   query: async (connectionString, query) => {
-    const dbClient = new DbClient(connectionString);
+    const dbClient = new Client({
+      connectionString,
+      ssl: parseSsl(connectionString),
+    });
     await dbClient.connect();
 
     try {
-      const result = await dbClient.queryObject({
-        camelcase: false,
-        text: query,
-      });
+      const result = await dbClient.query(query);
 
       return {
         rowsAffected: result.rowCount,
         rows: result.rows,
       };
     } catch (err) {
-      if (err instanceof PostgresError) {
+      if (err.severity) {
         throw new DatabaseError(err.toString());
       }
       throw err;
@@ -146,6 +150,14 @@ More details: https://deno-postgres.com/#/?id=url-parameters
       await dbClient.end();
     }
   },
+};
+
+const parseSsl = (connectionString) => {
+  const url = new URL(connectionString);
+  const sslmode = url.searchParams.get("sslmode");
+  if (sslmode === "disable") return false;
+  if (sslmode === "require") return { rejectUnauthorized: false };
+  return false;
 };
 
 export { postgresConnector };

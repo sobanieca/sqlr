@@ -20,7 +20,7 @@ import { Confirm } from "jsr:@cliffy/prompt@1.0.0/confirm";
 import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
 import { Table } from "jsr:@cliffy/table@1.0.0";
 import { EOL } from "jsr:@std/fs@1/eol";
-import { Client } from "jsr:@db/postgres@0.19.5";
+import pg from "npm:pg@8";
 
 export {
   BaseHandler,
@@ -29,7 +29,6 @@ export {
   brightGreen,
   brightRed,
   brightYellow,
-  Client as DbClient,
   Command,
   Confirm,
   EnumType,
@@ -39,6 +38,7 @@ export {
   Input,
   log,
   LogLevels,
+  pg,
   rgb24,
   Secret,
   Select,

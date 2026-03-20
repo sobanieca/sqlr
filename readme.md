@@ -1,3 +1,6 @@
+> **Beta:** This project is in beta. Database connectors need more real-world
+> usage to be fully validated across all supported databases.
+
 # About
 
 - :zap: Don't wait for your GUI tools to load, when you need to run simple SQL

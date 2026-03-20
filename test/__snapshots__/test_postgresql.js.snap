@@ -53,7 +53,7 @@ snapshot[`sqlr CLI 2`] = `
   │            │ 'sslmode' - require | prefer | disable                                           │
   │            │ 'options' - additional values for connection                                     │
   │            │ (options=--cluster=your_cluster_name)                                            │
-  │            │ More details: https://deno-postgres.com/#/?id=url-parameters                     │
+  │            │ More details: https://node-postgres.com/features/connecting                      │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mysql      │ mysql://user:password@host:port/database_name                                    │
   │            │ Additional url parameters:                                                       │
@@ -408,7 +408,7 @@ Rows affected: *
 snapshot[`sqlr CLI 17`] = `
 {
   code: 0,
-  output: 'PostgresError: syntax error at or near "INVALID"
+  output: 'error: syntax error at or near "INVALID"
 ',
   outputError: "",
   sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "INVALID SQL QUERY"',
