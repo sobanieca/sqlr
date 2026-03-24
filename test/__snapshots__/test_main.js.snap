@@ -4,7 +4,7 @@ snapshot[`sqlr main 1`] = `
 {
   code: 0,
   output: "
-Usage:   sqlr 
+Usage:   sqlr  
 Version: *
 
 Description:

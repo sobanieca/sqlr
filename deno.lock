@@ -9,12 +9,17 @@
     "jsr:@cliffy/prompt@1.0.0": "1.0.0",
     "jsr:@cliffy/table@1.0.0": "1.0.0",
     "jsr:@db/postgres@0.19.5": "0.19.5",
+    "jsr:@db/sqlite@*": "0.13.0",
+    "jsr:@db/sqlite@0.13": "0.13.0",
+    "jsr:@denosaurs/plug@1": "1.1.0",
     "jsr:@std/assert@^1.0.13": "1.0.19",
     "jsr:@std/assert@^1.0.18": "1.0.19",
     "jsr:@std/bytes@^1.0.5": "1.0.6",
     "jsr:@std/crypto@^1.0.4": "1.0.5",
+    "jsr:@std/encoding@1": "1.0.10",
     "jsr:@std/encoding@^1.0.10": "1.0.10",
     "jsr:@std/encoding@^1.0.9": "1.0.10",
+    "jsr:@std/fmt@1": "1.0.9",
     "jsr:@std/fmt@1.0.9": "1.0.9",
     "jsr:@std/fmt@^1.0.5": "1.0.9",
     "jsr:@std/fmt@^1.0.6": "1.0.9",
@@ -27,6 +32,8 @@
     "jsr:@std/io@~0.225.2": "0.225.3",
     "jsr:@std/io@~0.225.3": "0.225.3",
     "jsr:@std/log@0.224.14": "0.224.14",
+    "jsr:@std/path@1": "1.1.4",
+    "jsr:@std/path@1.0": "1.0.9",
     "jsr:@std/path@^1.0.8": "1.1.4",
     "jsr:@std/path@^1.0.9": "1.1.4",
     "jsr:@std/path@^1.1.4": "1.1.4",
@@ -98,6 +105,22 @@
         "jsr:@std/path@^1.0.8"
       ]
     },
+    "@db/sqlite@0.13.0": {
+      "integrity": "4545c635e0b3d4ddfdc0f2240f932f24b8ad0178e9c2e3a0f9403e7b18ae2fb5",
+      "dependencies": [
+        "jsr:@denosaurs/plug",
+        "jsr:@std/path@1.0"
+      ]
+    },
+    "@denosaurs/plug@1.1.0": {
+      "integrity": "eb2f0b7546c7bca2000d8b0282c54d50d91cf6d75cb26a80df25a6de8c4bc044",
+      "dependencies": [
+        "jsr:@std/encoding@1",
+        "jsr:@std/fmt@1",
+        "jsr:@std/fs@1",
+        "jsr:@std/path@1"
+      ]
+    },
     "@std/assert@1.0.19": {
       "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e"
     },
@@ -116,6 +139,7 @@
     "@std/fs@1.0.23": {
       "integrity": "3ecbae4ce4fee03b180fa710caff36bb5adb66631c46a6460aaad49515565a37",
       "dependencies": [
+        "jsr:@std/internal@^1.0.12",
         "jsr:@std/path@^1.1.4"
       ]
     },
@@ -132,6 +156,9 @@
         "jsr:@std/fs@^1.0.11",
         "jsr:@std/io@~0.225.2"
       ]
+    },
+    "@std/path@1.0.9": {
+      "integrity": "260a49f11edd3db93dd38350bf9cd1b4d1366afa98e81b86167b4e3dd750129e"
     },
     "@std/path@1.1.4": {
       "integrity": "1d2d43f39efb1b42f0b1882a25486647cb851481862dc7313390b2bb044314b5",
