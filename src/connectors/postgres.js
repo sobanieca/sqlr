@@ -1,4 +1,4 @@
-import { Input, pg, Secret, Select } from "../deps.js";
+import { Input, pg, Secret } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 
 const { Client } = pg;
@@ -9,7 +9,6 @@ const postgresConnector = {
     `
 postgres://host:port/database_name?user=user&password=password(urlencoded)&application_name=sqlr
 Additional url parameters:
-'sslmode' - require | prefer | disable
 'options' - additional values for connection (options=--cluster=your_cluster_name)
 More details: https://node-postgres.com/features/connecting
   `.trim(),
@@ -21,20 +20,13 @@ More details: https://node-postgres.com/features/connecting
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
-    const sslmode = await Select.prompt({
-      message: "SSL mode (default: prefer)",
-      options: [
-        { name: "prefer", value: "prefer" },
-        { name: "require", value: "require" },
-        { name: "disable", value: "disable" },
-      ],
-    });
 
-    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=${sslmode}`;
+    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=prefer`;
   },
   getTables: async (connectionString) => {
+    const normalized = normalizeConnectionString(connectionString);
     const dbClient = new Client({
-      connectionString,
+      connectionString: normalized,
       ssl: parseSsl(connectionString),
     });
     await dbClient.connect();
@@ -128,8 +120,9 @@ More details: https://node-postgres.com/features/connecting
     }
   },
   query: async (connectionString, query) => {
+    const normalized = normalizeConnectionString(connectionString);
     const dbClient = new Client({
-      connectionString,
+      connectionString: normalized,
       ssl: parseSsl(connectionString),
     });
     await dbClient.connect();
@@ -150,6 +143,12 @@ More details: https://node-postgres.com/features/connecting
       await dbClient.end();
     }
   },
+};
+
+const normalizeConnectionString = (connectionString) => {
+  const url = new URL(connectionString);
+  url.searchParams.set("uselibpqcompat", "true");
+  return url.toString();
 };
 
 const parseSsl = (connectionString) => {

@@ -3,6 +3,9 @@ import { assertSnapshot } from "jsr:@std/testing@1.0.12/snapshot";
 const CONNECTION_STRING =
   "postgres://world:world123@localhost:5432/world-db?sslmode=disable";
 
+const POSTGRES_SSL_CONNECTION_STRING =
+  "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr";
+
 const MYSQL_CONNECTION_STRING =
   "mysql://world:world123@localhost:3306/world-db";
 
@@ -126,6 +129,9 @@ export const stopService = async (service) => {
 export const startPostgres = () => startService("postgres");
 export const stopPostgres = () => stopService("postgres");
 
+export const startPostgresSsl = () => startService("postgres-ssl");
+export const stopPostgresSsl = () => stopService("postgres-ssl");
+
 export const startMysql = () => startService("mysql");
 export const stopMysql = () => stopService("mysql");
 
@@ -157,4 +163,5 @@ export {
   CONNECTION_STRING,
   MSSQL_CONNECTION_STRING,
   MYSQL_CONNECTION_STRING,
+  POSTGRES_SSL_CONNECTION_STRING,
 };

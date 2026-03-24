@@ -1,11 +1,15 @@
 import {
   CONNECTION_STRING,
   createTestRunner,
+  POSTGRES_SSL_CONNECTION_STRING,
   startPostgres,
+  startPostgresSsl,
   stopPostgres,
+  stopPostgresSsl,
 } from "./test-utils.js";
 
 const CS = CONNECTION_STRING;
+const SSL_CS = POSTGRES_SSL_CONNECTION_STRING;
 
 Deno.test("sqlr CLI", async (t) => {
   const test = createTestRunner(t);
@@ -85,5 +89,27 @@ Deno.test("sqlr CLI", async (t) => {
     await test("sqlr rm -n test-pg");
   } finally {
     await stopPostgres();
+  }
+});
+
+Deno.test("sqlr CLI - PostgreSQL SSL", async (t) => {
+  const test = createTestRunner(t);
+
+  await startPostgresSsl();
+
+  try {
+    await test(
+      `sqlr query -t postgresql -s "${SSL_CS}" "SELECT 1 as test"`,
+    );
+
+    await test(
+      `sqlr query -t postgresql -s "${SSL_CS}" "SELECT code, name FROM country ORDER BY code LIMIT 3"`,
+    );
+
+    await test(
+      `sqlr describe -t postgresql -s "${SSL_CS}" -f "country"`,
+    );
+  } finally {
+    await stopPostgresSsl();
   }
 });
