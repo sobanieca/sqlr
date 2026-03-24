@@ -50,7 +50,6 @@ snapshot[`sqlr CLI 2`] = `
   │ postgresql │ postgres://host:port/database_name?user=user&password=password(urlencoded)&appli │
   │            │ cation_name=sqlr                                                                 │
   │            │ Additional url parameters:                                                       │
-  │            │ 'sslmode' - require | prefer | disable                                           │
   │            │ 'options' - additional values for connection                                     │
   │            │ (options=--cluster=your_cluster_name)                                            │
   │            │ More details: https://node-postgres.com/features/connecting                      │
@@ -459,5 +458,95 @@ snapshot[`sqlr CLI 21`] = `
 ",
   outputError: "",
   sqlrCommand: "sqlr rm -n test-pg",
+}
+`;
+
+snapshot[`sqlr CLI - PostgreSQL SSL 1`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr" "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr CLI - PostgreSQL SSL 2`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+}
+`;
+
+snapshot[`sqlr CLI - PostgreSQL SSL 3`] = `
+{
+  code: 0,
+  output: 'Database schema:
+[
+  {
+    schema: "public",
+    name: "country",
+    columns: [
+      { name: "code", type: "character", nullable: false },
+      { name: "name", type: "text", nullable: false },
+      { name: "continent", type: "USER-DEFINED", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "real", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "integer", nullable: false },
+      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "gnp", type: "numeric", nullable: true },
+      { name: "gnp_old", type: "numeric", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
+      {
+        name: "capital",
+        type: "integer",
+        nullable: true,
+        relation: "public.city.id"
+      },
+      { name: "code2", type: "character", nullable: false }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "character", nullable: false },
+      { name: "emoji", type: "text", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "character",
+        nullable: false,
+        relation: "public.country.code"
+      },
+      { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "boolean", nullable: false },
+      { name: "percentage", type: "real", nullable: false }
+    ]
+  }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr" -f "country"',
 }
 `;
