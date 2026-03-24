@@ -11,6 +11,25 @@ services:
       timeout: 5s
       retries: 10
 
+  postgres-ssl:
+    image: ghusta/postgres-world-db
+    environment:
+      POSTGRES_PASSWORD: world123
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./ssl-certs/server.crt:/tmp/server.crt:ro
+      - ./ssl-certs/server.key:/tmp/server.key:ro
+      - ./init-postgres-ssl/entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
+      - ./init-postgres-ssl/enable-ssl.sh:/docker-entrypoint-initdb.d/99-enable-ssl.sh
+    user: root
+    entrypoint: ["/usr/local/bin/custom-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U world -d world-db"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
   mysql:
     image: mysql:8
     environment:
