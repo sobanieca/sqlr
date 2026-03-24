@@ -45,6 +45,7 @@ export const run = async (cmd, cwd, env) => {
   let outputError = new TextDecoder().decode(stderr);
 
   output = removeVaryingOutput(removeAnsi(output));
+  output = output.replace(/Downloading https?:\/\/[^\n]*\n?/g, "");
   outputError = removeAnsi(outputError);
   outputError = outputError.replace(/Download https?:\/\/[^\n]*\n?/g, "");
   outputError = outputError.replace(
