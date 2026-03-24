@@ -1,6 +1,6 @@
 import { Input } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
-import { Database } from "jsr:@db/sqlite@0.13";
+import { DatabaseSync } from "node:sqlite";
 
 const isSelectQuery = (query) => {
   const trimmed = query.trim().toUpperCase();
@@ -25,7 +25,7 @@ More details: https://www.sqlite.org/uri.html
     return dbPath;
   },
   getTables: (connectionString) => {
-    const db = new Database(connectionString, { readonly: true });
+    const db = new DatabaseSync(connectionString, { readOnly: true });
 
     try {
       const tables = db.prepare(
@@ -59,7 +59,7 @@ More details: https://www.sqlite.org/uri.html
         };
       });
     } catch (err) {
-      if (err.code && err.code.startsWith("SQLITE_")) {
+      if (err.code === "ERR_SQLITE_ERROR") {
         throw new DatabaseError(`SQLite Error: ${err.message}`);
       }
       throw err;
@@ -68,11 +68,11 @@ More details: https://www.sqlite.org/uri.html
     }
   },
   query: (connectionString, sql) => {
-    const db = new Database(connectionString);
+    const db = new DatabaseSync(connectionString);
 
     try {
       if (isSelectQuery(sql)) {
-        const rows = db.prepare(sql).all();
+        const rows = db.prepare(sql).all().map((row) => ({ ...row }));
         return {
           rowsAffected: rows.length,
           rows,
@@ -81,11 +81,11 @@ More details: https://www.sqlite.org/uri.html
 
       const result = db.prepare(sql).run();
       return {
-        rowsAffected: result,
+        rowsAffected: result.changes,
         rows: [],
       };
     } catch (err) {
-      if (err.code && err.code.startsWith("SQLITE_")) {
+      if (err.code === "ERR_SQLITE_ERROR") {
         throw new DatabaseError(`SQLite Error: ${err.message}`);
       }
       throw err;

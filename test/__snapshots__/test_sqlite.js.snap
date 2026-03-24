@@ -246,8 +246,8 @@ main.country_language [ country_code -> "main.country.code", language TEXT, is_o
 snapshot[`sqlr SQLite 11`] = `
 {
   code: 0,
-  output: "Error occurred when executing query against database. Ensure that query or connection string is valid. Only simple queries are supported. Use --debug option for details.
-",
+  output: 'SQLite Error: near "INVALID": syntax error
+',
   outputError: "",
   sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "INVALID SQL QUERY"',
 }
