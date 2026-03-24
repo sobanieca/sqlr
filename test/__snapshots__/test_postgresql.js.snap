@@ -67,6 +67,10 @@ snapshot[`sqlr CLI 2`] = `
   │ clickhouse │ http(s)://user:password@host:port?database=database_name                         │
   │            │ Default port: 8123 (HTTP), 8443 (HTTPS)                                          │
   │            │ More details: https://clickhouse.com/docs/en/interfaces/http                     │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ sqlite     │ /path/to/database.db                                                             │
+  │            │ Use ':memory:' for an in-memory database                                         │
+  │            │ More details: https://www.sqlite.org/uri.html                                    │
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 \`,
   outputError: "",
@@ -93,7 +97,8 @@ Options:
   -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}} substitution in SQL                                                                 
   -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                                                         
   -n, --name                 [name]               - Name of the connection                                                          (Conflicts: --type, --connection-string)              
-  -t, --type                 [type]               - Type of the connection                                                          (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -t, --type                 [type]               - Type of the connection                                                          (Values: "postgresql", "mysql", "mssql", "clickhouse",
+                                                                                                                                    "sqlite")                                             
   -s, --connection-string    [connection-string]  - Connection string                                                                                                                     
   --table                                         - Display results as table                                                        (Conflicts: --compact)                                
   --compact                                       - Display results in compact form                                                 (Conflicts: --table)                                  
@@ -124,7 +129,8 @@ Options:
   --debug                                       - Enable debug logs                                                                                                     
   -g, --global                                  - Use global scope for connections (ignore git repository scope)                                                        
   -n, --name               [name]               - Name of the connection                                          (Conflicts: --type, --connection-string)              
-  -t, --type               [type]               - Type of the connection                                          (Values: "postgresql", "mysql", "mssql", "clickhouse")
+  -t, --type               [type]               - Type of the connection                                          (Values: "postgresql", "mysql", "mssql", "clickhouse",
+                                                                                                                  "sqlite")                                             
   -s, --connection-string  [connection-string]  - Connection string                                                                                                     
   -f, --filter             [filter]             - Filter results by schema/table name                                                                                   
   --table                                       - Display results in table                                                                                              

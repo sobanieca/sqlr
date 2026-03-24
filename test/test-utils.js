@@ -15,6 +15,8 @@ const MSSQL_CONNECTION_STRING =
 const CLICKHOUSE_CONNECTION_STRING =
   "http://world:world123@localhost:8123?database=world";
 
+const SQLITE_CONNECTION_STRING = "/tmp/sqlr-sqlite/world.db";
+
 export const run = async (cmd, cwd, env) => {
   const command = new Deno.Command("sh", {
     args: ["-c", cmd],
@@ -157,6 +159,35 @@ export const stopMssql = () => stopService("mssql");
 export const startClickhouse = () => startService("clickhouse");
 export const stopClickhouse = () => stopService("clickhouse");
 
+export const startSqlite = async () => {
+  const dir = SQLITE_CONNECTION_STRING.replace(/\/[^/]+$/, "");
+  await Deno.mkdir(dir, { recursive: true });
+  await Deno.chmod(dir, 0o777);
+
+  const testDir = getTestDir();
+  const init = new Deno.Command("docker", {
+    args: ["compose", "up", "sqlite-init"],
+    cwd: testDir,
+    stdout: "piped",
+    stderr: "piped",
+  });
+
+  const { code, stderr } = await init.output();
+  if (code !== 0) {
+    const err = new TextDecoder().decode(stderr);
+    throw new Error(`Failed to init sqlite: ${err}`);
+  }
+};
+
+export const stopSqlite = async () => {
+  const dir = SQLITE_CONNECTION_STRING.replace(/\/[^/]+$/, "");
+  try {
+    await Deno.remove(dir, { recursive: true });
+  } catch {
+    // ignore
+  }
+};
+
 export {
   assertSnapshot,
   CLICKHOUSE_CONNECTION_STRING,
@@ -164,4 +195,5 @@ export {
   MSSQL_CONNECTION_STRING,
   MYSQL_CONNECTION_STRING,
   POSTGRES_SSL_CONNECTION_STRING,
+  SQLITE_CONNECTION_STRING,
 };

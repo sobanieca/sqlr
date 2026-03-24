@@ -1,0 +1,301 @@
+export const snapshot = {};
+
+snapshot[`sqlr SQLite 1`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr SQLite 2`] = `
+{
+  code: 0,
+  output: 'Query executed in: *ms
+Rows affected: *
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+}
+`;
+
+snapshot[`sqlr SQLite 3`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+}
+`;
+
+snapshot[`sqlr SQLite 4`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+}
+`;
+
+snapshot[`sqlr SQLite 5`] = `
+{
+  code: 0,
+  output: "SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
+Rows affected: *
+[ { input_file_test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query.sql -y',
+}
+`;
+
+snapshot[`sqlr SQLite 6`] = `
+{
+  code: 0,
+  output: "SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+}
+`;
+
+snapshot[`sqlr SQLite 7`] = `
+{
+  code: 0,
+  output: "Query executed in: *ms
+Rows affected: *
+Results saved to /tmp/sqlr-test-output-sqlite.json
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test" -o /tmp/sqlr-test-output-sqlite.json',
+}
+`;
+
+snapshot[`sqlr SQLite 8`] = `
+{
+  code: 0,
+  output: 'Database schema:
+[
+  {
+    schema: "main",
+    name: "country",
+    columns: [
+      { name: "code", type: "TEXT", nullable: false },
+      { name: "name", type: "TEXT", nullable: false },
+      { name: "continent", type: "TEXT", nullable: false },
+      { name: "region", type: "TEXT", nullable: false },
+      { name: "surface_area", type: "REAL", nullable: false },
+      { name: "indep_year", type: "INTEGER", nullable: true },
+      { name: "population", type: "INTEGER", nullable: false },
+      { name: "life_expectancy", type: "REAL", nullable: true },
+      { name: "gnp", type: "REAL", nullable: true },
+      { name: "gnp_old", type: "REAL", nullable: true },
+      { name: "local_name", type: "TEXT", nullable: false },
+      { name: "government_form", type: "TEXT", nullable: false },
+      { name: "head_of_state", type: "TEXT", nullable: true },
+      {
+        name: "capital",
+        type: "INTEGER",
+        nullable: true,
+        relation: "main.city.id"
+      },
+      { name: "code2", type: "TEXT", nullable: false }
+    ]
+  },
+  {
+    schema: "main",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "TEXT", nullable: false },
+      { name: "emoji", type: "TEXT", nullable: false },
+      { name: "unicode", type: "TEXT", nullable: true }
+    ]
+  },
+  {
+    schema: "main",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "TEXT",
+        nullable: false,
+        relation: "main.country.code"
+      },
+      { name: "language", type: "TEXT", nullable: false },
+      { name: "is_official", type: "INTEGER", nullable: false },
+      { name: "percentage", type: "REAL", nullable: false }
+    ]
+  }
+]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country"',
+}
+`;
+
+snapshot[`sqlr SQLite 9`] = `
+{
+  code: 0,
+  output: 'Database schema:
+  ┌───────────────────────────┐
+  │ main.country              │
+  ├───────────────────────────┤
+  │ code TEXT                 │
+  ├───────────────────────────┤
+  │ name TEXT                 │
+  ├───────────────────────────┤
+  │ continent TEXT            │
+  ├───────────────────────────┤
+  │ region TEXT               │
+  ├───────────────────────────┤
+  │ surface_area REAL         │
+  ├───────────────────────────┤
+  │ indep_year? INTEGER       │
+  ├───────────────────────────┤
+  │ population INTEGER        │
+  ├───────────────────────────┤
+  │ life_expectancy? REAL     │
+  ├───────────────────────────┤
+  │ gnp? REAL                 │
+  ├───────────────────────────┤
+  │ gnp_old? REAL             │
+  ├───────────────────────────┤
+  │ local_name TEXT           │
+  ├───────────────────────────┤
+  │ government_form TEXT      │
+  ├───────────────────────────┤
+  │ head_of_state? TEXT       │
+  ├───────────────────────────┤
+  │ capital -> "main.city.id" │
+  ├───────────────────────────┤
+  │ code2 TEXT                │
+  └───────────────────────────┘
+  ┌───────────────────┐
+  │ main.country_flag │
+  ├───────────────────┤
+  │ code2 TEXT        │
+  ├───────────────────┤
+  │ emoji TEXT        │
+  ├───────────────────┤
+  │ unicode? TEXT     │
+  └───────────────────┘
+  ┌─────────────────────────────────────┐
+  │ main.country_language               │
+  ├─────────────────────────────────────┤
+  │ country_code -> "main.country.code" │
+  ├─────────────────────────────────────┤
+  │ language TEXT                       │
+  ├─────────────────────────────────────┤
+  │ is_official INTEGER                 │
+  ├─────────────────────────────────────┤
+  │ percentage REAL                     │
+  └─────────────────────────────────────┘
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --table',
+}
+`;
+
+snapshot[`sqlr SQLite 10`] = `
+{
+  code: 0,
+  output: 'Database schema:
+main.country [ code TEXT, name TEXT, continent TEXT, region TEXT, surface_area REAL, indep_year? INTEGER, population INTEGER, life_expectancy? REAL, gnp? REAL, gnp_old? REAL, local_name TEXT, government_form TEXT, head_of_state? TEXT, capital -> "main.city.id", code2 TEXT ]
+main.country_flag [ code2 TEXT, emoji TEXT, unicode? TEXT ]
+main.country_language [ country_code -> "main.country.code", language TEXT, is_official INTEGER, percentage REAL ]
+',
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --compact',
+}
+`;
+
+snapshot[`sqlr SQLite 11`] = `
+{
+  code: 0,
+  output: "Error occurred when executing query against database. Ensure that query or connection string is valid. Only simple queries are supported. Use --debug option for details.
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "INVALID SQL QUERY"',
+}
+`;
+
+snapshot[`sqlr SQLite 12`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add -n test-sqlite -t sqlite -s "/tmp/sqlr-sqlite/world.db"',
+}
+`;
+
+snapshot[`sqlr SQLite 13`] = `
+{
+  code: 0,
+  output: "  ┌─────────────┬────────┐
+  │ Name        │ Type   │
+  ├─────────────┼────────┤
+  │ test-sqlite │ sqlite │
+  └─────────────┴────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr ls",
+}
+`;
+
+snapshot[`sqlr SQLite 14`] = `
+{
+  code: 0,
+  output: "Using connection: test-sqlite
+Query executed in: *ms
+Rows affected: *
+[ { test: 1 } ]
+",
+  outputError: "",
+  sqlrCommand: 'sqlr query -n test-sqlite "SELECT 1 as test"',
+}
+`;
+
+snapshot[`sqlr SQLite 15`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm -n test-sqlite",
+}
+`;
