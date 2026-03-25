@@ -1,7 +1,7 @@
 import { assertSnapshot } from "jsr:@std/testing@1.0.12/snapshot";
 
 const CONNECTION_STRING =
-  "postgres://world:world123@localhost:5432/world-db?sslmode=disable";
+  "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr";
 
 const POSTGRES_SSL_CONNECTION_STRING =
   "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr";

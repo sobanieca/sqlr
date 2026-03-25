@@ -150,7 +150,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT 1 as test"',
 }
 `;
 
@@ -166,7 +166,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
 }
 `;
 
@@ -186,7 +186,7 @@ Rows affected: *
   └──────┴─────────────┘
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
 }
 `;
 
@@ -201,7 +201,7 @@ AFG,Afghanistan
 AGO,Angola
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
 }
 `;
 
@@ -216,7 +216,7 @@ Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query.sql -y',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" test-query.sql -y',
 }
 `;
 
@@ -231,7 +231,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
 }
 `;
 
@@ -243,7 +243,7 @@ Rows affected: *
 Results saved to /tmp/sqlr-test-output.json
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT 1 as test" -o /tmp/sqlr-test-output.json',
 }
 `;
 
@@ -305,7 +305,7 @@ snapshot[`sqlr CLI 12`] = `
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country"',
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" -f "country"',
 }
 `;
 
@@ -368,7 +368,7 @@ snapshot[`sqlr CLI 13`] = `
   └───────────────────────────────────────┘
 ',
   outputError: "",
-  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country" --table',
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" -f "country" --table',
 }
 `;
 
@@ -381,7 +381,7 @@ public.country_flag [ code2 character, emoji text, unicode? text ]
 public.country_language [ country_code -> "public.country.code", language text, is_official boolean, percentage real ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" -f "country" --compact',
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" -f "country" --compact',
 }
 `;
 
@@ -391,7 +391,7 @@ snapshot[`sqlr CLI 15`] = `
   output: 'Missing input variables: template. Use -i "name: value" to provide them.
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql -y',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" test-query-handlebars.sql -y',
 }
 `;
 
@@ -406,7 +406,7 @@ Rows affected: *
 [ { handlebars_value: "{{template}}" } ]
 \`,
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" test-query-handlebars.sql --ignore-input-validation -y',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" test-query-handlebars.sql --ignore-input-validation -y',
 }
 `;
 
@@ -416,7 +416,7 @@ snapshot[`sqlr CLI 17`] = `
   output: 'error: syntax error at or near "INVALID"
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable" "INVALID SQL QUERY"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "INVALID SQL QUERY"',
 }
 `;
 
@@ -426,7 +426,7 @@ snapshot[`sqlr CLI 18`] = `
   output: "Connection has been added
 ",
   outputError: "",
-  sqlrCommand: 'sqlr add -n test-pg -t postgresql -s "postgres://world:world123@localhost:5432/world-db?sslmode=disable"',
+  sqlrCommand: 'sqlr add -n test-pg -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr"',
 }
 `;
 

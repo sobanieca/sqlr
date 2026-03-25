@@ -21,14 +21,11 @@ More details: https://node-postgres.com/features/connecting
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
 
-    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr&sslmode=prefer`;
+    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr`;
   },
   getTables: async (connectionString) => {
     const normalized = normalizeConnectionString(connectionString);
-    const dbClient = new Client({
-      connectionString: normalized,
-      ssl: parseSsl(connectionString),
-    });
+    const dbClient = new Client({ connectionString: normalized });
     await dbClient.connect();
 
     try {
@@ -121,10 +118,7 @@ More details: https://node-postgres.com/features/connecting
   },
   query: async (connectionString, query) => {
     const normalized = normalizeConnectionString(connectionString);
-    const dbClient = new Client({
-      connectionString: normalized,
-      ssl: parseSsl(connectionString),
-    });
+    const dbClient = new Client({ connectionString: normalized });
     await dbClient.connect();
 
     try {
@@ -149,14 +143,6 @@ const normalizeConnectionString = (connectionString) => {
   const url = new URL(connectionString);
   url.searchParams.set("uselibpqcompat", "true");
   return url.toString();
-};
-
-const parseSsl = (connectionString) => {
-  const url = new URL(connectionString);
-  const sslmode = url.searchParams.get("sslmode");
-  if (sslmode === "disable") return false;
-  if (sslmode === "require") return { rejectUnauthorized: false };
-  return false;
 };
 
 export { postgresConnector };
