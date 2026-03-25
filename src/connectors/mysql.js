@@ -13,8 +13,8 @@ More details: https://github.com/sidorares/node-mysql2#readme
   `.trim(),
   getConnectionString: async () => {
     const host = await Input.prompt(
-      "Database host (example: localhost | my.db.com)",
-    );
+      "Database host (default: localhost | example: my.db.com)",
+    ) || "localhost";
     const port = await Input.prompt("Port (default: 3306)") || 3306;
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");

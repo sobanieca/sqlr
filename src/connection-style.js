@@ -15,6 +15,7 @@ const colors = [
 ];
 
 const emojis = [
+  { name: "None", value: "none" },
   { name: "\u{1F680} Rocket", value: "\u{1F680}" },
   { name: "\u{1F6A7} Construction", value: "\u{1F6A7}" },
   { name: "\u{1F9EA} Laboratory", value: "\u{1F9EA}" },
@@ -24,17 +25,16 @@ const emojis = [
   { name: "\u{26A1} Lightning", value: "\u{26A1}" },
   { name: "\u{1F4E6} Package", value: "\u{1F4E6}" },
   { name: "Custom", value: "custom" },
-  { name: "None", value: "none" },
 ];
 
 const colorMap = Object.fromEntries(colors.map((c) => [c.value, c.rgb]));
 
 const promptColor = async () => {
-  const options = colors.map((c) => ({
+  const options = [{ name: "None", value: "none" }];
+  options.push(...colors.map((c) => ({
     name: `${rgb24("\u{2588}\u{2588}", c.rgb)} ${c.name}`,
     value: c.value,
-  }));
-  options.push({ name: "None", value: "none" });
+  })));
 
   return await Select.prompt({
     message: "Select connection color",

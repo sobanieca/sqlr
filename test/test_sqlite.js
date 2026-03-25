@@ -54,6 +54,10 @@ Deno.test("sqlr SQLite", async (t) => {
     );
 
     await test(
+      `sqlr describe -t sqlite -s "${CS}" -f "country" --tables-only`,
+    );
+
+    await test(
       `sqlr query -t sqlite -s "${CS}" "INVALID SQL QUERY"`,
     );
 

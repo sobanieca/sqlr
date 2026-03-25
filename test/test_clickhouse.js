@@ -54,6 +54,10 @@ Deno.test("sqlr ClickHouse", async (t) => {
     );
 
     await test(
+      `sqlr describe -t clickhouse -s "${CS}" -f "country" --tables-only`,
+    );
+
+    await test(
       `sqlr query -t clickhouse -s "${CS}" "INVALID SQL QUERY"`,
     );
 

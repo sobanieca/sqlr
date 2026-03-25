@@ -54,6 +54,10 @@ Deno.test("sqlr MSSQL", async (t) => {
     );
 
     await test(
+      `sqlr describe -t mssql -s "${CS}" -f "country" --tables-only`,
+    );
+
+    await test(
       `sqlr query -t mssql -s "${CS}" "INVALID SQL QUERY"`,
     );
 

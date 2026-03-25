@@ -246,6 +246,19 @@ main.country_language [ country_code -> "main.country.code", language TEXT, is_o
 snapshot[`sqlr SQLite 11`] = `
 {
   code: 0,
+  output: "Database schema:
+main.country
+main.country_flag
+main.country_language
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --tables-only',
+}
+`;
+
+snapshot[`sqlr SQLite 12`] = `
+{
+  code: 0,
   output: 'SQLite Error: near "INVALID": syntax error
 ',
   outputError: "",
@@ -253,7 +266,7 @@ snapshot[`sqlr SQLite 11`] = `
 }
 `;
 
-snapshot[`sqlr SQLite 12`] = `
+snapshot[`sqlr SQLite 13`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -263,7 +276,7 @@ snapshot[`sqlr SQLite 12`] = `
 }
 `;
 
-snapshot[`sqlr SQLite 13`] = `
+snapshot[`sqlr SQLite 14`] = `
 {
   code: 0,
   output: "  ┌─────────────┬────────┐
@@ -277,7 +290,7 @@ snapshot[`sqlr SQLite 13`] = `
 }
 `;
 
-snapshot[`sqlr SQLite 14`] = `
+snapshot[`sqlr SQLite 15`] = `
 {
   code: 0,
   output: "Using connection: test-sqlite
@@ -290,7 +303,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr SQLite 15`] = `
+snapshot[`sqlr SQLite 16`] = `
 {
   code: 0,
   output: "Connection removed

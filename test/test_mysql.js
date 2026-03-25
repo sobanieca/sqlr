@@ -54,6 +54,10 @@ Deno.test("sqlr MySQL", async (t) => {
     );
 
     await test(
+      `sqlr describe -t mysql -s "${CS}" -f "country" --tables-only`,
+    );
+
+    await test(
       `sqlr query -t mysql -s "${CS}" "INVALID SQL QUERY"`,
     );
 

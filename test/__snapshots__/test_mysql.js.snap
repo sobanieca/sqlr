@@ -246,6 +246,19 @@ world-db.country_language [ country_code -> "world-db.country.code", language te
 snapshot[`sqlr MySQL 11`] = `
 {
   code: 0,
+  output: "Database schema:
+world-db.country
+world-db.country_flag
+world-db.country_language
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --tables-only',
+}
+`;
+
+snapshot[`sqlr MySQL 12`] = `
+{
+  code: 0,
   output: "MySQL Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INVALID SQL QUERY' at line 1
 ",
   outputError: "",
@@ -253,7 +266,7 @@ snapshot[`sqlr MySQL 11`] = `
 }
 `;
 
-snapshot[`sqlr MySQL 12`] = `
+snapshot[`sqlr MySQL 13`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -263,7 +276,7 @@ snapshot[`sqlr MySQL 12`] = `
 }
 `;
 
-snapshot[`sqlr MySQL 13`] = `
+snapshot[`sqlr MySQL 14`] = `
 {
   code: 0,
   output: "  ┌────────────┬───────┐
@@ -277,7 +290,7 @@ snapshot[`sqlr MySQL 13`] = `
 }
 `;
 
-snapshot[`sqlr MySQL 14`] = `
+snapshot[`sqlr MySQL 15`] = `
 {
   code: 0,
   output: 'Using connection: test-mysql
@@ -290,7 +303,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr MySQL 15`] = `
+snapshot[`sqlr MySQL 16`] = `
 {
   code: 0,
   output: "Connection removed

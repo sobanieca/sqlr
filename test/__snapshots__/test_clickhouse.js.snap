@@ -236,6 +236,19 @@ world.country_language [ country_code String, language String, is_official UInt8
 snapshot[`sqlr ClickHouse 11`] = `
 {
   code: 0,
+  output: "Database schema:
+world.country
+world.country_flag
+world.country_language
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --tables-only',
+}
+`;
+
+snapshot[`sqlr ClickHouse 12`] = `
+{
+  code: 0,
   output: "ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY.
 ",
   outputError: \`[*][ERROR][@clickhouse/client][Connection] Command: HTTP request error. 
@@ -257,7 +270,7 @@ Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALI
 }
 `;
 
-snapshot[`sqlr ClickHouse 12`] = `
+snapshot[`sqlr ClickHouse 13`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -267,7 +280,7 @@ snapshot[`sqlr ClickHouse 12`] = `
 }
 `;
 
-snapshot[`sqlr ClickHouse 13`] = `
+snapshot[`sqlr ClickHouse 14`] = `
 {
   code: 0,
   output: "  ┌─────────────────┬────────────┐
@@ -281,7 +294,7 @@ snapshot[`sqlr ClickHouse 13`] = `
 }
 `;
 
-snapshot[`sqlr ClickHouse 14`] = `
+snapshot[`sqlr ClickHouse 15`] = `
 {
   code: 0,
   output: "Using connection: test-clickhouse
@@ -294,7 +307,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr ClickHouse 15`] = `
+snapshot[`sqlr ClickHouse 16`] = `
 {
   code: 0,
   output: "Connection removed

@@ -246,6 +246,19 @@ dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is
 snapshot[`sqlr MSSQL 11`] = `
 {
   code: 0,
+  output: "Database schema:
+dbo.country
+dbo.country_flag
+dbo.country_language
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --tables-only',
+}
+`;
+
+snapshot[`sqlr MSSQL 12`] = `
+{
+  code: 0,
   output: "MSSQLError: Incorrect syntax near 'QUERY'.
 ",
   outputError: "",
@@ -253,7 +266,7 @@ snapshot[`sqlr MSSQL 11`] = `
 }
 `;
 
-snapshot[`sqlr MSSQL 12`] = `
+snapshot[`sqlr MSSQL 13`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -263,7 +276,7 @@ snapshot[`sqlr MSSQL 12`] = `
 }
 `;
 
-snapshot[`sqlr MSSQL 13`] = `
+snapshot[`sqlr MSSQL 14`] = `
 {
   code: 0,
   output: "  ┌────────────┬───────┐
@@ -277,7 +290,7 @@ snapshot[`sqlr MSSQL 13`] = `
 }
 `;
 
-snapshot[`sqlr MSSQL 14`] = `
+snapshot[`sqlr MSSQL 15`] = `
 {
   code: 0,
   output: "Using connection: test-mssql
@@ -290,7 +303,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr MSSQL 15`] = `
+snapshot[`sqlr MSSQL 16`] = `
 {
   code: 0,
   output: "Connection removed

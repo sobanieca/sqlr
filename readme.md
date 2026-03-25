@@ -76,6 +76,14 @@ stay on your machine and are never exposed in the agent's context.
 To let the agent learn about all available sqlr commands and options, have it
 run `sqlr help`.
 
+**Example prompt:**
+
+```
+Run `sqlr help` to learn about sqlr capabilities. Then run
+`sqlr set my-db-connection` and `sqlr describe --compact` to learn about my db
+structure. Finally, update all users last login date so it's more than 7 days ago.
+```
+
 ## SQL file collections
 
 You can maintain a collection of `.sql` files and execute them with sqlr

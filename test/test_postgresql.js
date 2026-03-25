@@ -63,6 +63,10 @@ Deno.test("sqlr CLI", async (t) => {
     );
 
     await test(
+      `sqlr describe -t postgresql -s "${CS}" -f "country" --tables-only`,
+    );
+
+    await test(
       `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql -y`,
       "test",
     );

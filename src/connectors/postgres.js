@@ -14,8 +14,8 @@ More details: https://node-postgres.com/features/connecting
   `.trim(),
   getConnectionString: async () => {
     const host = await Input.prompt(
-      "Database host (example: localhost | my.db.com)",
-    );
+      "Database host (default: localhost | example: my.db.com)",
+    ) || "localhost";
     const port = await Input.prompt("Port (default: 5432)") || 5432;
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");

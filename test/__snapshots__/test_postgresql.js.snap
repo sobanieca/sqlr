@@ -135,6 +135,7 @@ Options:
   -f, --filter             [filter]             - Filter results by schema/table name                                                                                   
   --table                                       - Display results in table                                                                                              
   --compact                                     - Display results in compact form                                                                                       
+  --tables-only                                 - List only table names without columns                                                                                 
 
 ',
   outputError: "",
@@ -388,6 +389,19 @@ public.country_language [ country_code -> "public.country.code", language text, 
 snapshot[`sqlr CLI 15`] = `
 {
   code: 0,
+  output: "Database schema:
+public.country
+public.country_flag
+public.country_language
+",
+  outputError: "",
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" -f "country" --tables-only',
+}
+`;
+
+snapshot[`sqlr CLI 16`] = `
+{
+  code: 0,
   output: 'Missing input variables: template. Use -i "name: value" to provide them.
 ',
   outputError: "",
@@ -395,7 +409,7 @@ snapshot[`sqlr CLI 15`] = `
 }
 `;
 
-snapshot[`sqlr CLI 16`] = `
+snapshot[`sqlr CLI 17`] = `
 {
   code: 0,
   output: \`SQL to execute:
@@ -410,7 +424,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 17`] = `
+snapshot[`sqlr CLI 18`] = `
 {
   code: 0,
   output: 'error: syntax error at or near "INVALID"
@@ -420,7 +434,7 @@ snapshot[`sqlr CLI 17`] = `
 }
 `;
 
-snapshot[`sqlr CLI 18`] = `
+snapshot[`sqlr CLI 19`] = `
 {
   code: 0,
   output: "Connection has been added
@@ -430,7 +444,7 @@ snapshot[`sqlr CLI 18`] = `
 }
 `;
 
-snapshot[`sqlr CLI 19`] = `
+snapshot[`sqlr CLI 20`] = `
 {
   code: 0,
   output: "  ┌─────────┬────────────┐
@@ -444,7 +458,7 @@ snapshot[`sqlr CLI 19`] = `
 }
 `;
 
-snapshot[`sqlr CLI 20`] = `
+snapshot[`sqlr CLI 21`] = `
 {
   code: 0,
   output: "Using connection: test-pg
@@ -457,7 +471,7 @@ Rows affected: *
 }
 `;
 
-snapshot[`sqlr CLI 21`] = `
+snapshot[`sqlr CLI 22`] = `
 {
   code: 0,
   output: "Connection removed

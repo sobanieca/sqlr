@@ -18,6 +18,7 @@ const describe = async (
   connectionName,
   table,
   compact,
+  tablesOnly,
   type,
   filter,
   connectionString,
@@ -53,7 +54,7 @@ const describe = async (
       );
     }
 
-    showTables(tables, table, compact);
+    showTables(tables, table, compact, tablesOnly);
   } catch (err) {
     logger.debug(err);
     logger.error(
@@ -62,8 +63,19 @@ const describe = async (
   }
 };
 
-const showTables = (tables, table, compact) => {
+const showTablesOnly = (tables) => {
+  for (const t of tables) {
+    logger.info(getTableName(t));
+  }
+};
+
+const showTables = (tables, table, compact, tablesOnly) => {
   logger.info("Database schema:");
+  if (tablesOnly) {
+    showTablesOnly(tables);
+    return;
+  }
+
   if (compact) {
     showTablesCompact(tables);
     return;
@@ -145,11 +157,30 @@ export default new Command()
   .option("-f, --filter [filter]", "Filter results by schema/table name")
   .option("--table", "Display results in table")
   .option("--compact", "Display results in compact form")
+  .option("--tables-only", "List only table names without columns")
   .description("Describe all tables and columns available in database")
   .action(
     async (
-      { name, table, compact, type, filter, connectionString, global: g },
+      {
+        name,
+        table,
+        compact,
+        tablesOnly,
+        type,
+        filter,
+        connectionString,
+        global: g,
+      },
     ) => {
-      await describe(name, table, compact, type, filter, connectionString, g);
+      await describe(
+        name,
+        table,
+        compact,
+        tablesOnly,
+        type,
+        filter,
+        connectionString,
+        g,
+      );
     },
   );
