@@ -489,7 +489,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr" "SELECT 1 as test"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer" "SELECT 1 as test"',
 }
 `;
 
@@ -505,7 +505,7 @@ Rows affected: *
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr query -t postgresql -s "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
+  sqlrCommand: 'sqlr query -t postgresql -s "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
 }
 `;
 
@@ -567,6 +567,6 @@ snapshot[`sqlr CLI - PostgreSQL SSL 3`] = `
 ]
 ',
   outputError: "",
-  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr" -f "country"',
+  sqlrCommand: 'sqlr describe -t postgresql -s "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer" -f "country"',
 }
 `;

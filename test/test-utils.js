@@ -1,10 +1,10 @@
 import { assertSnapshot } from "jsr:@std/testing@1.0.12/snapshot";
 
-const CONNECTION_STRING =
+const POSTGRES_CONNECTION_STRING =
   "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr";
 
 const POSTGRES_SSL_CONNECTION_STRING =
-  "postgres://world:world123@localhost:5433/world-db?sslmode=require&application_name=sqlr";
+  "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer";
 
 const MYSQL_CONNECTION_STRING =
   "mysql://world:world123@localhost:3306/world-db";
@@ -192,9 +192,9 @@ export const stopSqlite = async () => {
 export {
   assertSnapshot,
   CLICKHOUSE_CONNECTION_STRING,
-  CONNECTION_STRING,
   MSSQL_CONNECTION_STRING,
   MYSQL_CONNECTION_STRING,
+  POSTGRES_CONNECTION_STRING,
   POSTGRES_SSL_CONNECTION_STRING,
   SQLITE_CONNECTION_STRING,
 };

@@ -61,12 +61,13 @@ Commands:
                                sqlr set-global false   (use repository scope)
 
   describe              Describe all tables and columns available in database.
-                        Usage: sqlr describe [-n connection] [--table] [--compact] [-f filter]
+                        Usage: sqlr describe [-n connection] [--table] [--compact] [--tables-only] [-f filter]
 
                         Shows database schema including table names, column names, types,
                         nullable flags, and foreign key relations.
                         Use --filter to narrow results by schema/table name.
                         Use --table or --compact for different output formats.
+                        Use --tables-only to list only table names without column details.
 
   query                 Run SQL query against specified database.
                         The argument can be a SQL string or a path to a .sql file

@@ -1,6 +1,6 @@
 import {
-  CONNECTION_STRING,
   createTestRunner,
+  POSTGRES_CONNECTION_STRING,
   POSTGRES_SSL_CONNECTION_STRING,
   startPostgres,
   startPostgresSsl,
@@ -8,7 +8,7 @@ import {
   stopPostgresSsl,
 } from "./test-utils.js";
 
-const CS = CONNECTION_STRING;
+const CS = POSTGRES_CONNECTION_STRING;
 const SSL_CS = POSTGRES_SSL_CONNECTION_STRING;
 
 Deno.test("sqlr CLI", async (t) => {

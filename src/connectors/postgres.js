@@ -1,4 +1,4 @@
-import { Input, pg, Secret } from "../deps.js";
+import { Input, pg, Secret, Toggle } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 
 const { Client } = pg;
@@ -20,8 +20,10 @@ More details: https://node-postgres.com/features/connecting
     const dbName = await Input.prompt("Database name");
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
+    const useSsl = await Toggle.prompt("Use SSL?");
 
-    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr`;
+    const sslParam = useSsl ? "&sslmode=prefer" : "";
+    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr${sslParam}`;
   },
   getTables: async (connectionString) => {
     const normalized = normalizeConnectionString(connectionString);
