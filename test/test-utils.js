@@ -64,6 +64,10 @@ export const run = async (cmd, cwd, env) => {
     /( {4}at \*\n)+/g,
     "    at *\n",
   );
+  outputError = outputError.replace(
+    /Expected one of: .+\./g,
+    "Expected one of: *.",
+  );
 
   return {
     code,
