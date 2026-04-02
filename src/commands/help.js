@@ -41,6 +41,7 @@ Commands:
                         Usage: sqlr ls-types
 
   ls                    List all defined connections (names and types).
+                        The current default connection is marked with [current].
                         Usage: sqlr ls [-g]
 
   clear                 Remove all connections in current scope.
@@ -49,9 +50,11 @@ Commands:
   set                   Set default connection for current scope. When set,
                         query and describe commands will use it automatically
                         without requiring -n flag or interactive selection.
+                        Run without arguments to clear the default connection.
                         Usage: sqlr set [connection]
                                sqlr set -n my-connection
                                sqlr set -n shared-db -g
+                               sqlr set                    (clear default)
 
                         When used with -g, also enables global mode so the
                         default connection applies everywhere.

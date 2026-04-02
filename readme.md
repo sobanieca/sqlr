@@ -17,14 +17,14 @@
 - :robot: AI agent friendly - agents can query databases without exposing
   connection strings in their context
 
-Supported databases: PostgreSQL, MySQL, MSSQL, ClickHouse.
+Supported databases: PostgreSQL, MySQL, MSSQL, ClickHouse, SQLite.
 
 ## Usage
 
-**1. Add a database connection**
+**1. Add a connection**
 
 ```bash
-sqlr add-connection
+sqlr add
 # ? Provide name of the connection: mydb
 # ? Select database type: PostgreSQL
 # ? Provide connection details...
@@ -32,10 +32,10 @@ sqlr add-connection
 # Connection has been added
 ```
 
-**2. Set default connection for current scope**
+**2. Set default connection**
 
 ```bash
-sqlr set-connection mydb
+sqlr set mydb
 # Default connection set to mydb
 ```
 
@@ -69,9 +69,9 @@ Variables use `{{key}}` syntax in SQL and are provided via `-i "key: value"`.
 ## Using with AI agents
 
 Sqlr stores database connections locally. Once you set a default connection with
-`set-connection`, agents can run queries directly (e.g. `sqlr "SELECT ..."`),
-without ever needing access to the actual connection string. Connection strings
-stay on your machine and are never exposed in the agent's context.
+`set`, agents can run queries directly (e.g. `sqlr "SELECT ..."`), without ever
+needing access to the actual connection string. Connection strings stay on your
+machine and are never exposed in the agent's context.
 
 To let the agent learn about all available sqlr commands and options, have it
 run `sqlr help`.

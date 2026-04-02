@@ -2,14 +2,17 @@ import { Command, Table } from "../deps.js";
 import logger from "../logger.js";
 import { styledName } from "../connection-style.js";
 import storage from "../scoped-storage.js";
+import { getDefaultConnection } from "../scope.js";
 
 const showAllConnections = (isGlobal) => {
   const keys = storage.getAllKeys(isGlobal);
   const connections = [];
+  const defaultConnection = getDefaultConnection(isGlobal);
 
   for (const key of keys) {
     const connection = JSON.parse(storage.getItem(key, isGlobal));
-    connections.push([styledName(connection), connection.type]);
+    const current = connection.name === defaultConnection ? " [current]" : "";
+    connections.push([`${styledName(connection)}${current}`, connection.type]);
   }
 
   logger.info(

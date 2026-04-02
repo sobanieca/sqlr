@@ -2,11 +2,21 @@ import { Command } from "../deps.js";
 import { getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
 import storage from "../scoped-storage.js";
-import { setDefaultConnection, setGlobalMode } from "../scope.js";
+import {
+  clearDefaultConnection,
+  setDefaultConnection,
+  setGlobalMode,
+} from "../scope.js";
 
-const setConnection = async (connectionName, isGlobal) => {
+const setConnection = async (connectionName, isGlobal, hasNameFlag) => {
   if (isGlobal) {
     setGlobalMode(true);
+  }
+
+  if (!connectionName && !hasNameFlag) {
+    clearDefaultConnection(isGlobal);
+    logger.info("Default connection has been cleared");
+    return;
   }
 
   if (!connectionName) {
@@ -29,5 +39,5 @@ export default new Command()
   .option("-n, --name [name]", "Name of the connection")
   .description("Set default connection for current scope")
   .action(async ({ name, global: g }, connection) => {
-    await setConnection(name || connection, g);
+    await setConnection(name || connection, g, name !== undefined);
   });

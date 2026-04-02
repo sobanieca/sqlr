@@ -329,11 +329,11 @@ snapshot[`sqlr set-global 1`] = `
 
 snapshot[`sqlr set-global 2`] = `
 {
-  output: "  ┌───────────┬────────────┐
-  │ Name      │ Type       │
-  ├───────────┼────────────┤
-  │ global-db │ postgresql │
-  └───────────┴────────────┘
+  output: "  ┌─────────────────────┬────────────┐
+  │ Name                │ Type       │
+  ├─────────────────────┼────────────┤
+  │ global-db [current] │ postgresql │
+  └─────────────────────┴────────────┘
 ",
   step: "after set-global",
 }

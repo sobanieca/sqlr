@@ -61,11 +61,16 @@ const setDefaultConnection = (connectionName, isGlobal) => {
   localStorage.setItem(getDefaultConnectionKey(isGlobal), connectionName);
 };
 
+const clearDefaultConnection = (isGlobal) => {
+  localStorage.removeItem(getDefaultConnectionKey(isGlobal));
+};
+
 const resetScopeCache = () => {
   cachedScope = null;
 };
 
 export {
+  clearDefaultConnection,
   getDefaultConnection,
   getScopePrefix,
   GLOBAL_MODE_KEY,
