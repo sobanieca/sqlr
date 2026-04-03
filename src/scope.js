@@ -61,7 +61,9 @@ const getDefaultConnection = (isGlobal) =>
   localStorage.getItem(getDefaultConnectionKey(isGlobal));
 
 const setDefaultConnection = (connectionName, isGlobal) => {
-  logger.debug(`Setting default connection to '${connectionName}' (global: ${!!isGlobal})`);
+  logger.debug(
+    `Setting default connection to '${connectionName}' (global: ${!!isGlobal})`,
+  );
   localStorage.setItem(getDefaultConnectionKey(isGlobal), connectionName);
 };
 
