@@ -1,3 +1,5 @@
+import logger from "./logger.js";
+
 let cachedScope = null;
 
 const resolveScope = () => {
@@ -35,6 +37,7 @@ const isGlobalModeEnabled = () =>
   localStorage.getItem(GLOBAL_MODE_KEY) === "true";
 
 const setGlobalMode = (enabled) => {
+  logger.debug(`Setting global mode to ${enabled}`);
   if (enabled) {
     localStorage.setItem(GLOBAL_MODE_KEY, "true");
   } else {
@@ -58,10 +61,12 @@ const getDefaultConnection = (isGlobal) =>
   localStorage.getItem(getDefaultConnectionKey(isGlobal));
 
 const setDefaultConnection = (connectionName, isGlobal) => {
+  logger.debug(`Setting default connection to '${connectionName}' (global: ${!!isGlobal})`);
   localStorage.setItem(getDefaultConnectionKey(isGlobal), connectionName);
 };
 
 const clearDefaultConnection = (isGlobal) => {
+  logger.debug(`Clearing default connection (global: ${!!isGlobal})`);
   localStorage.removeItem(getDefaultConnectionKey(isGlobal));
 };
 

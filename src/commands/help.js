@@ -41,7 +41,8 @@ Commands:
                         Usage: sqlr ls-types
 
   ls                    List all defined connections (names and types).
-                        The current default connection is marked with [current].
+                        The default connection is marked with [default].
+                        Shows if global mode is enabled.
                         Usage: sqlr ls [-g]
 
   clear                 Remove all connections in current scope.

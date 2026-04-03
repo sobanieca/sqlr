@@ -2,12 +2,16 @@ import { Command } from "../deps.js";
 import logger from "../logger.js";
 import { getConnectionName } from "../connection-accessor.js";
 import storage from "../scoped-storage.js";
+import { clearDefaultConnection, getDefaultConnection } from "../scope.js";
 
 const removeConnection = async (connectionName, isGlobal) => {
   if (!connectionName) {
     connectionName = await getConnectionName(isGlobal);
   }
   storage.removeItem(connectionName, isGlobal);
+  if (getDefaultConnection(isGlobal) === connectionName) {
+    clearDefaultConnection(isGlobal);
+  }
   logger.info("Connection removed");
 };
 
