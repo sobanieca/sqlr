@@ -1,6 +1,5 @@
-import { Input } from "../deps.js";
+import { DatabaseSync, Input } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
-import { DatabaseSync } from "node:sqlite";
 
 const isSelectQuery = (query) => {
   const trimmed = query.trim().toUpperCase();

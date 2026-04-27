@@ -1,6 +1,5 @@
-import { Input, Secret, Select } from "../deps.js";
+import { Input, mysql, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
-import mysql from "npm:mysql2@3/promise";
 
 const mysqlConnector = {
   getDatabaseName: () => "MySQL",

@@ -56,3 +56,6 @@ derived from `Deno.hostname()` + `Deno.osRelease()`.
 - Use ES6 shorthand property syntax whenever possible when initiating objects
 - When updating or introducing new features, ensure the `help` command text in
   `src/commands/help.js` is updated to reflect the changes
+- All external dependencies (`npm:`, `jsr:`, `node:`, `https:` imports) MUST be
+  imported and re-exported via `src/deps.js`. It is the single source of truth
+  for external dependencies — no other file should import them directly.

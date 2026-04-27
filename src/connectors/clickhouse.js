@@ -1,6 +1,5 @@
-import { Input, Secret, Select } from "../deps.js";
+import { createClickhouseClient, Input, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
-import { createClient } from "npm:@clickhouse/client@1";
 
 const isSelectQuery = (query) => {
   const trimmed = query.trim().toUpperCase();
@@ -56,7 +55,7 @@ More details: https://clickhouse.com/docs/en/interfaces/http
   },
   getTables: async (connectionString) => {
     const { baseUrl, database } = parseConnectionString(connectionString);
-    const client = createClient({
+    const client = createClickhouseClient({
       url: baseUrl,
       database: database,
       log: { LoggerClass: null },
@@ -134,7 +133,7 @@ More details: https://clickhouse.com/docs/en/interfaces/http
   },
   query: async (connectionString, query) => {
     const { baseUrl, database } = parseConnectionString(connectionString);
-    const client = createClient({
+    const client = createClickhouseClient({
       url: baseUrl,
       database: database,
       log: { LoggerClass: null },

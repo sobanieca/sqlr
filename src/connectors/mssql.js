@@ -1,6 +1,5 @@
-import { Input, Secret, Select } from "../deps.js";
+import { Input, mssql, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
-import mssql from "npm:mssql@11";
 
 const parseConnectionString = (connectionString) => {
   const url = new URL(connectionString);

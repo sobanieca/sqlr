@@ -21,6 +21,10 @@ import { Secret } from "jsr:@cliffy/prompt@1.0.0/secret";
 import { Table } from "jsr:@cliffy/table@1.0.0";
 import { EOL } from "jsr:@std/fs@1/eol";
 import pg from "npm:pg@8";
+import { createClient as createClickhouseClient } from "npm:@clickhouse/client@1";
+import mysql from "npm:mysql2@3/promise";
+import mssql from "npm:mssql@11";
+import { DatabaseSync } from "node:sqlite";
 
 export {
   BaseHandler,
@@ -31,6 +35,8 @@ export {
   brightYellow,
   Command,
   Confirm,
+  createClickhouseClient,
+  DatabaseSync,
   EnumType,
   EOL,
   gray,
@@ -38,6 +44,8 @@ export {
   Input,
   log,
   LogLevels,
+  mssql,
+  mysql,
   pg,
   rgb24,
   Secret,
