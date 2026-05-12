@@ -1,6 +1,8 @@
 import { createClickhouseClient, Input, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 
+const DEFAULT_CONNECTION_TIMEOUT_MS = 10000;
+
 const isSelectQuery = (query) => {
   const trimmed = query.trim().toUpperCase();
   return trimmed.startsWith("SELECT") ||
@@ -14,6 +16,8 @@ const parseConnectionString = (connectionString) => {
   const url = new URL(connectionString);
   const database = url.searchParams.get("database") ||
     url.pathname.replace("/", "") || "default";
+  const timeoutMs = parseInt(url.searchParams.get("connectionTimeoutMs"), 10) ||
+    DEFAULT_CONNECTION_TIMEOUT_MS;
 
   const baseUrl = `${url.protocol}//${
     url.username
@@ -23,7 +27,7 @@ const parseConnectionString = (connectionString) => {
       : ""
   }${url.host}`;
 
-  return { baseUrl, database };
+  return { baseUrl, database, timeoutMs };
 };
 
 const clickhouseConnector = {
@@ -32,6 +36,8 @@ const clickhouseConnector = {
     `
 http(s)://user:password@host:port?database=database_name
 Default port: 8123 (HTTP), 8443 (HTTPS)
+Additional url parameters:
+'connectionTimeoutMs' - connection timeout in milliseconds (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})
 More details: https://clickhouse.com/docs/en/interfaces/http
   `.trim(),
   getConnectionString: async () => {
@@ -50,14 +56,20 @@ More details: https://clickhouse.com/docs/en/interfaces/http
         { name: "https", value: "https" },
       ],
     });
+    const timeoutMs = await Input.prompt(
+      `Connection timeout in ms (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})`,
+    ) || DEFAULT_CONNECTION_TIMEOUT_MS;
 
-    return `${protocol}://${user}:${password}@${host}:${port}?database=${dbName}`;
+    return `${protocol}://${user}:${password}@${host}:${port}?database=${dbName}&connectionTimeoutMs=${timeoutMs}`;
   },
   getTables: async (connectionString) => {
-    const { baseUrl, database } = parseConnectionString(connectionString);
+    const { baseUrl, database, timeoutMs } = parseConnectionString(
+      connectionString,
+    );
     const client = createClickhouseClient({
       url: baseUrl,
       database: database,
+      request_timeout: timeoutMs,
       log: { LoggerClass: null },
     });
 
@@ -132,10 +144,13 @@ More details: https://clickhouse.com/docs/en/interfaces/http
     }
   },
   query: async (connectionString, query) => {
-    const { baseUrl, database } = parseConnectionString(connectionString);
+    const { baseUrl, database, timeoutMs } = parseConnectionString(
+      connectionString,
+    );
     const client = createClickhouseClient({
       url: baseUrl,
       database: database,
+      request_timeout: timeoutMs,
       log: { LoggerClass: null },
     });
 

@@ -10,7 +10,7 @@
     }
   },
   "tasks": {
-    "test": "deno test -A test_*.js",
-    "update-snapshots": "deno test -A test_*.js -- --update"
+    "test": "deno test -A --fail-fast test_*.js",
+    "update-snapshots": "deno test -A --fail-fast test_*.js -- --update"
   }
 }

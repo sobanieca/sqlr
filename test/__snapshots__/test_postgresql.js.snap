@@ -52,24 +52,28 @@ snapshot[`sqlr CLI 2`] = `
   │            │ Additional url parameters:                                                       │
   │            │ 'options' - additional values for connection                                     │
   │            │ (options=--cluster=your_cluster_name)                                            │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
   │            │ More details: https://node-postgres.com/features/connecting                      │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mysql      │ mysql://user:password@host:port/database_name                                    │
   │            │ Additional url parameters:                                                       │
   │            │ 'ssl' - {"rejectUnauthorized":true|false}                                        │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
   │            │ More details: https://github.com/sidorares/node-mysql2#readme                    │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mssql      │ mssql://user:password@host:port/database_name                                    │
   │            │ Additional url parameters:                                                       │
   │            │ 'encrypt' - true | false (default: true)                                         │
   │            │ 'trustServerCertificate' - true | false (default: false)                         │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ clickhouse │ http(s)://user:password@host:port?database=database_name                         │
   │            │ Default port: 8123 (HTTP), 8443 (HTTPS)                                          │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
   │            │ More details: https://clickhouse.com/docs/en/interfaces/http                     │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ sqlite     │ /path/to/database.db                                                             │
-  │            │ Use ':memory:' for an in-memory database                                         │
   │            │ More details: https://www.sqlite.org/uri.html                                    │
   └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
 \`,

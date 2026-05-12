@@ -1,7 +1,7 @@
 {
   "name": "@sobanieca/sqlr",
   "description": "CLI tool for interacting with SQL databases",
-  "version": "0.11.3",
+  "version": "0.12.0",
   "license": "MIT",
   "exports": "./main.js",
   "compilerOptions": {

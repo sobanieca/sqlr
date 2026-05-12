@@ -2,6 +2,7 @@ import { Input, pg, Secret, Toggle } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 
 const { Client } = pg;
+const DEFAULT_CONNECTION_TIMEOUT_MS = 10000;
 
 const postgresConnector = {
   getDatabaseName: () => "PostgreSQL",
@@ -10,6 +11,7 @@ const postgresConnector = {
 postgres://host:port/database_name?user=user&password=password(urlencoded)&application_name=sqlr
 Additional url parameters:
 'options' - additional values for connection (options=--cluster=your_cluster_name)
+'connectionTimeoutMs' - connection timeout in milliseconds (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})
 More details: https://node-postgres.com/features/connecting
   `.trim(),
   getConnectionString: async () => {
@@ -21,13 +23,21 @@ More details: https://node-postgres.com/features/connecting
     const user = await Input.prompt("Username");
     const password = encodeURIComponent(await Secret.prompt("Password"));
     const useSsl = await Toggle.prompt("Use SSL?");
+    const timeoutMs = await Input.prompt(
+      `Connection timeout in ms (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})`,
+    ) || DEFAULT_CONNECTION_TIMEOUT_MS;
 
     const sslParam = useSsl ? "&sslmode=prefer" : "";
-    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr${sslParam}`;
+    return `postgres://${host}:${port}/${dbName}?user=${user}&password=${password}&application_name=sqlr${sslParam}&connectionTimeoutMs=${timeoutMs}`;
   },
   getTables: async (connectionString) => {
-    const normalized = normalizeConnectionString(connectionString);
-    const dbClient = new Client({ connectionString: normalized });
+    const { connectionString: normalized, timeoutMs } = parseConnectionOptions(
+      connectionString,
+    );
+    const dbClient = new Client({
+      connectionString: normalized,
+      connectionTimeoutMillis: timeoutMs,
+    });
     await dbClient.connect();
 
     try {
@@ -119,8 +129,13 @@ More details: https://node-postgres.com/features/connecting
     }
   },
   query: async (connectionString, query) => {
-    const normalized = normalizeConnectionString(connectionString);
-    const dbClient = new Client({ connectionString: normalized });
+    const { connectionString: normalized, timeoutMs } = parseConnectionOptions(
+      connectionString,
+    );
+    const dbClient = new Client({
+      connectionString: normalized,
+      connectionTimeoutMillis: timeoutMs,
+    });
     await dbClient.connect();
 
     try {
@@ -141,10 +156,13 @@ More details: https://node-postgres.com/features/connecting
   },
 };
 
-const normalizeConnectionString = (connectionString) => {
+const parseConnectionOptions = (connectionString) => {
   const url = new URL(connectionString);
+  const timeoutMs = parseInt(url.searchParams.get("connectionTimeoutMs"), 10) ||
+    DEFAULT_CONNECTION_TIMEOUT_MS;
+  url.searchParams.delete("connectionTimeoutMs");
   url.searchParams.set("uselibpqcompat", "true");
-  return url.toString();
+  return { connectionString: url.toString(), timeoutMs };
 };
 
 export { postgresConnector };

@@ -1,6 +1,16 @@
 import { Input, mysql, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 
+const DEFAULT_CONNECTION_TIMEOUT_MS = 10000;
+
+const parseConnectionOptions = (connectionString) => {
+  const url = new URL(connectionString);
+  const timeoutMs = parseInt(url.searchParams.get("connectionTimeoutMs"), 10) ||
+    DEFAULT_CONNECTION_TIMEOUT_MS;
+  url.searchParams.delete("connectionTimeoutMs");
+  return { uri: url.toString(), timeoutMs };
+};
+
 const mysqlConnector = {
   getDatabaseName: () => "MySQL",
   getConnectionStringHint: () =>
@@ -8,6 +18,7 @@ const mysqlConnector = {
 mysql://user:password@host:port/database_name
 Additional url parameters:
 'ssl' - {"rejectUnauthorized":true|false}
+'connectionTimeoutMs' - connection timeout in milliseconds (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})
 More details: https://github.com/sidorares/node-mysql2#readme
   `.trim(),
   getConnectionString: async () => {
@@ -26,17 +37,28 @@ More details: https://github.com/sidorares/node-mysql2#readme
         { name: "enabled (trust any certificate)", value: "trust" },
       ],
     });
+    const timeoutMs = await Input.prompt(
+      `Connection timeout in ms (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})`,
+    ) || DEFAULT_CONNECTION_TIMEOUT_MS;
 
-    const sslParam = ssl === "verify"
-      ? '?ssl={"rejectUnauthorized":true}'
+    const sslEntry = ssl === "verify"
+      ? 'ssl={"rejectUnauthorized":true}'
       : ssl === "trust"
-      ? '?ssl={"rejectUnauthorized":false}'
+      ? 'ssl={"rejectUnauthorized":false}'
       : "";
 
-    return `mysql://${user}:${password}@${host}:${port}/${dbName}${sslParam}`;
+    const params = [sslEntry, `connectionTimeoutMs=${timeoutMs}`]
+      .filter(Boolean)
+      .join("&");
+
+    return `mysql://${user}:${password}@${host}:${port}/${dbName}?${params}`;
   },
   getTables: async (connectionString) => {
-    const connection = await mysql.createConnection(connectionString);
+    const { uri, timeoutMs } = parseConnectionOptions(connectionString);
+    const connection = await mysql.createConnection({
+      uri,
+      connectTimeout: timeoutMs,
+    });
 
     try {
       const url = new URL(connectionString);
@@ -128,10 +150,12 @@ More details: https://github.com/sidorares/node-mysql2#readme
     }
   },
   query: async (connectionString, query) => {
+    const { uri, timeoutMs } = parseConnectionOptions(connectionString);
     const connection = await mysql.createConnection({
-      uri: connectionString,
+      uri,
       supportBigNumbers: true,
       bigNumberStrings: true,
+      connectTimeout: timeoutMs,
     });
 
     try {

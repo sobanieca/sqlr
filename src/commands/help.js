@@ -28,6 +28,8 @@ Commands:
                         Supported types can be listed using 'ls-types' command.
                         Connections are stored locally and can be reused across commands.
                         Optionally encrypt sensitive connections with a password.
+                        Network connectors prompt for a connection timeout (default 10000 ms);
+                        when using -s, append '&connectionTimeoutMs=<ms>' to override.
 
   rm                    Remove selected connection.
                         Usage: sqlr rm [connection]

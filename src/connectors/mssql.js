@@ -1,9 +1,13 @@
 import { Input, mssql, Secret, Select } from "../deps.js";
 import { DatabaseError } from "../database-error.js";
 
+const DEFAULT_CONNECTION_TIMEOUT_MS = 10000;
+
 const parseConnectionString = (connectionString) => {
   const url = new URL(connectionString);
   const params = url.searchParams;
+  const connectionTimeout = parseInt(params.get("connectionTimeoutMs"), 10) ||
+    DEFAULT_CONNECTION_TIMEOUT_MS;
 
   return {
     server: url.hostname,
@@ -11,6 +15,8 @@ const parseConnectionString = (connectionString) => {
     database: url.pathname.replace("/", ""),
     user: decodeURIComponent(url.username),
     password: decodeURIComponent(url.password),
+    connectionTimeout,
+    requestTimeout: connectionTimeout,
     options: {
       encrypt: params.get("encrypt") !== "false",
       trustServerCertificate: params.get("trustServerCertificate") === "true",
@@ -26,6 +32,7 @@ mssql://user:password@host:port/database_name
 Additional url parameters:
 'encrypt' - true | false (default: true)
 'trustServerCertificate' - true | false (default: false)
+'connectionTimeoutMs' - connection timeout in milliseconds (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})
   `.trim(),
   getConnectionString: async () => {
     const host = await Input.prompt(
@@ -49,8 +56,11 @@ Additional url parameters:
         { name: "true", value: "true" },
       ],
     });
+    const timeoutMs = await Input.prompt(
+      `Connection timeout in ms (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})`,
+    ) || DEFAULT_CONNECTION_TIMEOUT_MS;
 
-    return `mssql://${user}:${password}@${host}:${port}/${dbName}?encrypt=${encrypt}&trustServerCertificate=${trustServerCertificate}`;
+    return `mssql://${user}:${password}@${host}:${port}/${dbName}?encrypt=${encrypt}&trustServerCertificate=${trustServerCertificate}&connectionTimeoutMs=${timeoutMs}`;
   },
   getTables: async (connectionString) => {
     const config = parseConnectionString(connectionString);

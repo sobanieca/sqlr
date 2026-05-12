@@ -14,12 +14,11 @@ const sqliteConnector = {
   getConnectionStringHint: () =>
     `
 /path/to/database.db
-Use ':memory:' for an in-memory database
 More details: https://www.sqlite.org/uri.html
   `.trim(),
   getConnectionString: async () => {
     const dbPath = await Input.prompt(
-      "Database file path (example: /data/mydb.sqlite | :memory:)",
+      "Database file path (example: /data/mydb.sqlite)",
     );
     return dbPath;
   },
