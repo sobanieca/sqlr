@@ -99,6 +99,140 @@ snapshot[`sqlr main 6`] = `
 }
 `;
 
+snapshot[`sqlr add and rm by name 1`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add -n test-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"',
+}
+`;
+
+snapshot[`sqlr add and rm by name 2`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add -n test-mysql -t mysql -s "mysql://u:p@localhost:3306/db2"',
+}
+`;
+
+snapshot[`sqlr add and rm by name 3`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/db"',
+}
+`;
+
+snapshot[`sqlr add and rm by name 4`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add -n test-clickhouse -t clickhouse -s "http://u:p@localhost:8123?database=db"',
+}
+`;
+
+snapshot[`sqlr add and rm by name 5`] = `
+{
+  code: 0,
+  output: "Connection has been added
+",
+  outputError: "",
+  sqlrCommand: 'sqlr add -n test-sqlite -t sqlite -s "/tmp/db.sqlite"',
+}
+`;
+
+snapshot[`sqlr add and rm by name 6`] = `
+{
+  code: 0,
+  output: "  ┌─────────────────┬────────────┐
+  │ Name            │ Type       │
+  ├─────────────────┼────────────┤
+  │ test-clickhouse │ clickhouse │
+  ├─────────────────┼────────────┤
+  │ test-mssql      │ mssql      │
+  ├─────────────────┼────────────┤
+  │ test-mysql      │ mysql      │
+  ├─────────────────┼────────────┤
+  │ test-pg         │ postgresql │
+  ├─────────────────┼────────────┤
+  │ test-sqlite     │ sqlite     │
+  └─────────────────┴────────────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr ls",
+}
+`;
+
+snapshot[`sqlr add and rm by name 7`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm -n test-pg",
+}
+`;
+
+snapshot[`sqlr add and rm by name 8`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm -n test-mysql",
+}
+`;
+
+snapshot[`sqlr add and rm by name 9`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm -n test-mssql",
+}
+`;
+
+snapshot[`sqlr add and rm by name 10`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm -n test-clickhouse",
+}
+`;
+
+snapshot[`sqlr add and rm by name 11`] = `
+{
+  code: 0,
+  output: "Connection removed
+",
+  outputError: "",
+  sqlrCommand: "sqlr rm -n test-sqlite",
+}
+`;
+
+snapshot[`sqlr add and rm by name 12`] = `
+{
+  code: 0,
+  output: "  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+",
+  outputError: "",
+  sqlrCommand: "sqlr ls",
+}
+`;
+
 snapshot[`sqlr connection string encoding 1`] = `
 {
   code: 0,

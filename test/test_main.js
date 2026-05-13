@@ -20,6 +20,40 @@ Deno.test("sqlr main", async (t) => {
   await test("sqlr ls");
 });
 
+Deno.test("sqlr add and rm by name", async (t) => {
+  const test = createTestRunner(t);
+
+  await test(
+    `sqlr add -n test-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"`,
+  );
+
+  await test(
+    `sqlr add -n test-mysql -t mysql -s "mysql://u:p@localhost:3306/db2"`,
+  );
+
+  await test(
+    `sqlr add -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/db"`,
+  );
+
+  await test(
+    `sqlr add -n test-clickhouse -t clickhouse -s "http://u:p@localhost:8123?database=db"`,
+  );
+
+  await test(
+    `sqlr add -n test-sqlite -t sqlite -s "/tmp/db.sqlite"`,
+  );
+
+  await test("sqlr ls");
+
+  await test("sqlr rm -n test-pg");
+  await test("sqlr rm -n test-mysql");
+  await test("sqlr rm -n test-mssql");
+  await test("sqlr rm -n test-clickhouse");
+  await test("sqlr rm -n test-sqlite");
+
+  await test("sqlr ls");
+});
+
 Deno.test("sqlr connection string encoding", async (t) => {
   const test = createTestRunner(t);
 

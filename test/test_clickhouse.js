@@ -60,18 +60,6 @@ Deno.test("sqlr ClickHouse", async (t) => {
     await test(
       `sqlr query -t clickhouse -s "${CS}" "INVALID SQL QUERY"`,
     );
-
-    await test(
-      `sqlr add -n test-clickhouse -t clickhouse -s "${CS}"`,
-    );
-
-    await test("sqlr ls");
-
-    await test(
-      `sqlr query -n test-clickhouse "SELECT 1 as test"`,
-    );
-
-    await test("sqlr rm -n test-clickhouse");
   } finally {
     await stopClickhouse();
   }

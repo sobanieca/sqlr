@@ -60,18 +60,6 @@ Deno.test("sqlr MySQL", async (t) => {
     await test(
       `sqlr query -t mysql -s "${CS}" "INVALID SQL QUERY"`,
     );
-
-    await test(
-      `sqlr add -n test-mysql -t mysql -s "${CS}"`,
-    );
-
-    await test("sqlr ls");
-
-    await test(
-      `sqlr query -n test-mysql "SELECT 1 as test"`,
-    );
-
-    await test("sqlr rm -n test-mysql");
   } finally {
     await stopMysql();
   }

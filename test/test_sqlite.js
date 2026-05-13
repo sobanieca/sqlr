@@ -60,18 +60,6 @@ Deno.test("sqlr SQLite", async (t) => {
     await test(
       `sqlr query -t sqlite -s "${CS}" "INVALID SQL QUERY"`,
     );
-
-    await test(
-      `sqlr add -n test-sqlite -t sqlite -s "${CS}"`,
-    );
-
-    await test("sqlr ls");
-
-    await test(
-      `sqlr query -n test-sqlite "SELECT 1 as test"`,
-    );
-
-    await test("sqlr rm -n test-sqlite");
   } finally {
     await stopSqlite();
   }

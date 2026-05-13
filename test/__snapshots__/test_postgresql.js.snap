@@ -438,52 +438,6 @@ snapshot[`sqlr CLI 18`] = `
 }
 `;
 
-snapshot[`sqlr CLI 19`] = `
-{
-  code: 0,
-  output: "Connection has been added
-",
-  outputError: "",
-  sqlrCommand: 'sqlr add -n test-pg -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr"',
-}
-`;
-
-snapshot[`sqlr CLI 20`] = `
-{
-  code: 0,
-  output: "  ┌─────────┬────────────┐
-  │ Name    │ Type       │
-  ├─────────┼────────────┤
-  │ test-pg │ postgresql │
-  └─────────┴────────────┘
-",
-  outputError: "",
-  sqlrCommand: "sqlr ls",
-}
-`;
-
-snapshot[`sqlr CLI 21`] = `
-{
-  code: 0,
-  output: "Using connection: test-pg
-Query executed in: *ms
-Rows affected: *
-[ { test: 1 } ]
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -n test-pg "SELECT 1 as test"',
-}
-`;
-
-snapshot[`sqlr CLI 22`] = `
-{
-  code: 0,
-  output: "Connection removed
-",
-  outputError: "",
-  sqlrCommand: "sqlr rm -n test-pg",
-}
-`;
 
 snapshot[`sqlr CLI - PostgreSQL SSL 1`] = `
 {

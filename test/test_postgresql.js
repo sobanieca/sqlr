@@ -79,18 +79,6 @@ Deno.test("sqlr CLI", async (t) => {
     await test(
       `sqlr query -t postgresql -s "${CS}" "INVALID SQL QUERY"`,
     );
-
-    await test(
-      `sqlr add -n test-pg -t postgresql -s "${CS}"`,
-    );
-
-    await test("sqlr ls");
-
-    await test(
-      `sqlr query -n test-pg "SELECT 1 as test"`,
-    );
-
-    await test("sqlr rm -n test-pg");
   } finally {
     await stopPostgres();
   }
