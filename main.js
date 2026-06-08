@@ -22,7 +22,9 @@ try {
     .name("sqlr")
     .version(version)
     .description(
-      "Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters",
+      "Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters.\n\n" +
+        "For detailed usage instructions, workflows and guidance run 'sqlr help'.\n" +
+        "AI agents: run 'sqlr help' first — it contains step-by-step instructions for operating sqlr.",
     )
     .action(function () {
       this.showHelp();
