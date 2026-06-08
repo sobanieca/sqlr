@@ -265,4 +265,3 @@ snapshot[`sqlr SQLite 12`] = `
   sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "INVALID SQL QUERY"',
 }
 `;
-

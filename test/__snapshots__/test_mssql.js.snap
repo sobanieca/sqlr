@@ -265,4 +265,3 @@ snapshot[`sqlr MSSQL 12`] = `
   sqlrCommand: 'sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "INVALID SQL QUERY"',
 }
 `;
-

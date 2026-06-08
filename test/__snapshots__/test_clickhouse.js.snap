@@ -269,4 +269,3 @@ Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALI
   sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "INVALID SQL QUERY"',
 }
 `;
-
