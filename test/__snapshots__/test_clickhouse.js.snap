@@ -74,7 +74,7 @@ Rows affected: *
 [ { input_file_test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query.sql -y',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query.sql',
 }
 `;
 
@@ -89,7 +89,7 @@ Rows affected: *
 [ { test: 1 } ]
 ",
   outputError: "",
-  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-vars.sql -i "col: 1" -i "alias: test" -y',
+  sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-vars.sql -i "col: 1" -i "alias: test"',
 }
 `;
 

@@ -98,7 +98,6 @@ Commands:
                           --table                  Display results as table
                           --compact                Display results in compact CSV-like form
                           --ignore-input-validation  Skip validation for missing input variables
-                          -y, --yes                Skip confirmation prompt when executing SQL from a file
 
   update                Display instructions for updating sqlr to the latest version.
                         Usage: sqlr update [--deno]
@@ -145,14 +144,12 @@ AI agent instructions:
      sqlr "SELECT * FROM table LIMIT 10"
      For larger results, save to file: sqlr "SELECT *" -o results.json
      Use SQL files with variables: sqlr query.sql -i "param: value"
-     To skip file confirmation prompt: sqlr query.sql -y
 
   Important notes for AI agents:
   - Use 'sqlr describe' to discover schema before writing queries
   - Use LIMIT in SELECT queries to avoid overwhelming output
   - Use --compact or --table flags for more parseable output
   - Use -o flag to save large result sets to a JSON file
-  - Use -y flag to skip confirmation prompt when executing SQL from files
   - Use --debug global flag for troubleshooting connection issues
   - For encrypted connections, set SQLR_ENCRYPTION_PASSWORD env var to avoid interactive prompts
   - Connections are scoped to the git repository. Use -g flag to access global connections

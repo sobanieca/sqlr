@@ -1,12 +1,4 @@
-import {
-  brightGreen,
-  Command,
-  Confirm,
-  EnumType,
-  EOL,
-  gray,
-  Table,
-} from "../deps.js";
+import { brightGreen, Command, EnumType, EOL, gray, Table } from "../deps.js";
 import { connectors } from "../connectors.js";
 import { getConnection, getConnectionName } from "../connection-accessor.js";
 import logger from "../logger.js";
@@ -71,7 +63,6 @@ const runQuery = async (
   type,
   connectionString,
   ignoreInputValidation,
-  yes,
   isGlobal,
 ) => {
   if (!connectionName && !connectionString) {
@@ -107,13 +98,6 @@ const runQuery = async (
       ? [...lines.slice(0, 10), "..."].join(EOL)
       : query;
     logger.info(`${gray("SQL to execute:")}\n${preview}`);
-    if (!yes) {
-      const confirmed = await Confirm.prompt("Proceed with execution?");
-      if (!confirmed) {
-        logger.info("Query execution cancelled.");
-        return;
-      }
-    }
   }
 
   try {
@@ -207,10 +191,6 @@ export default new Command()
     "--ignore-input-validation",
     "Skip validation for missing input variables, allowing {{handlebars}} syntax to pass through to the database",
   )
-  .option(
-    "-y, --yes",
-    "Skip confirmation prompt when executing SQL from a file",
-  )
   .description("Run query against specified database")
   .action(
     async (
@@ -223,7 +203,6 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
-        yes,
         global: g,
       },
       queryArg,
@@ -238,7 +217,6 @@ export default new Command()
         type,
         connectionString,
         ignoreInputValidation,
-        yes,
         g,
       );
     },

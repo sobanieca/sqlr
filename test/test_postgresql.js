@@ -37,12 +37,12 @@ Deno.test("sqlr CLI", async (t) => {
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" test-query.sql -y`,
+      `sqlr query -t postgresql -s "${CS}" test-query.sql`,
       "test",
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test" -y`,
+      `sqlr query -t postgresql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test"`,
       "test",
     );
 
@@ -67,12 +67,12 @@ Deno.test("sqlr CLI", async (t) => {
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql -y`,
+      `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql`,
       "test",
     );
 
     await test(
-      `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql --ignore-input-validation -y`,
+      `sqlr query -t postgresql -s "${CS}" test-query-handlebars.sql --ignore-input-validation`,
       "test",
     );
 

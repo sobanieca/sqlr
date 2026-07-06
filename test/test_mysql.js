@@ -28,12 +28,12 @@ Deno.test("sqlr MySQL", async (t) => {
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" test-query.sql -y`,
+      `sqlr query -t mysql -s "${CS}" test-query.sql`,
       "test",
     );
 
     await test(
-      `sqlr query -t mysql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test" -y`,
+      `sqlr query -t mysql -s "${CS}" test-query-vars.sql -i "col: 1" -i "alias: test"`,
       "test",
     );
 

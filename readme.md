@@ -84,6 +84,27 @@ Run `sqlr help` to learn about sqlr capabilities. Then run
 structure. Finally, update all users last login date so it's more than 7 days ago.
 ```
 
+### Defining an agent skill per connection
+
+If your AI agent supports custom skills / slash commands (for example Claude
+Code), you can define one skill per database connection so a single command
+targets a specific database. Point the skill at the connection by name and let
+sqlr do the rest.
+
+For a `/query-clickhouse-prod` skill, use instructions like:
+
+```
+Run `sqlr help` to learn about sqlr capabilities. Then run
+`sqlr set clickhouse-prod` to select the production ClickHouse connection.
+Use `sqlr describe --compact` to inspect the schema when needed, and run the
+query the user asked for with `sqlr "<SQL>"` (or `sqlr <file>.sql`).
+```
+
+You can add one such skill per environment, e.g. `/query-postgres-staging`,
+`/query-mysql-local`, each pointing at its own `sqlr set <connection>`. The
+connection strings stay on your machine — the agent only ever references the
+connection by name.
+
 ## SQL file collections
 
 You can maintain a collection of `.sql` files and execute them with sqlr
