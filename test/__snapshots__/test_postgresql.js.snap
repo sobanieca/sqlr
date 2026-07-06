@@ -269,7 +269,7 @@ snapshot[`sqlr CLI 12`] = `
       { name: "region", type: "text", nullable: false },
       { name: "surface_area", type: "real", nullable: false },
       { name: "indep_year", type: "smallint", nullable: true },
-      { name: "population", type: "integer", nullable: false },
+      { name: "population", type: "bigint", nullable: false },
       { name: "life_expectancy", type: "real", nullable: true },
       { name: "gnp", type: "numeric", nullable: true },
       { name: "gnp_old", type: "numeric", nullable: true },
@@ -278,7 +278,7 @@ snapshot[`sqlr CLI 12`] = `
       { name: "head_of_state", type: "text", nullable: true },
       {
         name: "capital",
-        type: "integer",
+        type: "bigint",
         nullable: true,
         relation: "public.city.id"
       },
@@ -335,7 +335,7 @@ snapshot[`sqlr CLI 13`] = `
   ├─────────────────────────────┤
   │ indep_year? smallint        │
   ├─────────────────────────────┤
-  │ population integer          │
+  │ population bigint           │
   ├─────────────────────────────┤
   │ life_expectancy? real       │
   ├─────────────────────────────┤
@@ -383,7 +383,7 @@ snapshot[`sqlr CLI 14`] = `
 {
   code: 0,
   output: 'Database schema:
-public.country [ code character, name text, continent USER-DEFINED, region text, surface_area real, indep_year? smallint, population integer, life_expectancy? real, gnp? numeric, gnp_old? numeric, local_name text, government_form text, head_of_state? text, capital -> "public.city.id", code2 character ]
+public.country [ code character, name text, continent USER-DEFINED, region text, surface_area real, indep_year? smallint, population bigint, life_expectancy? real, gnp? numeric, gnp_old? numeric, local_name text, government_form text, head_of_state? text, capital -> "public.city.id", code2 character ]
 public.country_flag [ code2 character, emoji text, unicode? text ]
 public.country_language [ country_code -> "public.country.code", language text, is_official boolean, percentage real ]
 ',
@@ -483,7 +483,7 @@ snapshot[`sqlr CLI - PostgreSQL SSL 3`] = `
       { name: "region", type: "text", nullable: false },
       { name: "surface_area", type: "real", nullable: false },
       { name: "indep_year", type: "smallint", nullable: true },
-      { name: "population", type: "integer", nullable: false },
+      { name: "population", type: "bigint", nullable: false },
       { name: "life_expectancy", type: "real", nullable: true },
       { name: "gnp", type: "numeric", nullable: true },
       { name: "gnp_old", type: "numeric", nullable: true },
@@ -492,7 +492,7 @@ snapshot[`sqlr CLI - PostgreSQL SSL 3`] = `
       { name: "head_of_state", type: "text", nullable: true },
       {
         name: "capital",
-        type: "integer",
+        type: "bigint",
         nullable: true,
         relation: "public.city.id"
       },
