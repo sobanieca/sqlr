@@ -20,11 +20,7 @@ const parseConnectionString = (connectionString) => {
     DEFAULT_CONNECTION_TIMEOUT_MS;
 
   const baseUrl = `${url.protocol}//${
-    url.username
-      ? `${encodeURIComponent(url.username)}:${
-        encodeURIComponent(url.password)
-      }@`
-      : ""
+    url.username ? `${url.username}:${url.password}@` : ""
   }${url.host}`;
 
   return { baseUrl, database, timeoutMs };
