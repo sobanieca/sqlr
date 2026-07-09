@@ -37,21 +37,30 @@ Additional url parameters:
 More details: https://clickhouse.com/docs/en/interfaces/http
   `.trim(),
   getConnectionString: async () => {
-    const host = await Input.prompt(
+    const hostInput = await Input.prompt(
       "Database host (default: localhost | example: my.db.com)",
     ) || "localhost";
+
+    const protocolMatch = hostInput.match(/^(https?):\/\//i);
+    let host = protocolMatch
+      ? hostInput.slice(protocolMatch[0].length)
+      : hostInput;
+    host = host.replace(/\/+$/, "");
+
     const port = await Input.prompt("Port (default: 8123)") || 8123;
     const dbName = await Input.prompt("Database name (default: default)") ||
       "default";
     const user = await Input.prompt("Username (default: default)") || "default";
     const password = encodeURIComponent(await Secret.prompt("Password"));
-    const protocol = await Select.prompt({
-      message: "Protocol (default: http)",
-      options: [
-        { name: "http", value: "http" },
-        { name: "https", value: "https" },
-      ],
-    });
+    const protocol = protocolMatch
+      ? protocolMatch[1].toLowerCase()
+      : await Select.prompt({
+        message: "Protocol (default: http)",
+        options: [
+          { name: "http", value: "http" },
+          { name: "https", value: "https" },
+        ],
+      });
     const timeoutMs = await Input.prompt(
       `Connection timeout in ms (default: ${DEFAULT_CONNECTION_TIMEOUT_MS})`,
     ) || DEFAULT_CONNECTION_TIMEOUT_MS;
