@@ -23,20 +23,18 @@ Options:
 
 Commands:
 
-  add                       - Add new connection. Run without parameters to use wizard.                     
-  rm          [connection]  - Remove selected connection                                                    
-  get         [connection]  - Get details of selected connection                                            
-  ls-types                  - Get available connection types to be used with '--type' parameter in 'add'    
-                              command                                                                       
-  ls                        - List all defined connections                                                  
-  clear                     - Remove all connections                                                        
-  set         [connection]  - Set default connection for current scope                                      
-  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository
-                              scope)                                                                        
-  describe                  - Describe all tables and columns available in database                         
-  query       [queryArg]    - Run query against specified database                                          
-  update                    - Update sqlr to the latest version                                             
-  help                      - Display detailed help text with usage instructions                            
+  add                       - Add new connection. Run without parameters to use wizard.                            
+  rm          [connection]  - Remove selected connection                                                           
+  get         [connection]  - Get details of selected connection                                                   
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add' command   
+  ls                        - List all defined connections                                                         
+  clear                     - Remove all connections                                                               
+  set         [connection]  - Set default connection for current scope                                             
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository scope)
+  describe                  - Describe all tables and columns available in database                                
+  query       [queryArg]    - Run query against specified database                                                 
+  update                    - Update sqlr to the latest version                                                    
+  help                      - Display detailed help text with usage instructions                                   
 
 ",
   outputError: "",
@@ -98,19 +96,22 @@ Description:
 
 Options:
 
-  -h, --help                                      - Show this help.                                                                                                                       
-  --debug                                         - Enable debug logs                                                                                                                     
-  -g, --global                                    - Use global scope for connections (ignore git repository scope)                                                                        
-  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}} substitution in SQL                                                                 
-  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                                                         
-  -n, --name                 [name]               - Name of the connection                                                          (Conflicts: --type, --connection-string)              
-  -t, --type                 [type]               - Type of the connection                                                          (Values: "postgresql", "mysql", "mssql", "clickhouse",
-                                                                                                                                    "sqlite")                                             
-  -s, --connection-string    [connection-string]  - Connection string                                                                                                                     
-  --table                                         - Display results as table                                                        (Conflicts: --compact)                                
-  --compact                                       - Display results in compact form                                                 (Conflicts: --table)                                  
-  --ignore-input-validation                       - Skip validation for missing input variables, allowing {{handlebars}} syntax to                                                        
-                                                    pass through to the database                                                                                                          
+  -h, --help                                      - Show this help.                                                                                  
+  --debug                                         - Enable debug logs                                                                                
+  -g, --global                                    - Use global scope for connections (ignore git repository                                          
+                                                    scope)                                                                                           
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}}                                                
+                                                    substitution in SQL                                                                              
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                    
+  -n, --name                 [name]               - Name of the connection                                        (Conflicts: --type,                
+                                                                                                                  --connection-string)               
+  -t, --type                 [type]               - Type of the connection                                        (Values: "postgresql", "mysql",    
+                                                                                                                  "mssql", "clickhouse", "sqlite")   
+  -s, --connection-string    [connection-string]  - Connection string                                                                                
+  --table                                         - Display results as table                                      (Conflicts: --compact)             
+  --compact                                       - Display results in compact form                               (Conflicts: --table)               
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing                                            
+                                                    {{handlebars}} syntax to pass through to the database                                            
 
 ',
   outputError: "",
@@ -131,17 +132,18 @@ Description:
 
 Options:
 
-  -h, --help                                    - Show this help.                                                                                                       
-  --debug                                       - Enable debug logs                                                                                                     
-  -g, --global                                  - Use global scope for connections (ignore git repository scope)                                                        
-  -n, --name               [name]               - Name of the connection                                          (Conflicts: --type, --connection-string)              
-  -t, --type               [type]               - Type of the connection                                          (Values: "postgresql", "mysql", "mssql", "clickhouse",
-                                                                                                                  "sqlite")                                             
-  -s, --connection-string  [connection-string]  - Connection string                                                                                                     
-  -f, --filter             [filter]             - Filter results by schema/table name                                                                                   
-  --table                                       - Display results in table                                                                                              
-  --compact                                     - Display results in compact form                                                                                       
-  --tables-only                                 - List only table names without columns                                                                                 
+  -h, --help                                    - Show this help.                                                                                    
+  --debug                                       - Enable debug logs                                                                                  
+  -g, --global                                  - Use global scope for connections (ignore git                                                       
+                                                  repository scope)                                                                                  
+  -n, --name               [name]               - Name of the connection                            (Conflicts: --type, --connection-string)         
+  -t, --type               [type]               - Type of the connection                            (Values: "postgresql", "mysql", "mssql",         
+                                                                                                    "clickhouse", "sqlite")                          
+  -s, --connection-string  [connection-string]  - Connection string                                                                                  
+  -f, --filter             [filter]             - Filter results by schema/table name                                                                
+  --table                                       - Display results in table                                                                           
+  --compact                                     - Display results in compact form                                                                    
+  --tables-only                                 - List only table names without columns                                                              
 
 ',
   outputError: "",

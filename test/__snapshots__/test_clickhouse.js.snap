@@ -249,7 +249,7 @@ world.country_language
 snapshot[`sqlr ClickHouse 12`] = `
 {
   code: 0,
-  output: "ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY.
+  output: "ClickHouseError: Syntax error: failed at position 1 
 ",
   outputError: '[*][ERROR][@clickhouse/client][Connection] Command: HTTP request error. 
 Arguments: {
@@ -260,10 +260,10 @@ Arguments: {
   session_id: undefined,
   clickhouse_settings: {}
 } 
-Caused by: ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY. Expected one of: *. 
+Caused by: ClickHouseError: Syntax error: failed at position 1 
     at *
   code: "62",
-  type: "SYNTAX_ERROR"
+  type: "INVALID"
 }
 ',
   sqlrCommand: 'sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "INVALID SQL QUERY"',

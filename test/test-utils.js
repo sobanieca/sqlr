@@ -1,4 +1,4 @@
-import { assertSnapshot } from "jsr:@std/testing@1.0.12/snapshot";
+import { assertSnapshot } from "jsr:@std/testing@1.0.20/snapshot";
 
 const POSTGRES_CONNECTION_STRING =
   "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr";
