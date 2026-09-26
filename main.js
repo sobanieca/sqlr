@@ -12,6 +12,7 @@ import clearConnections from "./src/commands/clear-connections.js";
 import setConnection from "./src/commands/set-connection.js";
 import setGlobal from "./src/commands/set-global.js";
 import helpText from "./src/commands/help.js";
+import skill from "./src/commands/skill.js";
 import { version } from "./src/version.js";
 import logger from "./src/logger.js";
 
@@ -45,6 +46,7 @@ try {
     .command("describe", describe)
     .command("query", query)
     .command("update", update)
+    .command("skill", skill)
     .command(
       "help",
       new Command()

@@ -76,36 +76,33 @@ needing access to the actual connection string. Connection strings stay on your
 machine and are never exposed in the agent's context.
 
 To let the agent learn about all available sqlr commands and options, have it
-run `sqlr help`.
+run `sqlr skill` (the help text with a short preamble for agents).
 
-**Example prompt:**
+### Creating a `/sqlr` skill in your project
 
-```
-Run `sqlr help` to learn about sqlr capabilities. Then run
-`sqlr set my-db-connection` and `sqlr describe --compact` to learn about my db
-structure. Finally, update all users last login date so it's more than 7 days ago.
+```bash
+sqlr skill --init
 ```
 
-### Defining an agent skill per connection
-
-If your AI agent supports custom skills / slash commands (for example Claude
-Code), you can define one skill per database connection so a single command
-targets a specific database. Point the skill at the connection by name and let
-sqlr do the rest.
-
-For a `/query-clickhouse-prod` skill, use instructions like:
+This writes `SKILL.md` to `.agents/skills/sqlr/` (Codex, Cursor) and
+`.claude/skills/sqlr/` (Claude Code, Cursor) in the nearest directory that has
+`AGENTS.md` or `CLAUDE.md`, falling back to the git root. It works in monorepos
+and nested projects. Then:
 
 ```
-Run `sqlr help` to learn about sqlr capabilities. Then run
-`sqlr set clickhouse-prod` to select the production ClickHouse connection.
-Use `sqlr describe --compact` to inspect the schema when needed, and run the
-query the user asked for with `sqlr "<SQL>"` (or `sqlr <file>.sql`).
+/sqlr how many orders were placed last week, grouped by country
 ```
 
-You can add one such skill per environment, e.g. `/query-postgres-staging`,
-`/query-mysql-local`, each pointing at its own `sqlr set <connection>`. The
-connection strings stay on your machine — the agent only ever references the
-connection by name.
+### One skill per connection
+
+```bash
+sqlr skill --init -n clickhouse-prod
+```
+
+This creates `/sqlr-clickhouse-prod`, a skill that always runs
+`sqlr set clickhouse-prod` first. Add one per environment, e.g.
+`/sqlr-postgres-staging`, `/sqlr-mysql-local`. The connection strings stay on
+your machine, the agent only ever references the connection by name.
 
 ## SQL file collections
 

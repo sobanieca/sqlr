@@ -102,6 +102,19 @@ Commands:
   update                Display instructions for updating sqlr to the latest version.
                         Usage: sqlr update [--deno]
 
+  skill                 Print instructions for AI agents (this help text with an agent preamble).
+                        Usage: sqlr skill
+                               sqlr skill --init
+                               sqlr skill --init -n prod
+
+                        With --init: Creates a project skill so the agent can be invoked
+                        with /sqlr (Claude Code, Cursor) or $sqlr (Codex). The skill is
+                        written to .agents/skills/sqlr/SKILL.md and .claude/skills/sqlr/SKILL.md
+                        in the nearest directory that has AGENTS.md or CLAUDE.md (or the
+                        git root), so it works in monorepos and nested projects.
+                        With -n <connection>: The skill is named sqlr-<connection> and
+                        always runs 'sqlr set <connection>' first.
+
 Typical workflow:
 
   1. Configure a connection:

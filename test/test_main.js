@@ -5,6 +5,8 @@ Deno.test("sqlr main", async (t) => {
 
   await test("sqlr");
 
+  await test("sqlr skill");
+
   await test(
     `sqlr add -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"`,
   );
@@ -330,5 +332,68 @@ Deno.test("sqlr set", async (t) => {
   } finally {
     await Deno.remove(tempDir, { recursive: true });
     await Deno.remove(tempDir2, { recursive: true });
+  }
+});
+
+Deno.test("sqlr skill --init", async (t) => {
+  const projectRoot = Deno.cwd().replace("/test", "");
+  const mainPath = `${projectRoot}/main.js`;
+  const sqlr = (cmd, cwd) =>
+    run(cmd.replace("sqlr", `deno run -A ${mainPath}`), cwd);
+  const normalize = (text, dir) => text.replaceAll(dir, "<tmp>");
+
+  const repo = await Deno.makeTempDir();
+  await Deno.mkdir(`${repo}/.git`);
+  await Deno.mkdir(`${repo}/services/api/src`, { recursive: true });
+  await Deno.writeTextFile(`${repo}/services/api/CLAUDE.md`, "# api\n");
+
+  try {
+    await t.step("skill lands next to the nearest CLAUDE.md", async () => {
+      const result = await sqlr(
+        "sqlr skill --init",
+        `${repo}/services/api/src`,
+      );
+      const skill = await Deno.readTextFile(
+        `${repo}/services/api/.agents/skills/sqlr/SKILL.md`,
+      );
+      const claudeSkill = await Deno.readTextFile(
+        `${repo}/services/api/.claude/skills/sqlr/SKILL.md`,
+      );
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, repo),
+        sameContent: skill === claudeSkill,
+        skill,
+      });
+    });
+
+    await t.step("pinned skill lands at the git root", async () => {
+      const result = await sqlr(
+        "sqlr skill --init -n prod",
+        `${repo}/services`,
+      );
+      const skill = await Deno.readTextFile(
+        `${repo}/.claude/skills/sqlr-prod/SKILL.md`,
+      );
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, repo),
+        skill,
+      });
+    });
+
+    await t.step("refuses to overwrite an existing skill", async () => {
+      const result = await sqlr(
+        "sqlr skill --init -n prod",
+        `${repo}/services`,
+      );
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, repo),
+        outputError: normalize(result.outputError, repo),
+      });
+    });
+  } finally {
+    await Deno.remove(repo, { recursive: true });
   }
 });

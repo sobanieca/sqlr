@@ -19,6 +19,7 @@ import { Toggle } from "jsr:@cliffy/prompt@1.2.1/toggle";
 import { Secret } from "jsr:@cliffy/prompt@1.2.1/secret";
 import { Table } from "jsr:@cliffy/table@1.2.1";
 import { EOL } from "jsr:@std/fs@1/eol";
+import { dirname, join } from "jsr:@std/path@1.1.6";
 import pg from "npm:pg@8";
 import { createClient as createClickhouseClient } from "npm:@clickhouse/client@1";
 import mysql from "npm:mysql2@3/promise";
@@ -35,11 +36,13 @@ export {
   Command,
   createClickhouseClient,
   DatabaseSync,
+  dirname,
   EnumType,
   EOL,
   gray,
   green,
   Input,
+  join,
   log,
   LogLevels,
   mssql,

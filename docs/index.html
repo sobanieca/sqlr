@@ -385,31 +385,41 @@
     .node.safe .lbl {
       color: var(--accent);
     }
-    .cipher {
+    .conn {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 8px;
+      align-items: center;
       font-family: var(--mono);
       font-size: 12px;
-      color: var(--muted);
-      word-break: break-all;
-      line-height: 1.5;
     }
-    .cipher b {
+    .conn .n {
       color: var(--accent);
       font-weight: 500;
     }
-    .badge {
+    .conn .v {
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .conn .v.locked {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 12.5px;
-      color: var(--ok);
-      font-weight: 500;
+      gap: 5px;
+      color: var(--ink);
     }
-    .badge svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
+    .conn .v.locked svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--accent);
       fill: none;
       stroke-width: 2.2;
+      flex: none;
+    }
+    .node .note {
+      font-size: 12.5px;
+      color: var(--muted);
     }
     .link {
       position: relative;
@@ -486,24 +496,62 @@
         opacity: 0;
       }
     }
-    .steps {
-      margin: 22px 0 0;
-      padding: 0;
-      list-style: none;
+    .patterns {
+      margin-top: 18px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px 24px;
-      font-size: 14.5px;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 14px;
+    }
+    @media (max-width: 760px) {
+      .patterns {
+        grid-template-columns: 1fr;
+      }
+    }
+    .pattern {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      min-width: 0;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+    .pattern h3 {
+      font-size: 15.5px;
+      font-weight: 600;
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+    .pattern h3 span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pattern p {
+      font-size: 14px;
       color: var(--muted);
     }
-    .steps li b {
-      color: var(--ink);
-      font-weight: 600;
-      display: block;
-    }
-    .steps code {
+    .pattern pre {
+      margin: 0;
       font-size: 12.5px;
-      color: var(--ink);
+      line-height: 1.75;
+      white-space: pre;
+      overflow-x: auto;
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .pattern .str {
+      color: var(--accent);
+    }
+    .pattern .dim {
+      color: var(--muted);
     }
 
     /* install */
@@ -624,42 +672,53 @@
       </section>
 
       <section class="agent">
-        <h2>AI agents query by name. The connection string never enters their context.</h2>
+        <h2>AI agents query by name. The connection string stays on disk.</h2>
         <p
-          class="lead">Add the connection yourself, set it as default, and let the agent run <code class="name">sqlr</code>. It sees table names and rows, not hosts, users or passwords.</p>
+          class="lead">Add a connection once with <code>sqlr add</code>. From then on the agent runs <code class="name">sqlr</code> and sees table names and rows, never hosts, users or passwords. <code>sqlr skill --init</code> turns that into a <code>/sqlr</code> slash command for Claude Code, Codex and Cursor.</p>
 
         <div class="vault"
-          aria-label="How the agent, sqlr and the encrypted connection store interact">
+          aria-label="How the agent, sqlr and the stored connections interact">
           <div class="node">
             <span class="lbl">AI agent</span>
             <div
-              class="bubble">Run <code>sqlr set prod</code>, then find users inactive for 7 days.</div>
+              class="bubble"><code>/sqlr</code> find users inactive for 7 days</div>
             <code>sqlr "select id, email from users where last_login &lt; now() - interval '7 days'"</code>
           </div>
           <div class="link l1"
             aria-hidden="true"><span class="pk"></span><span class="pk back"></span></div>
           <div class="node sqlr">
             <span class="lbl">sqlr on your machine</span>
-            <span
-              class="big">Resolves <code>prod</code> to a stored connection</span>
-            <code>~/.local · localStorage · AES-GCM</code>
+            <span class="big">Looks up the default connection by name</span>
+            <code>sqlr set prod · once per repo</code>
           </div>
           <div class="link l2"
             aria-hidden="true"><span class="pk"></span><span class="pk back"></span></div>
           <div class="node safe">
-            <span class="lbl">Encrypted store</span>
+            <span class="lbl">Stored on disk</span>
             <div
-              class="cipher">prod → <b>enc:</b>MTc4KzIzNSs4OSsyMTArMTI2KzE1OCs5OSszMys0MSsxNzArNTgrMjE0KzcrMTQ1KzE5MCs5Nis0Nys4KzE1MSsyMTUrMTI1…</div>
-            <span
-              class="badge"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>password + machine bound key</span>
+              class="conn"><span class="n">dev</span><span class="v">postgres://app@localhost:5432/app</span></div>
+            <div
+              class="conn"><span class="n">prod</span><span class="v locked"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>password protected</span></div>
+            <span class="note">The agent never reads this store.</span>
           </div>
         </div>
 
-        <ul class="steps">
-          <li><b>You add it once</b><code>sqlr add</code> asks for the connection string and offers to encrypt it with a password.</li>
-          <li><b>Keys stay local</b>AES-GCM with a PBKDF2 key derived from your password and this machine's hostname. Copying the store elsewhere gives nothing.</li>
-          <li><b>The agent gets a name</b>Prompts, skills and chat logs contain <code>sqlr set prod</code>, never <code>postgres://user:pass@host</code>.</li>
-        </ul>
+        <div class="patterns">
+          <div class="pattern">
+            <h3>Dev database <span>nothing extra</span></h3>
+            <p>Store it as is. The agent can query straight away.</p>
+            <pre><span class="dim">$</span> sqlr add -n dev -t postgresql -s <span class="str">"postgres://app@localhost:5432/app"</span>
+<span class="dim">$</span> sqlr set dev</pre>
+          </div>
+          <div class="pattern">
+            <h3>Prod database <span>unlock once per shell</span></h3>
+            <p>Protect it with a password when adding. Before you start the agent, put that password in an environment variable. The agent inherits the variable but never sees its value, and it is gone when the terminal closes.</p>
+            <pre><span class="dim">$</span> sqlr add -n prod          <span class="dim"># answer yes to "secure connection"</span>
+<span class="dim">$</span> export SQLR_ENCRYPTION_PASSWORD=<span class="str">"my-prod-password"</span>
+<span class="dim">$</span> sqlr set prod
+<span class="dim">$</span> claude                    <span class="dim"># or codex, cursor…</span></pre>
+          </div>
+        </div>
       </section>
 
       <section class="install">
