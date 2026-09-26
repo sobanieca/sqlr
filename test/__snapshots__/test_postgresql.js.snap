@@ -34,6 +34,7 @@ Commands:
   describe                  - Describe all tables and columns available in database                                
   query       [queryArg]    - Run query against specified database                                                 
   update                    - Update sqlr to the latest version                                                    
+  skill                     - Print instructions for AI agents. Use --init to create a project skill (/sqlr)       
   help                      - Display detailed help text with usage instructions                                   
 
 ",
