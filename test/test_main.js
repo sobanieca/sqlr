@@ -338,8 +338,8 @@ Deno.test("sqlr set", async (t) => {
 Deno.test("sqlr skill --init", async (t) => {
   const projectRoot = Deno.cwd().replace("/test", "");
   const mainPath = `${projectRoot}/main.js`;
-  const sqlr = (cmd, cwd) =>
-    run(cmd.replace("sqlr", `deno run -A ${mainPath}`), cwd);
+  const sqlr = (cmd, cwd, env) =>
+    run(cmd.replace("sqlr", `deno run -A ${mainPath}`), cwd, env);
   const normalize = (text, dir) => text.replaceAll(dir, "<tmp>");
 
   const repo = await Deno.makeTempDir();
@@ -348,21 +348,24 @@ Deno.test("sqlr skill --init", async (t) => {
   await Deno.writeTextFile(`${repo}/services/api/CLAUDE.md`, "# api\n");
 
   try {
-    await t.step("skill lands next to the nearest CLAUDE.md", async () => {
+    await t.step("skill lands at the git root from a service", async () => {
       const result = await sqlr(
         "sqlr skill --init",
         `${repo}/services/api/src`,
       );
       const skill = await Deno.readTextFile(
-        `${repo}/services/api/.agents/skills/sqlr/SKILL.md`,
+        `${repo}/.agents/skills/sqlr/SKILL.md`,
       );
       const claudeSkill = await Deno.readTextFile(
-        `${repo}/services/api/.claude/skills/sqlr/SKILL.md`,
+        `${repo}/.claude/skills/sqlr/SKILL.md`,
       );
+      const inService = await Deno.stat(`${repo}/services/api/.claude`)
+        .then(() => true, () => false);
       await assertSnapshot(t, {
         code: result.code,
         output: normalize(result.output, repo),
         sameContent: skill === claudeSkill,
+        inService,
         skill,
       });
     });
@@ -395,5 +398,35 @@ Deno.test("sqlr skill --init", async (t) => {
     });
   } finally {
     await Deno.remove(repo, { recursive: true });
+  }
+
+  const root = await Deno.makeTempDir();
+  const home = `${root}/home`;
+  await Deno.mkdir(`${root}/.git`);
+  await Deno.mkdir(`${home}/notes`, { recursive: true });
+  await Deno.writeTextFile(`${home}/notes/CLAUDE.md`, "# notes\n");
+
+  try {
+    await t.step("skill lands in home outside a git repository", async () => {
+      const result = await sqlr("sqlr skill --init", `${home}/notes`, {
+        HOME: home,
+      });
+      const skill = await Deno.readTextFile(
+        `${home}/.agents/skills/sqlr/SKILL.md`,
+      );
+      const claudeSkill = await Deno.readTextFile(
+        `${home}/.claude/skills/sqlr/SKILL.md`,
+      );
+      const inNotes = await Deno.stat(`${home}/notes/.claude`)
+        .then(() => true, () => false);
+      await assertSnapshot(t, {
+        code: result.code,
+        output: normalize(result.output, root),
+        sameContent: skill === claudeSkill,
+        inNotes,
+      });
+    });
+  } finally {
+    await Deno.remove(root, { recursive: true });
   }
 });

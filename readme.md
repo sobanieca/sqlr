@@ -85,9 +85,11 @@ sqlr skill --init
 ```
 
 This writes `SKILL.md` to `.agents/skills/sqlr/` (Codex, Cursor) and
-`.claude/skills/sqlr/` (Claude Code, Cursor) in the nearest directory that has
-`AGENTS.md` or `CLAUDE.md`, falling back to the git root. It works in monorepos
-and nested projects. Then:
+`.claude/skills/sqlr/` (Claude Code, Cursor). Inside a git repository the skill
+goes to the git root, so the agent sees it in every folder of the repository,
+monorepo packages included. Outside a git repository the skill goes to your home
+directory (`~/.agents/skills/sqlr/` and `~/.claude/skills/sqlr/`), so agents see
+it in every project. Then:
 
 ```
 /sqlr how many orders were placed last week, grouped by country

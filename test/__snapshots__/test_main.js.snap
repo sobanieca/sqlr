@@ -34,7 +34,7 @@ Commands:
   describe                  - Describe all tables and columns available in database                                
   query       [queryArg]    - Run query against specified database                                                 
   update                    - Update sqlr to the latest version                                                    
-  skill                     - Print instructions for AI agents. Use --init to create a project skill (/sqlr)       
+  skill                     - Print instructions for AI agents. Use --init to create a skill (/sqlr)               
   help                      - Display detailed help text with usage instructions                                   
 
 ",
@@ -49,8 +49,9 @@ snapshot[`sqlr main 2`] = `
   output: \`
 sqlr - instructions for AI agents
 
-  Run 'sqlr skill --init' to create a project skill so you can invoke it
-  with /sqlr (Claude Code, Cursor) or \$sqlr (Codex).
+  Run 'sqlr skill --init' to create a skill so you can invoke it with
+  /sqlr (Claude Code, Cursor) or \$sqlr (Codex). Inside a git repository
+  the skill is created in the repository, otherwise in the home directory.
   Add '-n <connection>' to create a skill pinned to one connection,
   for example /sqlr-prod.
 
@@ -169,11 +170,13 @@ Commands:
                                sqlr skill --init
                                sqlr skill --init -n prod
 
-                        With --init: Creates a project skill so the agent can be invoked
+                        With --init: Creates a skill so the agent can be invoked
                         with /sqlr (Claude Code, Cursor) or \$sqlr (Codex). The skill is
-                        written to .agents/skills/sqlr/SKILL.md and .claude/skills/sqlr/SKILL.md
-                        in the nearest directory that has AGENTS.md or CLAUDE.md (or the
-                        git root), so it works in monorepos and nested projects.
+                        written to .agents/skills/sqlr/SKILL.md and .claude/skills/sqlr/SKILL.md.
+                        Inside a git repository (searched up to the home directory) it goes
+                        to the git root, so the agent sees it in every folder of the
+                        repository. Outside a git repository it goes to the home directory,
+                        so every agent sees it in all projects.
                         With -n <connection>: The skill is named sqlr-<connection> and
                         always runs 'sqlr set <connection>' first.
 
@@ -742,7 +745,8 @@ snapshot[`sqlr set 4`] = `
 snapshot[`sqlr skill --init 1`] = `
 {
   code: 0,
-  output: "Project root: <tmp>/services/api (agent instructions)
+  inService: false,
+  output: "Project root: <tmp> (git root)
 Created .agents/skills/sqlr/SKILL.md  (Codex, Cursor)
 Created .claude/skills/sqlr/SKILL.md  (Claude Code, Cursor)
 
@@ -830,5 +834,19 @@ snapshot[`sqlr skill --init 3`] = `
   output: "<tmp>/.agents/skills/sqlr-prod/SKILL.md already exists. Delete it first if you want to regenerate it.
 ",
   outputError: "",
+}
+`;
+
+snapshot[`sqlr skill --init 4`] = `
+{
+  code: 0,
+  inNotes: false,
+  output: "Not in a git repository - installing for all projects in <tmp>/home
+Created .agents/skills/sqlr/SKILL.md  (Codex, Cursor)
+Created .claude/skills/sqlr/SKILL.md  (Claude Code, Cursor)
+
+Try: /sqlr how many users signed up this week
+",
+  sameContent: true,
 }
 `;

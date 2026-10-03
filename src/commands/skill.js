@@ -2,7 +2,6 @@ import { Command, dirname, join } from "../deps.js";
 import logger from "../logger.js";
 import helpText from "./help.js";
 
-const AGENT_FILES = ["AGENTS.md", "agents.md", "CLAUDE.md", "claude.md"];
 const SKILL_TARGETS = [
   { dir: ".agents/skills", readBy: "Codex, Cursor" },
   { dir: ".claude/skills", readBy: "Claude Code, Cursor" },
@@ -51,8 +50,9 @@ ${select}
 const agentInstructions = `
 sqlr - instructions for AI agents
 
-  Run 'sqlr skill --init' to create a project skill so you can invoke it
-  with /sqlr (Claude Code, Cursor) or $sqlr (Codex).
+  Run 'sqlr skill --init' to create a skill so you can invoke it with
+  /sqlr (Claude Code, Cursor) or $sqlr (Codex). Inside a git repository
+  the skill is created in the repository, otherwise in the home directory.
   Add '-n <connection>' to create a skill pinned to one connection,
   for example /sqlr-prod.
 
@@ -72,45 +72,57 @@ const exists = (path) => {
   }
 };
 
-const hasAgentMarker = (dir) =>
-  AGENT_FILES.some((file) => exists(join(dir, file))) ||
-  SKILL_TARGETS.some((target) => exists(join(dir, target.dir)));
+const homeDir = () => Deno.env.get("HOME") || Deno.env.get("USERPROFILE");
 
-const findSkillRoot = (start = Deno.cwd()) => {
-  const home = Deno.env.get("HOME") || Deno.env.get("USERPROFILE") || "";
+const findSkillRoot = (start = Deno.cwd(), home = homeDir()) => {
   let dir = start;
   while (true) {
-    if (hasAgentMarker(dir)) return { dir, reason: "agent instructions" };
-    if (exists(join(dir, ".git"))) return { dir, reason: "git root" };
-    const parent = dirname(dir);
-    if (dir === home || parent === dir) {
-      return { dir: start, reason: "current directory" };
+    if (exists(join(dir, ".git"))) {
+      return { dir, reason: "git root", global: false };
     }
+    const parent = dirname(dir);
+    if (dir === home || parent === dir) break;
     dir = parent;
   }
+  if (!home) {
+    logger.error(
+      "Not in a git repository and the home directory is unknown (set HOME).",
+    );
+    Deno.exit(1);
+  }
+  return { dir: home, reason: "not in a git repository", global: true };
 };
 
 const createSkill = async (connection) => {
   const skillName = connection ? `sqlr-${connection}` : "sqlr";
   const root = findSkillRoot();
-  const created = [];
+  const files = SKILL_TARGETS.map((target) => ({
+    target,
+    path: join(target.dir, skillName, "SKILL.md"),
+  }));
 
-  for (const target of SKILL_TARGETS) {
-    const skillDir = join(root.dir, target.dir, skillName);
-    const skillFile = join(skillDir, "SKILL.md");
+  for (const { path } of files) {
+    const skillFile = join(root.dir, path);
     if (exists(skillFile)) {
       logger.error(
         `${skillFile} already exists. Delete it first if you want to regenerate it.`,
       );
       Deno.exit(1);
     }
-    await Deno.mkdir(skillDir, { recursive: true });
-    await Deno.writeTextFile(skillFile, skillContent(connection));
-    created.push({ path: join(target.dir, skillName, "SKILL.md"), target });
   }
 
-  logger.info(`Project root: ${root.dir} (${root.reason})`);
-  for (const { path, target } of created) {
+  for (const { path } of files) {
+    const skillFile = join(root.dir, path);
+    await Deno.mkdir(dirname(skillFile), { recursive: true });
+    await Deno.writeTextFile(skillFile, skillContent(connection));
+  }
+
+  logger.info(
+    root.global
+      ? `Not in a git repository - installing for all projects in ${root.dir}`
+      : `Project root: ${root.dir} (${root.reason})`,
+  );
+  for (const { path, target } of files) {
     logger.info(`Created ${path}  (${target.readBy})`);
   }
   logger.info("");
@@ -119,9 +131,12 @@ const createSkill = async (connection) => {
 
 export default new Command()
   .description(
-    "Print instructions for AI agents. Use --init to create a project skill (/sqlr)",
+    "Print instructions for AI agents. Use --init to create a skill (/sqlr)",
   )
-  .option("--init", "Create the skill in the current project")
+  .option(
+    "--init",
+    "Create the skill in the current git repository, or in the home directory outside one",
+  )
   .option(
     "-n, --name <name:string>",
     "Pin the created skill to a connection (creates /sqlr-<name>)",

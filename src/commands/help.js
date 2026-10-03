@@ -107,11 +107,13 @@ Commands:
                                sqlr skill --init
                                sqlr skill --init -n prod
 
-                        With --init: Creates a project skill so the agent can be invoked
+                        With --init: Creates a skill so the agent can be invoked
                         with /sqlr (Claude Code, Cursor) or $sqlr (Codex). The skill is
-                        written to .agents/skills/sqlr/SKILL.md and .claude/skills/sqlr/SKILL.md
-                        in the nearest directory that has AGENTS.md or CLAUDE.md (or the
-                        git root), so it works in monorepos and nested projects.
+                        written to .agents/skills/sqlr/SKILL.md and .claude/skills/sqlr/SKILL.md.
+                        Inside a git repository (searched up to the home directory) it goes
+                        to the git root, so the agent sees it in every folder of the
+                        repository. Outside a git repository it goes to the home directory,
+                        so every agent sees it in all projects.
                         With -n <connection>: The skill is named sqlr-<connection> and
                         always runs 'sqlr set <connection>' first.
 
