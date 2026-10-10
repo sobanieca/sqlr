@@ -9,6 +9,7 @@ use crate::json;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Cell {
+    Undefined,
     Null,
     Bool(bool),
     Number(f64),
@@ -111,6 +112,7 @@ impl From<&json::Value> for Cell {
 /// `Deno.inspect` representation.
 pub fn to_node(cell: &Cell) -> Node {
     match cell {
+        Cell::Undefined => Node::Undefined,
         Cell::Null => Node::Null,
         Cell::Bool(b) => Node::Bool(*b),
         Cell::Number(n) => Node::Number(*n),
@@ -151,11 +153,21 @@ fn inspect_buffer(bytes: &[u8]) -> String {
     out
 }
 
+/// `String(value)`, e.g. in template literals.
+pub fn to_js_string(cell: &Cell) -> String {
+    match cell {
+        Cell::Undefined => "undefined".to_string(),
+        Cell::Null => "null".to_string(),
+        other => to_display_string(other),
+    }
+}
+
 /// `String(value)` with `Array.prototype.join` semantics for nested values:
-/// `null` becomes an empty string. Used for `--compact` and `--table`.
+/// `null` and `undefined` become empty strings. Used for `--compact` and
+/// `--table`.
 pub fn to_display_string(cell: &Cell) -> String {
     match cell {
-        Cell::Null => String::new(),
+        Cell::Undefined | Cell::Null => String::new(),
         Cell::Bool(b) => b.to_string(),
         Cell::Number(n) => json::format_number(*n),
         Cell::String(s) => s.clone(),
@@ -185,7 +197,7 @@ pub fn rows_to_json(rows: &[Row]) -> String {
 
 fn write_json(out: &mut String, cell: &Cell, level: usize) {
     match cell {
-        Cell::Null => out.push_str("null"),
+        Cell::Undefined | Cell::Null => out.push_str("null"),
         Cell::Bool(b) => out.push_str(if *b { "true" } else { "false" }),
         Cell::Number(n) if n.is_finite() => out.push_str(&json::format_number(*n)),
         Cell::Number(_) => out.push_str("null"),
@@ -231,8 +243,17 @@ fn write_json(out: &mut String, cell: &Cell, level: usize) {
                 out.push_str("{}");
                 return;
             }
+            let entries: Vec<&(String, Cell)> = object
+                .entries
+                .iter()
+                .filter(|(_, value)| *value != Cell::Undefined)
+                .collect();
+            if entries.is_empty() {
+                out.push_str("{}");
+                return;
+            }
             out.push('{');
-            for (index, (key, value)) in object.entries.iter().enumerate() {
+            for (index, (key, value)) in entries.into_iter().enumerate() {
                 if index > 0 {
                     out.push(',');
                 }
@@ -278,6 +299,7 @@ mod tests {
         row.insert("u", Cell::Uint8Array(vec![]));
         row.insert("nan", Cell::Number(f64::NAN));
         row.insert("e", Cell::Array(vec![]));
+        row.insert("skipped", Cell::Undefined);
         assert_eq!(
             rows_to_json(&[row]),
             "[\n  {\n    \"n\": null,\n    \"d\": \"1970-01-01T00:00:00.000Z\",\n    \"b\": {\n      \"type\": \"Buffer\",\n      \"data\": [\n        1,\n        255\n      ]\n    },\n    \"u\": {},\n    \"nan\": null,\n    \"e\": []\n  }\n]"

@@ -10,7 +10,7 @@ pub mod mysql;
 pub mod postgres;
 pub mod sqlite;
 
-use crate::value::Row;
+use crate::value::{Cell, Row};
 use std::future::Future;
 use std::sync::Arc;
 
@@ -34,8 +34,9 @@ pub struct Table {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct QueryResult {
-    /// `None` prints as `undefined` (e.g. multiple statements in PostgreSQL).
-    pub rows_affected: Option<f64>,
+    /// Usually a number. PostgreSQL reports `null` for statements without a
+    /// row count and `undefined` for multiple statements.
+    pub rows_affected: Cell,
     pub rows: Vec<Row>,
 }
 
