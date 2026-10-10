@@ -1,0 +1,30 @@
+[package]
+name = "sqlr"
+version = "1.0.0"
+edition = "2024"
+description = "CLI tool for interacting with SQL databases"
+license = "MIT"
+repository = "https://github.com/sobanieca/sqlr"
+publish = false
+
+[dependencies]
+libc = "0.2"
+mysql_async = { version = "0.37.1", default-features = false, features = ["minimal-rust", "rustls-tls", "ring", "tls12"] }
+ring = "0.17"
+rusqlite = { version = "0.40.2", default-features = false, features = ["bundled"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
+tiberius = { version = "0.13.0", default-features = false, features = ["tds73", "rustls"] }
+tokio = { version = "1.53", default-features = false, features = ["rt", "net", "time", "io-util"] }
+tokio-postgres = { version = "0.7.18", default-features = false, features = ["runtime"] }
+tokio-postgres-rustls = { version = "0.14.0", default-features = false, features = ["ring"] }
+tokio-util = { version = "0.7", default-features = false, features = ["compat"] }
+ureq = { version = "3.4.2", default-features = false, features = ["rustls"] }
+webpki-roots = "1"
+
+[workspace]
+members = ["xtask"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
