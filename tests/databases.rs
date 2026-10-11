@@ -77,7 +77,7 @@ fn postgresql() {
     s.run(&format!(
         r#"sqlr query -t postgresql -s "{POSTGRES}" "CREATE TEMP TABLE t (id int)""#
     ));
-    s.run(r#"sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=wrong" "SELECT 1""#);
+    s.run(r#"sqlr query -t postgresql -s "postgres://localhost:15432/world-db?user=world&password=wrong" "SELECT 1""#);
     s.assert_snapshot("postgresql");
 }
 

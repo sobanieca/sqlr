@@ -62,7 +62,7 @@ fn main() -> ExitCode {
             &[("UPDATE_SNAPSHOTS", "1"), ("TZ", "UTC")],
         ),
         "start-db" => run("bash", &["start-db.sh"]),
-        "stop-db" => run("docker", &["compose", "down"]),
+        "stop-db" => run("docker", &["compose", "down", "--volumes"]),
         "test-db" => cargo(
             &["test", "--test", "databases", "--", "--ignored"],
             DB_TEST_ENV,

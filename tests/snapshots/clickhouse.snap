@@ -1,4 +1,4 @@
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT 1 as test"
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT 1 as test"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -6,7 +6,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3"
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -18,7 +18,7 @@ Rows affected: 3
 ]
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -34,7 +34,7 @@ Rows affected: 3
   └──────┴─────────────┘
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -45,7 +45,7 @@ AFG,Afghanistan
 AGO,Angola
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query.sql
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" test-query.sql
 exit code: 0
 --- stdout
 SQL to execute:
@@ -56,7 +56,7 @@ Rows affected: 1
 [ { input_file_test: 1 } ]
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-vars.sql -i "col: 1" -i "alias: test"
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" test-query-vars.sql -i "col: 1" -i "alias: test"
 exit code: 0
 --- stdout
 SQL to execute:
@@ -67,7 +67,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT 1 as test" -o <tmp>/output-clickhouse.json
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT 1 as test" -o <tmp>/output-clickhouse.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -81,7 +81,7 @@ Results saved to <tmp>/output-clickhouse.json
     "test": 1
   }
 ]
-$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country"
+$ sqlr describe -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" -f "country"
 exit code: 0
 --- stdout
 Database schema:
@@ -129,7 +129,7 @@ Database schema:
 ]
 --- stderr
 
-$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --table
+$ sqlr describe -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" -f "country" --table
 exit code: 0
 --- stdout
 Database schema:
@@ -188,7 +188,7 @@ Database schema:
   └────────────────────────┘
 --- stderr
 
-$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --compact
+$ sqlr describe -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" -f "country" --compact
 exit code: 0
 --- stdout
 Database schema:
@@ -197,7 +197,7 @@ world.country_flag [ code2 String, emoji String, unicode? String ]
 world.country_language [ country_code String, language String, is_official UInt8, percentage Float32 ]
 --- stderr
 
-$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --tables-only
+$ sqlr describe -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" -f "country" --tables-only
 exit code: 0
 --- stdout
 Database schema:
@@ -206,13 +206,13 @@ world.country_flag
 world.country_language
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-handlebars.sql
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" test-query-handlebars.sql
 exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-handlebars.sql --ignore-input-validation
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" test-query-handlebars.sql --ignore-input-validation
 exit code: 0
 --- stdout
 SQL to execute:
@@ -223,13 +223,13 @@ Rows affected: 1
 [ { handlebars_value: "{{template}}" } ]
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "INVALID SQL QUERY"
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "INVALID SQL QUERY"
 exit code: 1
 --- stdout
 ClickHouseError: Syntax error: failed at position 1 (INVALID): INVALID SQL QUERY.
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni"
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -257,7 +257,7 @@ Rows affected: 1
 ]
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" --compact
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" --compact
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -266,7 +266,7 @@ i,big,u8,u64,f,d,dec1,t,dt,ts,arr,n,b,m,tup,u,ni
 1,9007199254740992,3,5,1.5,2.25,12.345,txt,2024-01-02,2024-01-02 03:04:05,1,2,3,,true,[object Object],1,a,a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11,7
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" --table
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" --table
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -278,7 +278,7 @@ Rows affected: 1
   └───┴──────────────────┴────┴─────┴─────┴──────┴────────┴─────┴────────────┴─────────────────────┴───────┴───┴──────┴─────────────────┴─────┴──────────────────────────────────────┴────┘
 --- stderr
 
-$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" -o <tmp>/output-clickhouse.json
+$ sqlr query -t clickhouse -s "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" -o <tmp>/output-clickhouse.json
 exit code: 0
 --- stdout
 Query executed in: *ms

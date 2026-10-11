@@ -1,4 +1,4 @@
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test"
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT 1 as test"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -6,7 +6,7 @@ Rows affected: 1
 [ { test: "1" } ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3"
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -18,7 +18,7 @@ Rows affected: 3
 ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -34,7 +34,7 @@ Rows affected: 3
   └──────┴─────────────┘
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -45,7 +45,7 @@ AFG,Afghanistan
 AGO,Angola
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query.sql
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" test-query.sql
 exit code: 0
 --- stdout
 SQL to execute:
@@ -56,7 +56,7 @@ Rows affected: 1
 [ { input_file_test: "1" } ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-vars.sql -i "col: 1" -i "alias: test"
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" test-query-vars.sql -i "col: 1" -i "alias: test"
 exit code: 0
 --- stdout
 SQL to execute:
@@ -67,7 +67,7 @@ Rows affected: 1
 [ { test: "1" } ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test" -o <tmp>/output-mysql.json
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT 1 as test" -o <tmp>/output-mysql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -81,7 +81,7 @@ Results saved to <tmp>/output-mysql.json
     "test": "1"
   }
 ]
-$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country"
+$ sqlr describe -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" -f "country"
 exit code: 0
 --- stdout
 Database schema:
@@ -139,7 +139,7 @@ Database schema:
 ]
 --- stderr
 
-$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --table
+$ sqlr describe -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" -f "country" --table
 exit code: 0
 --- stdout
 Database schema:
@@ -198,7 +198,7 @@ Database schema:
   └─────────────────────────────────────────┘
 --- stderr
 
-$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --compact
+$ sqlr describe -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" -f "country" --compact
 exit code: 0
 --- stdout
 Database schema:
@@ -207,7 +207,7 @@ world-db.country_flag [ code2 char, emoji text, unicode? text ]
 world-db.country_language [ country_code -> "world-db.country.code", language text, is_official tinyint, percentage float ]
 --- stderr
 
-$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --tables-only
+$ sqlr describe -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" -f "country" --tables-only
 exit code: 0
 --- stdout
 Database schema:
@@ -216,13 +216,13 @@ world-db.country_flag
 world-db.country_language
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-handlebars.sql
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" test-query-handlebars.sql
 exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-handlebars.sql --ignore-input-validation
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" test-query-handlebars.sql --ignore-input-validation
 exit code: 0
 --- stdout
 SQL to execute:
@@ -233,13 +233,13 @@ Rows affected: 1
 [ { handlebars_value: "{{template}}" } ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "INVALID SQL QUERY"
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "INVALID SQL QUERY"
 exit code: 1
 --- stdout
 MySQL Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INVALID SQL QUERY' at line 1
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2"
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -294,7 +294,7 @@ Rows affected: 2
 ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --compact
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --compact
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -304,7 +304,7 @@ i,u,big,dec1,f,dbl,t,d,dt,tm,j,bin,bit,n,b,pop,sa,gnp,iy,cont,le
 1,3,9007199254740993,12.345,1.5,2.25,txt,Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),03:04:05,[object Object],�,,,1,22720000,652090,5976.00,1919,Asia,45.9
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --table
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --table
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -318,7 +318,7 @@ Rows affected: 2
   └───┴───┴──────────────────┴────────┴─────┴──────┴─────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────┴─────┴───┴───┴──────────┴────────┴─────────┴──────┴───────────────┴──────┘
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" -o <tmp>/output-mysql.json
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" -o <tmp>/output-mysql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -411,7 +411,7 @@ Results saved to <tmp>/output-mysql.json
     "le": 45.9
   }
 ]
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "UPDATE country SET name = name WHERE code = 'ABW'"
+$ sqlr query -t mysql -s "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db" "UPDATE country SET name = name WHERE code = 'ABW'"
 exit code: 0
 --- stdout
 Query executed in: *ms

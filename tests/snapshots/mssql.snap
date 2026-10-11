@@ -1,4 +1,4 @@
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test"
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -6,7 +6,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code"
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -18,7 +18,7 @@ Rows affected: 3
 ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --table
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --table
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -34,7 +34,7 @@ Rows affected: 3
   └──────┴─────────────┘
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --compact
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --compact
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -45,7 +45,7 @@ AFG,Afghanistan
 AGO,Angola
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query.sql
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" test-query.sql
 exit code: 0
 --- stdout
 SQL to execute:
@@ -56,7 +56,7 @@ Rows affected: 1
 [ { input_file_test: 1 } ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-vars.sql -i "col: 1" -i "alias: test"
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" test-query-vars.sql -i "col: 1" -i "alias: test"
 exit code: 0
 --- stdout
 SQL to execute:
@@ -67,7 +67,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test" -o <tmp>/output-mssql.json
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test" -o <tmp>/output-mssql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -81,7 +81,7 @@ Results saved to <tmp>/output-mssql.json
     "test": 1
   }
 ]
-$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country"
+$ sqlr describe -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" -f "country"
 exit code: 0
 --- stdout
 Database schema:
@@ -139,7 +139,7 @@ Database schema:
 ]
 --- stderr
 
-$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --table
+$ sqlr describe -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --table
 exit code: 0
 --- stdout
 Database schema:
@@ -198,7 +198,7 @@ Database schema:
   └────────────────────────────────────┘
 --- stderr
 
-$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --compact
+$ sqlr describe -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --compact
 exit code: 0
 --- stdout
 Database schema:
@@ -207,7 +207,7 @@ dbo.country_flag [ code2 char, emoji nvarchar, unicode? nvarchar ]
 dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is_official bit, percentage float ]
 --- stderr
 
-$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --tables-only
+$ sqlr describe -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --tables-only
 exit code: 0
 --- stdout
 Database schema:
@@ -216,13 +216,13 @@ dbo.country_flag
 dbo.country_language
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql
 exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql --ignore-input-validation
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql --ignore-input-validation
 exit code: 0
 --- stdout
 SQL to execute:
@@ -233,13 +233,13 @@ Rows affected: 1
 [ { handlebars_value: "{{template}}" } ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "INVALID SQL QUERY"
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "INVALID SQL QUERY"
 exit code: 1
 --- stdout
 MSSQLError: Incorrect syntax near 'QUERY'.
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x"
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x"
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -273,7 +273,7 @@ Rows affected: 1
 ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" --compact
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" --compact
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -282,7 +282,7 @@ i,big,dec1,r,f,b,t,vc,d,dt2,dt,sdt,dto,tm,bin,u,m,n,ti,si,nu,ch,x
 1,9007199254740993,12.345,1.5,2.25,true,txt,vc,Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 01:04:05 GMT+0000 (Coordinated Universal Time),Thu Jan 01 1970 03:04:05 GMT+0000 (Coordinated Universal Time),�,A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11,12.5,,3,4,1.25,x  ,<a>1</a>
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" --table
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" --table
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -294,7 +294,7 @@ Rows affected: 1
   └───┴──────────────────┴────────┴─────┴──────┴──────┴─────┴────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴─────┴──────────────────────────────────────┴──────┴───┴────┴────┴──────┴─────┴──────────┘
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" -o <tmp>/output-mssql.json
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" -o <tmp>/output-mssql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -337,7 +337,7 @@ Results saved to <tmp>/output-mssql.json
     "x": "<a>1</a>"
   }
 ]
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "UPDATE country SET name = name WHERE code = 'ABW'"
+$ sqlr query -t mssql -s "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true" "UPDATE country SET name = name WHERE code = 'ABW'"
 exit code: 0
 --- stdout
 Query executed in: *ms

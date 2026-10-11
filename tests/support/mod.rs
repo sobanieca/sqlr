@@ -12,13 +12,12 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-pub const POSTGRES: &str =
-    "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr";
-pub const POSTGRES_SSL: &str = "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer";
-pub const MYSQL: &str = "mysql://world:world123@localhost:3306/world-db";
-pub const MSSQL: &str =
-    "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true";
-pub const CLICKHOUSE: &str = "http://world:world123@localhost:8123?database=world";
+pub const POSTGRES: &str = "postgres://localhost:15432/world-db?user=world&password=sqlr_pg_aZ3yeTHbJe8&application_name=sqlr";
+pub const POSTGRES_SSL: &str = "postgres://localhost:15433/world-db?user=world&password=sqlr_pg_aZ3yeTHbJe8&application_name=sqlr&sslmode=prefer";
+pub const MYSQL: &str = "mysql://world:sqlr_my_YRanBbUweR3vZzeh@localhost:13306/world-db";
+pub const MSSQL: &str = "mssql://sa:Sqlr_ms_x26MtA0uEdP7lK@localhost:11433/world-db?encrypt=false&trustServerCertificate=true";
+pub const CLICKHOUSE: &str =
+    "http://world:sqlr_ch_o95Me4893wbRFg2NM@localhost:18123?database=world";
 pub const SQLITE: &str = "/tmp/sqlr-sqlite/world.db";
 
 pub fn fixtures() -> PathBuf {

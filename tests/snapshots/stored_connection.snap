@@ -1,4 +1,4 @@
-$ sqlr add -n world -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" -c blue -e "📦"
+$ sqlr add -n world -t postgresql -s "postgres://localhost:15432/world-db?user=world&password=sqlr_pg_aZ3yeTHbJe8&application_name=sqlr" -c blue -e "📦"
 exit code: 0
 --- stdout
 Connection has been added
