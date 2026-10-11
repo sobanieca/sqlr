@@ -1,63 +1,92 @@
 ## Project
 
-SQLR is a Deno-based CLI tool for executing SQL queries across PostgreSQL,
-MySQL, MSSQL, and ClickHouse. Published as `@sobanieca/sqlr` on JSR.
+SQLR is a CLI tool for executing SQL queries across PostgreSQL, MySQL, MSSQL,
+ClickHouse and SQLite. It's written in Rust and distributed as a single binary.
 
 ## Commands
 
+Development tasks are cargo aliases defined in `.cargo/config.toml` (backed by
+the `xtask` crate):
+
 ```bash
-./sqlr                    # Run CLI (deno run --allow-all main.js)
-deno task check                  # Format check + lint + type check + tests
-deno task start-db               # Start all test databases via Docker
-deno task stop-db                # Stop test databases
-cd test && deno task update-snapshots             # Update snapshots after changes
+cargo sqlr [args]        # Run sqlr from source
+cargo verify             # fmt --check, clippy -D warnings and all tests
+cargo start-db           # Start all test databases via Docker
+cargo test-db            # Tests against the test databases (TZ=UTC)
+cargo stop-db            # Stop test databases
+cargo update-snapshots   # Accept new CLI output (needs the test databases)
 ```
+
+`cargo verify` is the pre-commit check. CI runs it and `cargo test-db`.
 
 ## Architecture
 
-**Entry point:** `main.js` wires up CLI commands using Cliffy's `Command`
-framework.
+**Entry point:** `src/main.rs` defines the command tree and dispatches to
+`src/commands/`. Any first argument that isn't an option or a command is a
+query (`sqlr "SELECT 1"` is `sqlr query "SELECT 1"`).
 
-**Connector pattern:** Each database implements a standard interface in
+**CLI and output:** `src/cli.rs` (argument parsing, validation errors and help
+output) and `src/table.rs` (tables) reproduce the output of the Cliffy library
+used by the former Deno version. `src/prompt.rs` holds the interactive prompts
+(Input, Secret, Select, Toggle).
+
+**Connector pattern:** Each database implements `Connector` in
 `src/connectors/`:
 
-- `getDatabaseName()`, `getConnectionStringHint()`, `getConnectionString()` —
+- `database_name`, `connection_string_hint`, `prompt_connection_string` —
   metadata and interactive setup
-- `getTables(connectionString)` — returns
-  `[{schema, name, columns: [{name, type, nullable, relation}]}]`
-- `query(connectionString, sql)` — returns `{rowsAffected, rows: []}`
+- `get_tables(connection_string)` — tables with columns
+  (`{name, data_type, nullable, relation}`)
+- `query(connection_string, sql)` — `{rows_affected, rows}`
 
-New databases are added by creating a connector file and registering it in
-`src/connectors.js`. Commands automatically pick it up.
+New databases are added by creating a connector module and registering it in
+`CONNECTORS` in `src/connectors/mod.rs`. Commands automatically pick it up.
 
-**Connection storage:** `src/connection-accessor.js` uses Deno's `localStorage`
-to persist connections as JSON (`{name, type, connectionString, isEncrypted}`).
-Encryption uses AES-GCM + PBKDF2 in `src/guard.js` with machine-specific IV/salt
-derived from `Deno.hostname()` + `Deno.osRelease()`.
+**Values:** `src/value.rs` models result values with JavaScript semantics
+(numbers, strings, dates, buffers...) so the output matches what the Node.js
+drivers produced: `Deno.inspect`-style output (`src/inspect.rs`),
+`JSON.stringify` for `-o` and `String(value)` for `--compact`/`--table`.
+Connectors convert driver values the way the Node.js drivers did (e.g. bigint
+and decimal as strings, dates as `Date`).
 
-**Dependencies:** All external imports are centralized in `src/deps.js`.
+**Connection storage:** `src/storage.rs` keeps connections and settings in
+`$XDG_CONFIG_HOME/sqlr/storage.json` (default `~/.config/sqlr`). Connections are
+scoped to the nearest git repository or the global scope (`src/scope.rs`).
+Encryption (`src/guard.rs`) uses AES-256-GCM with a PBKDF2-SHA256 key and a
+random salt and nonce per connection.
+
+## Testing
+
+- Unit tests live next to the code (`#[cfg(test)]`).
+- `tests/cli.rs` and `tests/databases.rs` run the binary in an isolated
+  environment and compare the output with `tests/snapshots/*.snap`. Database
+  tests are `#[ignore]`d and need the databases from `tests/db`.
 
 ## Key Conventions
 
-- Passwords in connection strings are URL-encoded via `encodeURIComponent()`
-  during storage. Connectors decode them when connecting. `get-connection`
-  displays decoded strings.
+- Passwords in connection strings are URL-encoded. Connectors decode them when
+  connecting. `get` displays decoded strings.
 - Schema foreign keys are represented as `"schema.table.column"` strings.
-- ClickHouse connector distinguishes SELECT-like queries from mutations for
-  different client methods.
-- The `--debug` flag enables full stack traces; without it, `DatabaseError`
-  messages are shown as user-friendly text.
+- ClickHouse and SQLite connectors distinguish SELECT-like queries from
+  mutations.
+- Errors reported by the database are shown as is; other failures show a
+  generic message, details with `--debug`. Failed commands exit with code 1.
 
 ## IMPORTANT!
 
-- Don't add comments to the code. Use self-documenting code
-- When updating version update version.js and deno.json file. Update changelog
-  if it's present.
-- Use ES6 shorthand property syntax whenever possible when initiating objects
-- When updating or introducing new features, ensure the `help` command text in
-  `src/commands/help.js` is updated to reflect the changes
+- Don't add comments to the code. Use self-documenting code (module doc
+  comments are fine)
+- When updating the version update `Cargo.toml`.
+- When updating or introducing new features, ensure the help text in
+  `src/help.txt` is updated to reflect the changes
 - When updating or introducing new features, also update the landing page in
   `docs/index.html` so it reflects the changes
-- All external dependencies (`npm:`, `jsr:`, `node:`, `https:` imports) MUST be
-  imported and re-exported via `src/deps.js`. It is the single source of truth
-  for external dependencies — no other file should import them directly.
+- Keep dependencies minimal: database drivers, TLS and `ureq`. Formatting,
+  tables, prompts and JSON are implemented in the crate.
+
+## Publishing
+
+Every push to `main` builds binaries for Linux (musl, static) and macOS
+(x64/arm64) and publishes them as GitHub release `v<version>` (version from
+`Cargo.toml`). `install.sh` and `sqlr update` download these release assets,
+so their names (`sqlr-linux-x64`, ...) must not change.

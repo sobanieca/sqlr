@@ -1,0 +1,98 @@
+$ sqlr skill --init [cwd: repo/services/api/src]
+exit code: 0
+--- stdout
+Project root: <tmp>/repo (git root)
+Created .agents/skills/sqlr/SKILL.md  (Codex, Cursor)
+Created .claude/skills/sqlr/SKILL.md  (Claude Code, Cursor)
+
+Try: /sqlr how many users signed up this week
+--- stderr
+
+--- .agents/skills/sqlr/SKILL.md
+---
+name: sqlr
+description: Run SQL queries and inspect the schema of a database with the sqlr CLI. Use when asked to query, inspect, report on or change data in a database.
+---
+
+# sqlr
+
+`sqlr` runs SQL against connections saved on this machine. Connections are
+referenced by name. You never need, and must never ask for, a connection
+string or password.
+
+## Workflow
+
+1. Run `sqlr skill` once to read the full reference (all commands and flags).
+2. `sqlr ls` lists connections, the default is marked. Switch with
+   `sqlr set <name>`.
+3. `sqlr describe --compact` shows tables, columns, types and foreign keys.
+   Narrow it with `-f <table>`. Read the schema before writing queries.
+4. Run queries: `sqlr "SELECT ... LIMIT 20"` or
+   `sqlr path/to/query.sql -i "param: value"`.
+5. Use `-o result.json` for large results and `--table` for readable output.
+
+## Rules
+
+- Always add LIMIT to exploratory SELECT statements.
+- Show UPDATE, DELETE, DROP and other destructive statements to the user and
+  ask before running them.
+- If a command prompts for an encryption password, stop and ask the user to
+  run it, or to set SQLR_ENCRYPTION_PASSWORD.
+
+$ sqlr skill --init -n prod [cwd: repo/services]
+exit code: 0
+--- stdout
+Project root: <tmp>/repo (git root)
+Created .agents/skills/sqlr-prod/SKILL.md  (Codex, Cursor)
+Created .claude/skills/sqlr-prod/SKILL.md  (Claude Code, Cursor)
+
+Try: /sqlr-prod how many users signed up this week
+--- stderr
+
+--- .claude/skills/sqlr-prod/SKILL.md
+---
+name: sqlr-prod
+description: Run SQL queries and inspect the schema of the `prod` database with the sqlr CLI. Use when asked to query, inspect, report on or change data in the `prod` database.
+---
+
+# sqlr-prod
+
+`sqlr` runs SQL against connections saved on this machine. Connections are
+referenced by name. You never need, and must never ask for, a connection
+string or password.
+
+## Workflow
+
+1. Run `sqlr skill` once to read the full reference (all commands and flags).
+2. Run `sqlr set prod` first so every command targets this
+   connection.
+3. `sqlr describe --compact` shows tables, columns, types and foreign keys.
+   Narrow it with `-f <table>`. Read the schema before writing queries.
+4. Run queries: `sqlr "SELECT ... LIMIT 20"` or
+   `sqlr path/to/query.sql -i "param: value"`.
+5. Use `-o result.json` for large results and `--table` for readable output.
+
+## Rules
+
+- Always add LIMIT to exploratory SELECT statements.
+- Show UPDATE, DELETE, DROP and other destructive statements to the user and
+  ask before running them.
+- If a command prompts for an encryption password, stop and ask the user to
+  run it, or to set SQLR_ENCRYPTION_PASSWORD.
+
+$ sqlr skill --init -n prod [cwd: repo/services]
+exit code: 1
+--- stdout
+<tmp>/repo/.agents/skills/sqlr-prod/SKILL.md already exists. Delete it first if you want to regenerate it.
+--- stderr
+
+$ sqlr skill --init [cwd: home/notes]
+exit code: 0
+--- stdout
+Not in a git repository - installing for all projects in <tmp>/home
+Created .agents/skills/sqlr/SKILL.md  (Codex, Cursor)
+Created .claude/skills/sqlr/SKILL.md  (Claude Code, Cursor)
+
+Try: /sqlr how many users signed up this week
+--- stderr
+

@@ -1,0 +1,102 @@
+$ sqlr add -n repo-db -t postgresql -s "postgres://u:p@localhost:5432/db1" [cwd: repo]
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr set -n repo-db [cwd: repo]
+exit code: 0
+--- stdout
+Default connection set to repo-db
+--- stderr
+
+$ sqlr get [cwd: repo]
+exit code: 0
+--- stdout
+  ┌─────────┬────────────┬───────────────────────────────────┐
+  │ Name    │ Type       │ Connection string                 │
+  ├─────────┼────────────┼───────────────────────────────────┤
+  │ repo-db │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └─────────┴────────────┴───────────────────────────────────┘
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+  ┌───────────────────┬────────────┐
+  │ Name              │ Type       │
+  ├───────────────────┼────────────┤
+  │ repo-db [default] │ postgresql │
+  └───────────────────┴────────────┘
+--- stderr
+
+$ sqlr add -n other-db -t mysql -s "mysql://u:p@localhost:3306/db2" [cwd: other]
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr set -n other-db [cwd: other]
+exit code: 0
+--- stdout
+Default connection set to other-db
+--- stderr
+
+$ sqlr get [cwd: other]
+exit code: 0
+--- stdout
+  ┌──────────┬───────┬────────────────────────────────┐
+  │ Name     │ Type  │ Connection string              │
+  ├──────────┼───────┼────────────────────────────────┤
+  │ other-db │ mysql │ mysql://u:p@localhost:3306/db2 │
+  └──────────┴───────┴────────────────────────────────┘
+--- stderr
+
+$ sqlr add -n global-db -t postgresql -s "postgres://u:p@localhost:5432/db1" -g [cwd: repo]
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr set -n global-db -g [cwd: repo]
+exit code: 0
+--- stdout
+Default connection set to global-db
+--- stderr
+
+$ sqlr get [cwd: other]
+exit code: 0
+--- stdout
+  ┌───────────┬────────────┬───────────────────────────────────┐
+  │ Name      │ Type       │ Connection string                 │
+  ├───────────┼────────────┼───────────────────────────────────┤
+  │ global-db │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └───────────┴────────────┴───────────────────────────────────┘
+--- stderr
+
+$ sqlr set-global false [cwd: repo]
+exit code: 0
+--- stdout
+Global mode disabled. Connection commands will use repository scope.
+--- stderr
+
+$ sqlr set [cwd: repo]
+exit code: 0
+--- stdout
+Default connection has been cleared
+--- stderr
+
+$ sqlr rm repo-db [cwd: repo]
+exit code: 0
+--- stdout
+Connection removed
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+

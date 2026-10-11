@@ -1,4 +1,4 @@
-name: Check and Publish
+name: Check and Release
 
 on:
   push:
@@ -9,62 +9,89 @@ on:
       - main
 
 jobs:
-  check-version:
-    uses: ./.github/workflows/check-version.yml
-
   check:
-    needs: check-version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-      - run: deno task check
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal --component rustfmt,clippy && rustup default stable
+      - run: cargo verify
 
-  publish:
-    needs: check
-    if: github.event_name != 'pull_request'
+  test-db:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
-      - uses: actions/checkout@v7
-      - run: npx jsr publish --no-check
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal && rustup default stable
+      - run: cargo start-db
+      - run: cargo test-db
+      - if: always()
+        run: cargo stop-db
+
+  build:
+    needs: [check, test-db]
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            asset: sqlr-linux-x64
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-musl
+            asset: sqlr-linux-arm64
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            asset: sqlr-macos-x64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            asset: sqlr-macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal --target ${{ matrix.target }} && rustup default stable
+      - name: Install musl tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - name: Build
+        env:
+          CC_x86_64_unknown_linux_musl: musl-gcc
+          CC_aarch64_unknown_linux_musl: musl-gcc
+        run: |
+          cargo build --release --locked --target ${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/sqlr ${{ matrix.asset }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: ${{ matrix.asset }}
 
   release:
-    needs: check
+    needs: build
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v7
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
+      - uses: actions/checkout@v4
 
-      - name: Get version from deno.json
+      - name: Get version from Cargo.toml
         id: version
-        run: echo "version=$(deno eval "console.log(JSON.parse(Deno.readTextFileSync('deno.json')).version)")" >> $GITHUB_OUTPUT
+        run: echo "version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)" >> $GITHUB_OUTPUT
 
-      - name: Compile binaries
-        run: |
-          deno compile --no-check --allow-all --target x86_64-unknown-linux-gnu -o sqlr-linux-x64 main.js
-          deno compile --no-check --allow-all --target aarch64-unknown-linux-gnu -o sqlr-linux-arm64 main.js
-          deno compile --no-check --allow-all --target x86_64-apple-darwin -o sqlr-macos-x64 main.js
-          deno compile --no-check --allow-all --target aarch64-apple-darwin -o sqlr-macos-arm64 main.js
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
 
       - name: Create Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
           name: Release v${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
           files: |
-            sqlr-linux-x64
-            sqlr-linux-arm64
-            sqlr-macos-x64
-            sqlr-macos-arm64
+            dist/sqlr-linux-x64
+            dist/sqlr-linux-arm64
+            dist/sqlr-macos-x64
+            dist/sqlr-macos-arm64

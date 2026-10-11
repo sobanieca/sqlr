@@ -1,0 +1,45 @@
+$ sqlr add -n global-db -t postgresql -s "postgres://u:p@localhost:5432/db1" -g [cwd: repo]
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+
+$ sqlr set-global true [cwd: repo]
+exit code: 0
+--- stdout
+Global mode enabled. All connection commands will use global scope by default.
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+Global mode: enabled
+  ┌───────────┬────────────┐
+  │ Name      │ Type       │
+  ├───────────┼────────────┤
+  │ global-db │ postgresql │
+  └───────────┴────────────┘
+--- stderr
+
+$ sqlr set-global false [cwd: repo]
+exit code: 0
+--- stdout
+Global mode disabled. Connection commands will use repository scope.
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+

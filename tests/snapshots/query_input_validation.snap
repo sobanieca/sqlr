@@ -1,0 +1,59 @@
+$ sqlr query -t sqlite -s /nonexistent/db.sqlite test-query-vars.sql -i "col: 1"
+exit code: 1
+--- stdout
+Missing input variables: alias. Use -i "name: value" to provide them.
+--- stderr
+
+$ sqlr query -t sqlite -s /nonexistent/db.sqlite test-query-vars.sql -i "col"
+exit code: 1
+--- stdout
+Invalid input variable format: "col". Expected "key: value".
+--- stderr
+
+$ sqlr -t sqlite -s /nonexistent/db.sqlite
+exit code: 2
+--- stdout
+
+Usage:   sqlr 
+Version: *
+
+Description:
+
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters.
+                                                                                                         
+  For detailed usage instructions, workflows and guidance run 'sqlr help'.                               
+  AI agents: run 'sqlr help' first — it contains step-by-step instructions for operating sqlr.           
+
+Options:
+
+  -h, --help     - Show this help.                                                 
+  -V, --version  - Show the version number for this program.                       
+  --debug        - Enable debug logs                                               
+  -g, --global   - Use global scope for connections (ignore git repository scope)  
+
+Commands:
+
+  add                       - Add new connection. Run without parameters to use wizard.                            
+  rm          [connection]  - Remove selected connection                                                           
+  get         [connection]  - Get details of selected connection                                                   
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add' command   
+  ls                        - List all defined connections                                                         
+  clear                     - Remove all connections                                                               
+  set         [connection]  - Set default connection for current scope                                             
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository scope)
+  describe                  - Describe all tables and columns available in database                                
+  query       [queryArg]    - Run query against specified database                                                 
+  update                    - Update sqlr to the latest version                                                    
+  skill                     - Print instructions for AI agents. Use --init to create a skill (/sqlr)               
+  help                      - Display detailed help text with usage instructions                                   
+
+--- stderr
+  error: Unknown option "-t". Did you mean option "-h"?
+
+
+$ sqlr query
+exit code: 1
+--- stdout
+No connections defined. Add new connection first.
+--- stderr
+

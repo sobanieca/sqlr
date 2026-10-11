@@ -1,0 +1,14 @@
+# Development tasks.
+[alias]
+xtask = "run --quiet --package xtask --"
+# Run sqlr from source: cargo sqlr <args>
+sqlr = "run --quiet --package sqlr --"
+# Formatting, lints and tests: run before committing.
+verify = "xtask verify"
+# Accept new CLI test output in tests/snapshots.
+update-snapshots = "xtask update-snapshots"
+# Start / stop the test databases (Docker).
+start-db = "xtask start-db"
+stop-db = "xtask stop-db"
+# Tests against the test databases (start them first).
+test-db = "xtask test-db"

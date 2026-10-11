@@ -136,27 +136,10 @@ for details on additional options and arguments.
 
 ## Installation
 
-### Option 1: Install via Deno (Recommended)
+`sqlr` is a single binary for Linux and macOS (x64 and arm64). No runtime is
+needed.
 
-> Prerequisites
->
-> Deno runtime environment `https://deno.com`
-
-```bash
-deno install -g -f -r --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr
-```
-
-**Permissions:**
-
-- `--allow-write` - Required for writing results to files (`-o` flag)
-- `--allow-net` - Required for connecting to databases
-- `--allow-read` - Required for reading `.sql` files
-- `--allow-env` - Required for encryption and hostname detection
-
-### Option 2: Quick Install Script (Standalone Binary)
-
-If you don't have Deno installed, you can install the pre-compiled binary with a
-single command:
+### Option 1: Quick Install Script (Recommended)
 
 ```bash
 curl -fsSL sobanieca.github.io/sqlr/install.sh | bash
@@ -171,7 +154,7 @@ To install to a custom location:
 curl -fsSL sobanieca.github.io/sqlr/install.sh | INSTALL_DIR=~/bin bash
 ```
 
-### Option 3: Manual Binary Installation
+### Option 2: Manual Binary Installation
 
 Download the latest pre-compiled binary for your operating system from the
 [releases page](https://github.com/sobanieca/sqlr/releases/latest):
@@ -189,28 +172,44 @@ Available binaries: `sqlr-linux-x64`, `sqlr-linux-arm64`, `sqlr-macos-x64`,
 
 ## Updating
 
-Use `sqlr update` command and follow presented instructions to update.
+```bash
+sqlr update
+```
+
+This downloads the latest release and replaces the binary. If `sqlr` is
+installed in a system directory (like `/usr/local/bin`) run `sudo sqlr update`.
+`sqlr` checks for new versions once a day and prints a notice when one is
+available (set `SQLR_NO_UPDATE_CHECK=1` to disable it).
 
 ## Hints
 
 - If your queries are failing due to certificate validation errors (and you
-  trust target server) you can install using following command:
+  trust the target server), relax certificate validation in the connection
+  string: `sslmode=require` (PostgreSQL), `ssl={"rejectUnauthorized":false}`
+  (MySQL) or `trustServerCertificate=true` (MSSQL). Run `sqlr ls-types` to see
+  all connection string options.
 
-```bash
-deno install -g -f -r --unsafely-ignore-certificate-errors --allow-env --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr
-```
-
-You can consider introducing `sqlr-unsafe` sitting next to your main `sqlr`
-instance to work with trusted servers with problematic certificates:
-
-```bash
-deno install -g -f -r -n sqlr-unsafe --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write jsr:@sobanieca/sqlr
-```
-
-- If you want to disable colors (at least for main log messages), you can use:
+- If you want to disable colors, you can use:
 
 ```bash
 NO_COLOR=1 sqlr ...
+```
+
+- Connections are stored in `~/.config/sqlr/storage.json` (readable only by
+  your user). Use encrypted connections (`sqlr add` wizard or
+  `SQLR_ENCRYPTION_PASSWORD`) for sensitive environments.
+
+## Development
+
+`sqlr` is written in Rust. Development tasks are cargo aliases:
+
+```bash
+cargo sqlr [args]        # Run sqlr from source
+cargo verify             # fmt --check, clippy and tests (run before committing)
+cargo start-db           # Start the test databases (Docker)
+cargo test-db            # Run tests against the test databases
+cargo stop-db            # Stop the test databases
+cargo update-snapshots   # Accept new CLI output in tests/snapshots
 ```
 
 ## Contribution

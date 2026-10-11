@@ -1,0 +1,40 @@
+$ sqlr add -n red-db -t sqlite -s "/tmp/db.sqlite" -c red -e "🚀"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n plain-db -t sqlite -s "/tmp/db.sqlite" -c none
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr set red-db
+exit code: 0
+--- stdout
+Default connection set to red-db
+--- stderr
+
+$ sqlr ls
+exit code: 0
+--- stdout
+  ┌─────────────────────┬────────┐
+  │ Name                │ Type   │
+  ├─────────────────────┼────────┤
+  │ plain-db            │ sqlite │
+  ├─────────────────────┼────────┤
+  │ 🚀 red-db [default] │ sqlite │
+  └─────────────────────┴────────┘
+--- stderr
+
+$ sqlr get
+exit code: 0
+--- stdout
+  ┌───────────┬────────┬───────────────────┐
+  │ Name      │ Type   │ Connection string │
+  ├───────────┼────────┼───────────────────┤
+  │ 🚀 red-db │ sqlite │ /tmp/db.sqlite    │
+  └───────────┴────────┴───────────────────┘
+--- stderr
+

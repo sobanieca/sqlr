@@ -1,0 +1,34 @@
+$ sqlr add -n encrypted-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr get encrypted-pg
+exit code: 0
+--- stdout
+  ┌──────────────┬────────────┬───────────────────────────────────┐
+  │ Name         │ Type       │ Connection string                 │
+  ├──────────────┼────────────┼───────────────────────────────────┤
+  │ encrypted-pg │ postgresql │ postgres://u:p@localhost:5432/db1 │
+  └──────────────┴────────────┴───────────────────────────────────┘
+--- stderr
+
+$ sqlr get encrypted-pg
+exit code: 1
+--- stdout
+Something went wrong when trying to decrypt connection encrypted-pg. Ensure that password you've provided is valid
+--- stderr
+
+$ sqlr add -n short-pwd -t postgresql -s "postgres://u:p@localhost:5432/db1"
+exit code: 1
+--- stdout
+Please provide password with at least 8 characters
+--- stderr
+
+$ sqlr clear
+exit code: 0
+--- stdout
+All connections removed
+--- stderr
+

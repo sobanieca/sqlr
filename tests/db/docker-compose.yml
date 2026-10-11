@@ -1,0 +1,107 @@
+name: sqlr-test
+
+services:
+  postgres:
+    image: ghusta/postgres-world-db:2.15.0
+    environment:
+      POSTGRES_PASSWORD: sqlr_pg_aZ3yeTHbJe8
+    ports:
+      - "127.0.0.1:15432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U world -d world-db"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  postgres-ssl:
+    image: ghusta/postgres-world-db:2.15.0
+    environment:
+      POSTGRES_PASSWORD: sqlr_pg_aZ3yeTHbJe8
+    ports:
+      - "127.0.0.1:15433:5432"
+    volumes:
+      - ./init-postgres-ssl/entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
+      - ./init-postgres-ssl/enable-ssl.sh:/docker-entrypoint-initdb.d/99-enable-ssl.sh
+    entrypoint: ["/usr/local/bin/custom-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U world -d world-db"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:8.4.11
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: world-db
+      MYSQL_USER: world
+      MYSQL_PASSWORD: sqlr_my_YRanBbUweR3vZzeh
+    ports:
+      - "127.0.0.1:13306:3306"
+    volumes:
+      - ./init-mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost && mysql -u world -psqlr_my_YRanBbUweR3vZzeh world-db -e 'SELECT 1 FROM country LIMIT 1'",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-CU25-ubuntu-22.04
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Sqlr_ms_x26MtA0uEdP7lK"
+    ports:
+      - "127.0.0.1:11433:1433"
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Sqlr_ms_x26MtA0uEdP7lK' -C -Q 'SELECT 1' || exit 1",
+      ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+
+  mssql-init:
+    image: mcr.microsoft.com/mssql/server:2022-CU25-ubuntu-22.04
+    depends_on:
+      mssql:
+        condition: service_healthy
+    volumes:
+      - ./init-mssql:/init
+    entrypoint: ["/bin/bash", "/init/init.sh"]
+
+  sqlite-init:
+    image: keinos/sqlite3:3.53.2
+    volumes:
+      - ./init-sqlite:/init
+      - /tmp/sqlr-sqlite:/data
+    entrypoint: [
+      "/bin/sh",
+      "-c",
+      "rm -f /data/world.db && sqlite3 /data/world.db < /init/01-schema.sql && chmod 666 /data/world.db",
+    ]
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:26.6.1.1193
+    environment:
+      CLICKHOUSE_DB: world
+      CLICKHOUSE_USER: world
+      CLICKHOUSE_PASSWORD: sqlr_ch_o95Me4893wbRFg2NM
+    ports:
+      - "127.0.0.1:18123:8123"
+    volumes:
+      - ./init-clickhouse:/docker-entrypoint-initdb.d
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- 'http://localhost:8123/?query=SELECT+1+FROM+world.country+LIMIT+1&user=world&password=sqlr_ch_o95Me4893wbRFg2NM' || exit 1",
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 15
