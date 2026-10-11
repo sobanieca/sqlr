@@ -312,6 +312,7 @@ fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     logger::init(args.iter().any(|arg| arg == "--debug"));
     logger::debug("Debug mode enabled");
+    let _ = rustls::crypto::ring::default_provider().install_default();
 
     let root = root();
     let args = with_implicit_query(&root, args);

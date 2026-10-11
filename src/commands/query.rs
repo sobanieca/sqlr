@@ -205,7 +205,10 @@ fn show_result(
     }
 
     let rows = Node::Array(result.rows.iter().map(value::object_node).collect());
-    logger::info(inspect::inspect(&rows, inspect::Options::verbose()));
+    logger::info(inspect::inspect(&rows, inspect::Options {
+                colors: colors::enabled(),
+                ..inspect::Options::verbose()
+            }));
     Ok(())
 }
 

@@ -65,7 +65,10 @@ pub fn execute(options: Options) -> Result<(), String> {
         show_tables(&tables);
     } else {
         let nodes = Node::Array(tables.iter().map(table_node).collect());
-        logger::info(inspect::inspect(&nodes, inspect::Options::verbose()));
+        logger::info(inspect::inspect(&nodes, inspect::Options {
+                colors: colors::enabled(),
+                ..inspect::Options::verbose()
+            }));
     }
     Ok(())
 }
