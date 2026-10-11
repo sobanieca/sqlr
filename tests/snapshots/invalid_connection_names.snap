@@ -1,0 +1,30 @@
+$ sqlr add -n a_b -t sqlite -s "/tmp/db.sqlite"
+exit code: 1
+--- stdout
+Invalid connection name, please use only alphanumeric characters and/or at most 1 '-'
+--- stderr
+
+$ sqlr add -n ok-name -t sqlite -s "/tmp/db.sqlite"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n ok-name -t sqlite -s "/tmp/db.sqlite"
+exit code: 1
+--- stdout
+Invalid connection name. Such connection already exists.
+--- stderr
+
+$ sqlr get missing
+exit code: 1
+--- stdout
+Connection missing not found. Use ls command to list available connections.
+--- stderr
+
+$ sqlr set missing
+exit code: 1
+--- stdout
+Connection missing not found. Use ls command to list available connections.
+--- stderr
+

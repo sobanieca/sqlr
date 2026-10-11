@@ -1,38 +1,28 @@
-export const snapshot = {};
-
-snapshot[`sqlr SQLite 1`] = `
-{
-  code: 0,
-  output: "Query executed in: *ms
-Rows affected: *
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
 [ { test: 1 } ]
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test"',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 2`] = `
-{
-  code: 0,
-  output: 'Query executed in: *ms
-Rows affected: *
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
 [
   { code: "ABW", name: "Aruba" },
   { code: "AFG", name: "Afghanistan" },
   { code: "AGO", name: "Angola" }
 ]
-',
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3"',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 3`] = `
-{
-  code: 0,
-  output: "Query executed in: *ms
-Rows affected: *
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
   ┌──────┬─────────────┐
   │ code │ name        │
   ├──────┼─────────────┤
@@ -42,73 +32,59 @@ Rows affected: *
   ├──────┼─────────────┤
   │ AGO  │ Angola      │
   └──────┴─────────────┘
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 4`] = `
-{
-  code: 0,
-  output: "Query executed in: *ms
-Rows affected: *
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
 code,name
 ABW,Aruba
 AFG,Afghanistan
 AGO,Angola
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 5`] = `
-{
-  code: 0,
-  output: "SQL to execute:
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query.sql
+exit code: 0
+--- stdout
+SQL to execute:
 SELECT 1 as input_file_test;
 
 Query executed in: *ms
-Rows affected: *
+Rows affected: 1
 [ { input_file_test: 1 } ]
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query.sql',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 6`] = `
-{
-  code: 0,
-  output: "SQL to execute:
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query-vars.sql -i "col: 1" -i "alias: test"
+exit code: 0
+--- stdout
+SQL to execute:
 SELECT 1 as test;
 
 Query executed in: *ms
-Rows affected: *
+Rows affected: 1
 [ { test: 1 } ]
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query-vars.sql -i "col: 1" -i "alias: test"',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 7`] = `
-{
-  code: 0,
-  output: "Query executed in: *ms
-Rows affected: *
-Results saved to /tmp/sqlr-test-output-sqlite.json
-",
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test" -o /tmp/sqlr-test-output-sqlite.json',
-}
-`;
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test" -o /tmp/sqlr-test-sqlite-2448136-5/output-sqlite.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+Results saved to <tmp>/output-sqlite.json
+--- stderr
 
-snapshot[`sqlr SQLite 8`] = `
-{
-  code: 0,
-  output: 'Database schema:
+--- output file
+[
+  {
+    "test": 1
+  }
+]
+$ sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country"
+exit code: 0
+--- stdout
+Database schema:
 [
   {
     schema: "main",
@@ -161,16 +137,12 @@ snapshot[`sqlr SQLite 8`] = `
     ]
   }
 ]
-',
-  outputError: "",
-  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country"',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 9`] = `
-{
-  code: 0,
-  output: 'Database schema:
+$ sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --table
+exit code: 0
+--- stdout
+Database schema:
   ┌───────────────────────────┐
   │ main.country              │
   ├───────────────────────────┤
@@ -224,44 +196,149 @@ snapshot[`sqlr SQLite 9`] = `
   ├─────────────────────────────────────┤
   │ percentage REAL                     │
   └─────────────────────────────────────┘
-',
-  outputError: "",
-  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --table',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 10`] = `
-{
-  code: 0,
-  output: 'Database schema:
+$ sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --compact
+exit code: 0
+--- stdout
+Database schema:
 main.country [ code TEXT, name TEXT, continent TEXT, region TEXT, surface_area REAL, indep_year? INTEGER, population INTEGER, life_expectancy? REAL, gnp? REAL, gnp_old? REAL, local_name TEXT, government_form TEXT, head_of_state? TEXT, capital -> "main.city.id", code2 TEXT ]
 main.country_flag [ code2 TEXT, emoji TEXT, unicode? TEXT ]
 main.country_language [ country_code -> "main.country.code", language TEXT, is_official INTEGER, percentage REAL ]
-',
-  outputError: "",
-  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --compact',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 11`] = `
-{
-  code: 0,
-  output: "Database schema:
+$ sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --tables-only
+exit code: 0
+--- stdout
+Database schema:
 main.country
 main.country_flag
 main.country_language
-",
-  outputError: "",
-  sqlrCommand: 'sqlr describe -t sqlite -s "/tmp/sqlr-sqlite/world.db" -f "country" --tables-only',
-}
-`;
+--- stderr
 
-snapshot[`sqlr SQLite 12`] = `
-{
-  code: 0,
-  output: 'SQLite Error: near "INVALID": syntax error
-',
-  outputError: "",
-  sqlrCommand: 'sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "INVALID SQL QUERY"',
-}
-`;
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query-handlebars.sql
+exit code: 0
+--- stdout
+Missing input variables: template. Use -i "name: value" to provide them.
+--- stderr
+
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query-handlebars.sql --ignore-input-validation
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT '{{template}}' as handlebars_value;
+
+Query executed in: *ms
+Rows affected: 1
+[ { handlebars_value: "{{template}}" } ]
+--- stderr
+
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "INVALID SQL QUERY"
+exit code: 0
+--- stdout
+SQLite Error: near "INVALID": syntax error
+--- stderr
+
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 AS i, 1.5 AS r, 'txt' AS t, X'0102FF' AS b, NULL AS n, 9007199254740991 AS big, code, population, life_expectancy FROM country ORDER BY code LIMIT 2"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 2
+[
+  {
+    i: 1,
+    r: 1.5,
+    t: "txt",
+    b: Uint8Array(3) [ 1, 2, 255 ],
+    n: null,
+    big: 9007199254740991,
+    code: "ABW",
+    population: 103000,
+    life_expectancy: 78.4
+  },
+  {
+    i: 1,
+    r: 1.5,
+    t: "txt",
+    b: Uint8Array(3) [ 1, 2, 255 ],
+    n: null,
+    big: 9007199254740991,
+    code: "AFG",
+    population: 22720000,
+    life_expectancy: 45.9
+  }
+]
+--- stderr
+
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 AS i, 1.5 AS r, 'txt' AS t, X'0102FF' AS b, NULL AS n, 9007199254740991 AS big, code, population, life_expectancy FROM country ORDER BY code LIMIT 2" --compact
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 2
+i,r,t,b,n,big,code,population,life_expectancy
+1,1.5,txt,1,2,255,,9007199254740991,ABW,103000,78.4
+1,1.5,txt,1,2,255,,9007199254740991,AFG,22720000,45.9
+--- stderr
+
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 AS i, 1.5 AS r, 'txt' AS t, X'0102FF' AS b, NULL AS n, 9007199254740991 AS big, code, population, life_expectancy FROM country ORDER BY code LIMIT 2" --table
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 2
+  ┌───┬─────┬─────┬─────────┬───┬──────────────────┬──────┬────────────┬─────────────────┐
+  │ i │ r   │ t   │ b       │ n │ big              │ code │ population │ life_expectancy │
+  ├───┼─────┼─────┼─────────┼───┼──────────────────┼──────┼────────────┼─────────────────┤
+  │ 1 │ 1.5 │ txt │ 1,2,255 │   │ 9007199254740991 │ ABW  │ 103000     │ 78.4            │
+  ├───┼─────┼─────┼─────────┼───┼──────────────────┼──────┼────────────┼─────────────────┤
+  │ 1 │ 1.5 │ txt │ 1,2,255 │   │ 9007199254740991 │ AFG  │ 22720000   │ 45.9            │
+  └───┴─────┴─────┴─────────┴───┴──────────────────┴──────┴────────────┴─────────────────┘
+--- stderr
+
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 AS i, 1.5 AS r, 'txt' AS t, X'0102FF' AS b, NULL AS n, 9007199254740991 AS big, code, population, life_expectancy FROM country ORDER BY code LIMIT 2" -o /tmp/sqlr-test-sqlite-2448136-5/output-sqlite.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 2
+Results saved to <tmp>/output-sqlite.json
+--- stderr
+
+--- output file
+[
+  {
+    "i": 1,
+    "r": 1.5,
+    "t": "txt",
+    "b": {
+      "0": 1,
+      "1": 2,
+      "2": 255
+    },
+    "n": null,
+    "big": 9007199254740991,
+    "code": "ABW",
+    "population": 103000,
+    "life_expectancy": 78.4
+  },
+  {
+    "i": 1,
+    "r": 1.5,
+    "t": "txt",
+    "b": {
+      "0": 1,
+      "1": 2,
+      "2": 255
+    },
+    "n": null,
+    "big": 9007199254740991,
+    "code": "AFG",
+    "population": 22720000,
+    "life_expectancy": 45.9
+  }
+]
+$ sqlr query -t sqlite -s "/tmp/sqlr-test-sqlite-2448136-5/copy.db" "UPDATE country SET name = name WHERE continent = 'Asia'"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+--- stderr
+

@@ -1,0 +1,14 @@
+
+sqlr - instructions for AI agents
+
+  Run 'sqlr skill --init' to create a skill so you can invoke it with
+  /sqlr (Claude Code, Cursor) or $sqlr (Codex). Inside a git repository
+  the skill is created in the repository, otherwise in the home directory.
+  Add '-n <connection>' to create a skill pinned to one connection,
+  for example /sqlr-prod.
+
+  Connections are referenced by name. Connection strings and passwords are
+  stored on disk by the user. Never ask for them and never put them into
+  commands.
+
+  Full reference follows.

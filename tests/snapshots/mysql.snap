@@ -1,0 +1,146 @@
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+[ { test: "1" } ]
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3"
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query.sql
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
+Rows affected: 1
+[ { input_file_test: "1" } ]
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-vars.sql -i "col: 1" -i "alias: test"
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: 1
+[ { test: "1" } ]
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test" -o /tmp/sqlr-test-mysql-2448136-2/output-mysql.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+Results saved to <tmp>/output-mysql.json
+--- stderr
+
+--- output file
+[
+  {
+    "test": "1"
+  }
+]
+$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country"
+exit code: 0
+--- stdout
+Database schema:
+[]
+--- stderr
+
+$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --table
+exit code: 0
+--- stdout
+Database schema:
+--- stderr
+
+$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --compact
+exit code: 0
+--- stdout
+Database schema:
+--- stderr
+
+$ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --tables-only
+exit code: 0
+--- stdout
+Database schema:
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-handlebars.sql
+exit code: 0
+--- stdout
+Missing input variables: template. Use -i "name: value" to provide them.
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-handlebars.sql --ignore-input-validation
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT '{{template}}' as handlebars_value;
+
+Query executed in: *ms
+Rows affected: 1
+[ { handlebars_value: "{{template}}" } ]
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "INVALID SQL QUERY"
+exit code: 0
+--- stdout
+MySQL Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INVALID SQL QUERY' at line 1
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2"
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --compact
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --table
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" -o /tmp/sqlr-test-mysql-2448136-2/output-mysql.json
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+
+--- output file
+[
+  {
+    "test": "1"
+  }
+]
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "UPDATE country SET name = name WHERE code = 'ABW'"
+exit code: 0
+--- stdout
+MySQL Error: Table 'world-db.country' doesn't exist
+--- stderr
+

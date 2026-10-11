@@ -1,0 +1,336 @@
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT 1 as test"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+[ { test: 1 } ]
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query.sql
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
+Rows affected: 1
+[ { input_file_test: 1 } ]
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-vars.sql -i "col: 1" -i "alias: test"
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: 1
+[ { test: 1 } ]
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT 1 as test" -o /tmp/sqlr-test-clickhouse-2448136-0/output-clickhouse.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+Results saved to <tmp>/output-clickhouse.json
+--- stderr
+
+--- output file
+[
+  {
+    "test": 1
+  }
+]
+$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country"
+exit code: 0
+--- stdout
+Database schema:
+[
+  {
+    schema: "world",
+    name: "country",
+    columns: [
+      { name: "code", type: "String", nullable: false },
+      { name: "name", type: "String", nullable: false },
+      { name: "continent", type: "String", nullable: false },
+      { name: "region", type: "String", nullable: false },
+      { name: "surface_area", type: "Float32", nullable: false },
+      { name: "indep_year", type: "Int16", nullable: true },
+      { name: "population", type: "UInt32", nullable: false },
+      { name: "life_expectancy", type: "Float32", nullable: true },
+      { name: "gnp", type: "Decimal(10, 2)", nullable: true },
+      { name: "gnp_old", type: "Decimal(10, 2)", nullable: true },
+      { name: "local_name", type: "String", nullable: false },
+      { name: "government_form", type: "String", nullable: false },
+      { name: "head_of_state", type: "String", nullable: true },
+      { name: "capital", type: "UInt32", nullable: true },
+      { name: "code2", type: "String", nullable: false }
+    ]
+  },
+  {
+    schema: "world",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "String", nullable: false },
+      { name: "emoji", type: "String", nullable: false },
+      { name: "unicode", type: "String", nullable: true }
+    ]
+  },
+  {
+    schema: "world",
+    name: "country_language",
+    columns: [
+      { name: "country_code", type: "String", nullable: false },
+      { name: "language", type: "String", nullable: false },
+      { name: "is_official", type: "UInt8", nullable: false },
+      { name: "percentage", type: "Float32", nullable: false }
+    ]
+  }
+]
+--- stderr
+
+$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --table
+exit code: 0
+--- stdout
+Database schema:
+  ┌──────────────────────────┐
+  │ world.country            │
+  ├──────────────────────────┤
+  │ code String              │
+  ├──────────────────────────┤
+  │ name String              │
+  ├──────────────────────────┤
+  │ continent String         │
+  ├──────────────────────────┤
+  │ region String            │
+  ├──────────────────────────┤
+  │ surface_area Float32     │
+  ├──────────────────────────┤
+  │ indep_year? Int16        │
+  ├──────────────────────────┤
+  │ population UInt32        │
+  ├──────────────────────────┤
+  │ life_expectancy? Float32 │
+  ├──────────────────────────┤
+  │ gnp? Decimal(10, 2)      │
+  ├──────────────────────────┤
+  │ gnp_old? Decimal(10, 2)  │
+  ├──────────────────────────┤
+  │ local_name String        │
+  ├──────────────────────────┤
+  │ government_form String   │
+  ├──────────────────────────┤
+  │ head_of_state? String    │
+  ├──────────────────────────┤
+  │ capital? UInt32          │
+  ├──────────────────────────┤
+  │ code2 String             │
+  └──────────────────────────┘
+  ┌────────────────────┐
+  │ world.country_flag │
+  ├────────────────────┤
+  │ code2 String       │
+  ├────────────────────┤
+  │ emoji String       │
+  ├────────────────────┤
+  │ unicode? String    │
+  └────────────────────┘
+  ┌────────────────────────┐
+  │ world.country_language │
+  ├────────────────────────┤
+  │ country_code String    │
+  ├────────────────────────┤
+  │ language String        │
+  ├────────────────────────┤
+  │ is_official UInt8      │
+  ├────────────────────────┤
+  │ percentage Float32     │
+  └────────────────────────┘
+--- stderr
+
+$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --compact
+exit code: 0
+--- stdout
+Database schema:
+world.country [ code String, name String, continent String, region String, surface_area Float32, indep_year? Int16, population UInt32, life_expectancy? Float32, gnp? Decimal(10, 2), gnp_old? Decimal(10, 2), local_name String, government_form String, head_of_state? String, capital? UInt32, code2 String ]
+world.country_flag [ code2 String, emoji String, unicode? String ]
+world.country_language [ country_code String, language String, is_official UInt8, percentage Float32 ]
+--- stderr
+
+$ sqlr describe -t clickhouse -s "http://world:world123@localhost:8123?database=world" -f "country" --tables-only
+exit code: 0
+--- stdout
+Database schema:
+world.country
+world.country_flag
+world.country_language
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-handlebars.sql
+exit code: 0
+--- stdout
+Missing input variables: template. Use -i "name: value" to provide them.
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" test-query-handlebars.sql --ignore-input-validation
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT '{{template}}' as handlebars_value;
+
+Query executed in: *ms
+Rows affected: 1
+[ { handlebars_value: "{{template}}" } ]
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "INVALID SQL QUERY"
+exit code: 0
+--- stdout
+ClickHouseError: Syntax error: failed at position 1 
+--- stderr
+[2026-10-11T07:04:38.616Z][ERROR][@clickhouse/client][Connection] Command: HTTP request error. 
+Arguments: {
+  operation: "Command",
+  connection_id: "583cb2fb-27e6-463b-8192-ea366eb30231",
+  query_id: "919ee67f-0e34-4136-b519-7434504242a3",
+  with_abort_signal: false,
+  session_id: undefined,
+  clickhouse_settings: {}
+} 
+Caused by: ClickHouseError: Syntax error: failed at position 1 
+    at parseError (file:///home/sobanieca/.cache/deno/npm/registry.npmjs.org/@clickhouse/client/1.23.1/dist/common/error/error.js:42:16)
+    at ClientRequest.onResponse (file:///home/sobanieca/.cache/deno/npm/registry.npmjs.org/@clickhouse/client/1.23.1/dist/connection/socket_pool.js:239:91)
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5) {
+  code: "62",
+  type: "INVALID"
+}
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+[
+  {
+    i: 1,
+    big: 9007199254740992,
+    u8: 3,
+    u64: 5,
+    f: 1.5,
+    d: 2.25,
+    dec1: 12.345,
+    t: "txt",
+    dt: "2024-01-02",
+    ts: "2024-01-02 03:04:05",
+    arr: [ 1, 2, 3 ],
+    n: null,
+    b: true,
+    m: { a: 1 },
+    tup: [ 1, "a" ],
+    u: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+    ni: 7
+  }
+]
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" --compact
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+i,big,u8,u64,f,d,dec1,t,dt,ts,arr,n,b,m,tup,u,ni
+1,9007199254740992,3,5,1.5,2.25,12.345,txt,2024-01-02,2024-01-02 03:04:05,1,2,3,,true,[object Object],1,a,a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11,7
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" --table
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+  ┌───┬──────────────────┬────┬─────┬─────┬──────┬────────┬─────┬────────────┬─────────────────────┬───────┬───┬──────┬─────────────────┬─────┬──────────────────────────────────────┬────┐
+  │ i │ big              │ u8 │ u64 │ f   │ d    │ dec1   │ t   │ dt         │ ts                  │ arr   │ n │ b    │ m               │ tup │ u                                    │ ni │
+  ├───┼──────────────────┼────┼─────┼─────┼──────┼────────┼─────┼────────────┼─────────────────────┼───────┼───┼──────┼─────────────────┼─────┼──────────────────────────────────────┼────┤
+  │ 1 │ 9007199254740992 │ 3  │ 5   │ 1.5 │ 2.25 │ 12.345 │ txt │ 2024-01-02 │ 2024-01-02 03:04:05 │ 1,2,3 │   │ true │ [object Object] │ 1,a │ a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11 │ 7  │
+  └───┴──────────────────┴────┴─────┴─────┴──────┴────────┴─────┴────────────┴─────────────────────┴───────┴───┴──────┴─────────────────┴─────┴──────────────────────────────────────┴────┘
+--- stderr
+
+$ sqlr query -t clickhouse -s "http://world:world123@localhost:8123?database=world" "SELECT toInt32(1) i, toInt64(9007199254740993) big, toUInt8(3) u8, toUInt64(5) u64, toFloat32(1.5) f, toFloat64(2.25) d, toDecimal64(12.345, 3) dec1, 'txt' t, toDate('2024-01-02') dt, toDateTime('2024-01-02 03:04:05', 'UTC') ts, [1,2,3] arr, NULL n, true b, map('a',1) m, tuple(1,'a') tup, toUUID('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11') u, toNullable(toInt32(7)) ni" -o /tmp/sqlr-test-clickhouse-2448136-0/output-clickhouse.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+Results saved to <tmp>/output-clickhouse.json
+--- stderr
+
+--- output file
+[
+  {
+    "i": 1,
+    "big": 9007199254740992,
+    "u8": 3,
+    "u64": 5,
+    "f": 1.5,
+    "d": 2.25,
+    "dec1": 12.345,
+    "t": "txt",
+    "dt": "2024-01-02",
+    "ts": "2024-01-02 03:04:05",
+    "arr": [
+      1,
+      2,
+      3
+    ],
+    "n": null,
+    "b": true,
+    "m": {
+      "a": 1
+    },
+    "tup": [
+      1,
+      "a"
+    ],
+    "u": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+    "ni": 7
+  }
+]

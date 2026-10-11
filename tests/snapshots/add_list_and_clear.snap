@@ -1,0 +1,38 @@
+$ sqlr add -n conn-one -t postgresql -s "postgres://u:p@localhost:5432/db1"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n conn-two -t mysql -s "mysql://u:p@localhost:3306/db2"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr ls
+exit code: 0
+--- stdout
+  ┌──────────┬────────────┐
+  │ Name     │ Type       │
+  ├──────────┼────────────┤
+  │ conn-one │ postgresql │
+  ├──────────┼────────────┤
+  │ conn-two │ mysql      │
+  └──────────┴────────────┘
+--- stderr
+
+$ sqlr clear
+exit code: 0
+--- stdout
+All connections removed
+--- stderr
+
+$ sqlr ls
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+

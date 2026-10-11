@@ -1,0 +1,78 @@
+$ sqlr query -t postgresql -s "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer" "SELECT 1 as test"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+[ { test: 1 } ]
+--- stderr
+
+$ sqlr query -t postgresql -s "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer" "SELECT code, name FROM country ORDER BY code LIMIT 3"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+--- stderr
+
+$ sqlr describe -t postgresql -s "postgres://localhost:5433/world-db?user=world&password=world123&application_name=sqlr&sslmode=prefer" -f "country"
+exit code: 0
+--- stdout
+Database schema:
+[
+  {
+    schema: "public",
+    name: "country",
+    columns: [
+      { name: "code", type: "character", nullable: false },
+      { name: "name", type: "text", nullable: false },
+      { name: "continent", type: "USER-DEFINED", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "real", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "bigint", nullable: false },
+      { name: "life_expectancy", type: "real", nullable: true },
+      { name: "gnp", type: "numeric", nullable: true },
+      { name: "gnp_old", type: "numeric", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
+      {
+        name: "capital",
+        type: "bigint",
+        nullable: true,
+        relation: "public.city.id"
+      },
+      { name: "code2", type: "character", nullable: false }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "character", nullable: false },
+      { name: "emoji", type: "text", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
+    ]
+  },
+  {
+    schema: "public",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "character",
+        nullable: false,
+        relation: "public.country.code"
+      },
+      { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "boolean", nullable: false },
+      { name: "percentage", type: "real", nullable: false }
+    ]
+  }
+]
+--- stderr
+

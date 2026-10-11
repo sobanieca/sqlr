@@ -1,0 +1,346 @@
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+[ { test: 1 } ]
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --table
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT TOP 3 code, name FROM country ORDER BY code" --compact
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 3
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query.sql
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT 1 as input_file_test;
+
+Query executed in: *ms
+Rows affected: 1
+[ { input_file_test: 1 } ]
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-vars.sql -i "col: 1" -i "alias: test"
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT 1 as test;
+
+Query executed in: *ms
+Rows affected: 1
+[ { test: 1 } ]
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test" -o /tmp/sqlr-test-mssql-2448136-1/output-mssql.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+Results saved to <tmp>/output-mssql.json
+--- stderr
+
+--- output file
+[
+  {
+    "test": 1
+  }
+]
+$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country"
+exit code: 0
+--- stdout
+Database schema:
+[
+  {
+    schema: "dbo",
+    name: "country",
+    columns: [
+      { name: "code", type: "char", nullable: false },
+      { name: "name", type: "nvarchar", nullable: false },
+      { name: "continent", type: "nvarchar", nullable: false },
+      { name: "region", type: "nvarchar", nullable: false },
+      { name: "surface_area", type: "float", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "int", nullable: false },
+      { name: "life_expectancy", type: "float", nullable: true },
+      { name: "gnp", type: "decimal", nullable: true },
+      { name: "gnp_old", type: "decimal", nullable: true },
+      { name: "local_name", type: "nvarchar", nullable: false },
+      { name: "government_form", type: "nvarchar", nullable: false },
+      { name: "head_of_state", type: "nvarchar", nullable: true },
+      {
+        name: "capital",
+        type: "int",
+        nullable: true,
+        relation: "dbo.city.id"
+      },
+      { name: "code2", type: "char", nullable: false }
+    ]
+  },
+  {
+    schema: "dbo",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "char", nullable: false },
+      { name: "emoji", type: "nvarchar", nullable: false },
+      { name: "unicode", type: "nvarchar", nullable: true }
+    ]
+  },
+  {
+    schema: "dbo",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "char",
+        nullable: false,
+        relation: "dbo.country.code"
+      },
+      { name: "language", type: "nvarchar", nullable: false },
+      { name: "is_official", type: "bit", nullable: false },
+      { name: "percentage", type: "float", nullable: false }
+    ]
+  }
+]
+--- stderr
+
+$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --table
+exit code: 0
+--- stdout
+Database schema:
+  ┌──────────────────────────┐
+  │ dbo.country              │
+  ├──────────────────────────┤
+  │ code char                │
+  ├──────────────────────────┤
+  │ name nvarchar            │
+  ├──────────────────────────┤
+  │ continent nvarchar       │
+  ├──────────────────────────┤
+  │ region nvarchar          │
+  ├──────────────────────────┤
+  │ surface_area float       │
+  ├──────────────────────────┤
+  │ indep_year? smallint     │
+  ├──────────────────────────┤
+  │ population int           │
+  ├──────────────────────────┤
+  │ life_expectancy? float   │
+  ├──────────────────────────┤
+  │ gnp? decimal             │
+  ├──────────────────────────┤
+  │ gnp_old? decimal         │
+  ├──────────────────────────┤
+  │ local_name nvarchar      │
+  ├──────────────────────────┤
+  │ government_form nvarchar │
+  ├──────────────────────────┤
+  │ head_of_state? nvarchar  │
+  ├──────────────────────────┤
+  │ capital -> "dbo.city.id" │
+  ├──────────────────────────┤
+  │ code2 char               │
+  └──────────────────────────┘
+  ┌───────────────────┐
+  │ dbo.country_flag  │
+  ├───────────────────┤
+  │ code2 char        │
+  ├───────────────────┤
+  │ emoji nvarchar    │
+  ├───────────────────┤
+  │ unicode? nvarchar │
+  └───────────────────┘
+  ┌────────────────────────────────────┐
+  │ dbo.country_language               │
+  ├────────────────────────────────────┤
+  │ country_code -> "dbo.country.code" │
+  ├────────────────────────────────────┤
+  │ language nvarchar                  │
+  ├────────────────────────────────────┤
+  │ is_official bit                    │
+  ├────────────────────────────────────┤
+  │ percentage float                   │
+  └────────────────────────────────────┘
+--- stderr
+
+$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --compact
+exit code: 0
+--- stdout
+Database schema:
+dbo.country [ code char, name nvarchar, continent nvarchar, region nvarchar, surface_area float, indep_year? smallint, population int, life_expectancy? float, gnp? decimal, gnp_old? decimal, local_name nvarchar, government_form nvarchar, head_of_state? nvarchar, capital -> "dbo.city.id", code2 char ]
+dbo.country_flag [ code2 char, emoji nvarchar, unicode? nvarchar ]
+dbo.country_language [ country_code -> "dbo.country.code", language nvarchar, is_official bit, percentage float ]
+--- stderr
+
+$ sqlr describe -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" -f "country" --tables-only
+exit code: 0
+--- stdout
+Database schema:
+dbo.country
+dbo.country_flag
+dbo.country_language
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql
+exit code: 0
+--- stdout
+Missing input variables: template. Use -i "name: value" to provide them.
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql --ignore-input-validation
+exit code: 0
+--- stdout
+SQL to execute:
+SELECT '{{template}}' as handlebars_value;
+
+Query executed in: *ms
+Rows affected: 1
+[ { handlebars_value: "{{template}}" } ]
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "INVALID SQL QUERY"
+exit code: 0
+--- stdout
+MSSQLError: Incorrect syntax near 'QUERY'.
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+[
+  {
+    i: 1,
+    big: "9007199254740993",
+    dec1: 12.345,
+    r: 1.5,
+    f: 2.25,
+    b: true,
+    t: "txt",
+    vc: "vc",
+    d: 2024-01-02T00:00:00.000Z,
+    dt2: 2024-01-02T03:04:05.678Z,
+    dt: 2024-01-02T03:04:05.677Z,
+    sdt: 2024-01-02T03:04:00.000Z,
+    dto: 2024-01-02T01:04:05.678Z,
+    tm: 1970-01-01T03:04:05.000Z,
+    bin: <Buffer 01 02 ff>,
+    u: "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11",
+    m: 12.5,
+    n: null,
+    ti: 3,
+    si: 4,
+    nu: 1.25,
+    ch: "x  ",
+    x: "<a>1</a>"
+  }
+]
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" --compact
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+i,big,dec1,r,f,b,t,vc,d,dt2,dt,sdt,dto,tm,bin,u,m,n,ti,si,nu,ch,x
+1,9007199254740993,12.345,1.5,2.25,true,txt,vc,Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 01:04:05 GMT+0000 (Coordinated Universal Time),Thu Jan 01 1970 03:04:05 GMT+0000 (Coordinated Universal Time),�,A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11,12.5,,3,4,1.25,x  ,<a>1</a>
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" --table
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+  ┌───┬──────────────────┬────────┬─────┬──────┬──────┬─────┬────┬────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬─────┬──────────────────────────────────────┬──────┬───┬────┬────┬──────┬─────┬──────────┐
+  │ i │ big              │ dec1   │ r   │ f    │ b    │ t   │ vc │ d                                                              │ dt2                                                            │ dt                                                             │ sdt                                                            │ dto                                                            │ tm                                                             │ bin │ u                                    │ m    │ n │ ti │ si │ nu   │ ch  │ x        │
+  ├───┼──────────────────┼────────┼─────┼──────┼──────┼─────┼────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼─────┼──────────────────────────────────────┼──────┼───┼────┼────┼──────┼─────┼──────────┤
+  │ 1 │ 9007199254740993 │ 12.345 │ 1.5 │ 2.25 │ true │ txt │ vc │ Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time) │ Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time) │ Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time) │ Tue Jan 02 2024 03:04:00 GMT+0000 (Coordinated Universal Time) │ Tue Jan 02 2024 01:04:05 GMT+0000 (Coordinated Universal Time) │ Thu Jan 01 1970 03:04:05 GMT+0000 (Coordinated Universal Time) │ �   │ A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11 │ 12.5 │   │ 3  │ 4  │ 1.25 │ x   │ <a>1</a> │
+  └───┴──────────────────┴────────┴─────┴──────┴──────┴─────┴────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴─────┴──────────────────────────────────────┴──────┴───┴────┴────┴──────┴─────┴──────────┘
+--- stderr
+
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" -o /tmp/sqlr-test-mssql-2448136-1/output-mssql.json
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+Results saved to <tmp>/output-mssql.json
+--- stderr
+
+--- output file
+[
+  {
+    "i": 1,
+    "big": "9007199254740993",
+    "dec1": 12.345,
+    "r": 1.5,
+    "f": 2.25,
+    "b": true,
+    "t": "txt",
+    "vc": "vc",
+    "d": "2024-01-02T00:00:00.000Z",
+    "dt2": "2024-01-02T03:04:05.678Z",
+    "dt": "2024-01-02T03:04:05.677Z",
+    "sdt": "2024-01-02T03:04:00.000Z",
+    "dto": "2024-01-02T01:04:05.678Z",
+    "tm": "1970-01-01T03:04:05.000Z",
+    "bin": {
+      "type": "Buffer",
+      "data": [
+        1,
+        2,
+        255
+      ]
+    },
+    "u": "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11",
+    "m": 12.5,
+    "n": null,
+    "ti": 3,
+    "si": 4,
+    "nu": 1.25,
+    "ch": "x  ",
+    "x": "<a>1</a>"
+  }
+]
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "UPDATE country SET name = name WHERE code = 'ABW'"
+exit code: 0
+--- stdout
+Query executed in: *ms
+Rows affected: 1
+--- stderr
+

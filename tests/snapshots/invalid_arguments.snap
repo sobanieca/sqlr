@@ -1,0 +1,116 @@
+$ sqlr query --foo
+exit code: 0
+--- stdout
+No connections defined. Add new connection first.
+--- stderr
+
+$ sqlr query -t oracle -s x "SELECT 1"
+exit code: 2
+--- stdout
+
+Usage:   sqlr query [queryArg]
+Version: *               
+
+Description:
+
+  Run query against specified database
+
+Options:
+
+  -h, --help                                      - Show this help.                                                                                  
+  --debug                                         - Enable debug logs                                                                                
+  -g, --global                                    - Use global scope for connections (ignore git repository                                          
+                                                    scope)                                                                                           
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}}                                                
+                                                    substitution in SQL                                                                              
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                    
+  -n, --name                 [name]               - Name of the connection                                        (Conflicts: --type,                
+                                                                                                                  --connection-string)               
+  -t, --type                 [type]               - Type of the connection                                        (Values: "postgresql", "mysql",    
+                                                                                                                  "mssql", "clickhouse", "sqlite")   
+  -s, --connection-string    [connection-string]  - Connection string                                                                                
+  --table                                         - Display results as table                                      (Conflicts: --compact)             
+  --compact                                       - Display results in compact form                               (Conflicts: --table)               
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing                                            
+                                                    {{handlebars}} syntax to pass through to the database                                            
+
+--- stderr
+  error: Option "--type" must be of type "ConnectorType", but got "oracle". Expected values: "postgresql", "mysql", "mssql", "clickhouse", "sqlite"
+
+
+$ sqlr query --table --compact -t sqlite -s x "SELECT 1"
+exit code: 2
+--- stdout
+
+Usage:   sqlr query [queryArg]
+Version: *               
+
+Description:
+
+  Run query against specified database
+
+Options:
+
+  -h, --help                                      - Show this help.                                                                                  
+  --debug                                         - Enable debug logs                                                                                
+  -g, --global                                    - Use global scope for connections (ignore git repository                                          
+                                                    scope)                                                                                           
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}}                                                
+                                                    substitution in SQL                                                                              
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                    
+  -n, --name                 [name]               - Name of the connection                                        (Conflicts: --type,                
+                                                                                                                  --connection-string)               
+  -t, --type                 [type]               - Type of the connection                                        (Values: "postgresql", "mysql",    
+                                                                                                                  "mssql", "clickhouse", "sqlite")   
+  -s, --connection-string    [connection-string]  - Connection string                                                                                
+  --table                                         - Display results as table                                      (Conflicts: --compact)             
+  --compact                                       - Display results in compact form                               (Conflicts: --table)               
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing                                            
+                                                    {{handlebars}} syntax to pass through to the database                                            
+
+--- stderr
+  error: Option "--table" conflicts with option "--compact".
+
+
+$ sqlr set-global maybe
+exit code: 2
+--- stdout
+
+Usage:   sqlr set-global <enabled>
+Version: *                   
+
+Description:
+
+  Toggle global mode (true = ignore git repository scope, false = use repository scope)
+
+Options:
+
+  -h, --help    - Show this help.                                                 
+  --debug       - Enable debug logs                                               
+  -g, --global  - Use global scope for connections (ignore git repository scope)  
+
+--- stderr
+  error: Argument "enabled" must be of type "boolean", but got "maybe". Expected values: "true", "false", "1", "0"
+
+
+$ sqlr set-global
+exit code: 2
+--- stdout
+
+Usage:   sqlr set-global <enabled>
+Version: *                   
+
+Description:
+
+  Toggle global mode (true = ignore git repository scope, false = use repository scope)
+
+Options:
+
+  -h, --help    - Show this help.                                                 
+  --debug       - Enable debug logs                                               
+  -g, --global  - Use global scope for connections (ignore git repository scope)  
+
+--- stderr
+  error: Missing argument(s): enabled
+
+

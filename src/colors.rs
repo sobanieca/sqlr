@@ -31,6 +31,10 @@ pub fn italic(s: &str) -> String {
     run(s, "3", "23")
 }
 
+pub fn underline(s: &str) -> String {
+    run(s, "4", "24")
+}
+
 pub fn red(s: &str) -> String {
     run(s, "31", "39")
 }

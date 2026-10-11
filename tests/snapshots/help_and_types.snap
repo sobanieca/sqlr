@@ -1,0 +1,245 @@
+$ sqlr
+exit code: 0
+--- stdout
+
+Usage:   sqlr  
+Version: *
+
+Description:
+
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters.
+                                                                                                         
+  For detailed usage instructions, workflows and guidance run 'sqlr help'.                               
+  AI agents: run 'sqlr help' first — it contains step-by-step instructions for operating sqlr.           
+
+Options:
+
+  -h, --help     - Show this help.                                                 
+  -V, --version  - Show the version number for this program.                       
+  --debug        - Enable debug logs                                               
+  -g, --global   - Use global scope for connections (ignore git repository scope)  
+
+Commands:
+
+  add                       - Add new connection. Run without parameters to use wizard.                            
+  rm          [connection]  - Remove selected connection                                                           
+  get         [connection]  - Get details of selected connection                                                   
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add' command   
+  ls                        - List all defined connections                                                         
+  clear                     - Remove all connections                                                               
+  set         [connection]  - Set default connection for current scope                                             
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository scope)
+  describe                  - Describe all tables and columns available in database                                
+  query       [queryArg]    - Run query against specified database                                                 
+  update                    - Update sqlr to the latest version                                                    
+  skill                     - Print instructions for AI agents. Use --init to create a skill (/sqlr)               
+  help                      - Display detailed help text with usage instructions                                   
+
+--- stderr
+
+$ sqlr --help
+exit code: 0
+--- stdout
+
+Usage:   sqlr  
+Version: *
+
+Description:
+
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters.
+                                                                                                         
+  For detailed usage instructions, workflows and guidance run 'sqlr help'.                               
+  AI agents: run 'sqlr help' first — it contains step-by-step instructions for operating sqlr.           
+
+Options:
+
+  -h, --help     - Show this help.                                                 
+  -V, --version  - Show the version number for this program.                       
+  --debug        - Enable debug logs                                               
+  -g, --global   - Use global scope for connections (ignore git repository scope)  
+
+Commands:
+
+  add                       - Add new connection. Run without parameters to use wizard.                            
+  rm          [connection]  - Remove selected connection                                                           
+  get         [connection]  - Get details of selected connection                                                   
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add' command   
+  ls                        - List all defined connections                                                         
+  clear                     - Remove all connections                                                               
+  set         [connection]  - Set default connection for current scope                                             
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository scope)
+  describe                  - Describe all tables and columns available in database                                
+  query       [queryArg]    - Run query against specified database                                                 
+  update                    - Update sqlr to the latest version                                                    
+  skill                     - Print instructions for AI agents. Use --init to create a skill (/sqlr)               
+  help                      - Display detailed help text with usage instructions                                   
+
+--- stderr
+
+$ sqlr ls-types
+exit code: 0
+--- stdout
+  ┌────────────┬──────────────────────────────────────────────────────────────────────────────────┐
+  │ Type       │ Connection string hint                                                           │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ postgresql │ postgres://host:port/database_name?user=user&password=password(urlencoded)&appli │
+  │            │ cation_name=sqlr                                                                 │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'options' - additional values for connection                                     │
+  │            │ (options=--cluster=your_cluster_name)                                            │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
+  │            │ More details: https://node-postgres.com/features/connecting                      │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ mysql      │ mysql://user:password@host:port/database_name                                    │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'ssl' - {"rejectUnauthorized":true|false}                                        │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
+  │            │ More details: https://github.com/sidorares/node-mysql2#readme                    │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ mssql      │ mssql://user:password@host:port/database_name                                    │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'encrypt' - true | false (default: true)                                         │
+  │            │ 'trustServerCertificate' - true | false (default: false)                         │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ clickhouse │ http(s)://user:password@host:port?database=database_name                         │
+  │            │ Default port: 8123 (HTTP), 8443 (HTTPS)                                          │
+  │            │ Additional url parameters:                                                       │
+  │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
+  │            │ More details: https://clickhouse.com/docs/en/interfaces/http                     │
+  ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+  │ sqlite     │ /path/to/database.db                                                             │
+  │            │ More details: https://www.sqlite.org/uri.html                                    │
+  └────────────┴──────────────────────────────────────────────────────────────────────────────────┘
+--- stderr
+
+$ sqlr query --help
+exit code: 0
+--- stdout
+
+Usage:   sqlr query [queryArg]
+Version: *               
+
+Description:
+
+  Run query against specified database
+
+Options:
+
+  -h, --help                                      - Show this help.                                                                                  
+  --debug                                         - Enable debug logs                                                                                
+  -g, --global                                    - Use global scope for connections (ignore git repository                                          
+                                                    scope)                                                                                           
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}}                                                
+                                                    substitution in SQL                                                                              
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                    
+  -n, --name                 [name]               - Name of the connection                                        (Conflicts: --type,                
+                                                                                                                  --connection-string)               
+  -t, --type                 [type]               - Type of the connection                                        (Values: "postgresql", "mysql",    
+                                                                                                                  "mssql", "clickhouse", "sqlite")   
+  -s, --connection-string    [connection-string]  - Connection string                                                                                
+  --table                                         - Display results as table                                      (Conflicts: --compact)             
+  --compact                                       - Display results in compact form                               (Conflicts: --table)               
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing                                            
+                                                    {{handlebars}} syntax to pass through to the database                                            
+
+--- stderr
+
+$ sqlr describe --help
+exit code: 0
+--- stdout
+
+Usage:   sqlr describe
+Version: *       
+
+Description:
+
+  Describe all tables and columns available in database
+
+Options:
+
+  -h, --help                                    - Show this help.                                                                                    
+  --debug                                       - Enable debug logs                                                                                  
+  -g, --global                                  - Use global scope for connections (ignore git                                                       
+                                                  repository scope)                                                                                  
+  -n, --name               [name]               - Name of the connection                            (Conflicts: --type, --connection-string)         
+  -t, --type               [type]               - Type of the connection                            (Values: "postgresql", "mysql", "mssql",         
+                                                                                                    "clickhouse", "sqlite")                          
+  -s, --connection-string  [connection-string]  - Connection string                                                                                  
+  -f, --filter             [filter]             - Filter results by schema/table name                                                                
+  --table                                       - Display results in table                                                                           
+  --compact                                     - Display results in compact form                                                                    
+  --tables-only                                 - List only table names without columns                                                              
+
+--- stderr
+
+$ sqlr add --help
+exit code: 0
+--- stdout
+
+Usage:   sqlr add
+Version: *  
+
+Connection Types: Available types and connection string hints can be found using 'ls-types' command
+
+Description:
+
+  Add new connection. Run without parameters to use wizard.
+
+Options:
+
+  -h, --help                                    - Show this help.                                                                                    
+  --debug                                       - Enable debug logs                                                                                  
+  -g, --global                                  - Use global scope for connections                                                                   
+                                                  (ignore git repository scope)                                                                      
+  -n, --name               [name]               - Name of the connection                                                                             
+  -t, --type               [type]               - Type of the connection            (Values: "postgresql", "mysql", "mssql", "clickhouse", "sqlite") 
+  -s, --connection-string  [connection-string]  - Connection string                                                                                  
+  -c, --color              [color]              - Connection color                  (Values: "red", "dark-red", "yellow", "dark-yellow", "gray",     
+                                                                                    "dark-gray", "blue", "dark-blue", "orange", "dark-orange",       
+                                                                                    "none")                                                          
+  -e, --emoji              [emoji]              - Connection emoji                                                                                   
+
+--- stderr
+
+$ sqlr set --help
+exit code: 0
+--- stdout
+
+Usage:   sqlr set [connection]
+Version: *               
+
+Description:
+
+  Set default connection for current scope
+
+Options:
+
+  -h, --help            - Show this help.                                                 
+  --debug               - Enable debug logs                                               
+  -g, --global          - Use global scope for connections (ignore git repository scope)  
+  -n, --name    [name]  - Name of the connection                                          
+
+--- stderr
+
+$ sqlr skill --help
+exit code: 0
+--- stdout
+
+Usage:   sqlr skill
+Version: *    
+
+Description:
+
+  Print instructions for AI agents. Use --init to create a skill (/sqlr)
+
+Options:
+
+  -h, --help            - Show this help.                                                                       
+  --debug               - Enable debug logs                                                                     
+  -g, --global          - Use global scope for connections (ignore git repository scope)                        
+  --init                - Create the skill in the current git repository, or in the home directory outside one  
+  -n, --name    <name>  - Pin the created skill to a connection (creates /sqlr-<name>)                          
+
+--- stderr
+

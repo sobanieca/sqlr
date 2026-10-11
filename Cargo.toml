@@ -24,6 +24,9 @@ webpki-roots = "1"
 [workspace]
 members = ["xtask"]
 
+[profile.dev.package.ring]
+opt-level = 3
+
 [profile.release]
 lto = true
 codegen-units = 1

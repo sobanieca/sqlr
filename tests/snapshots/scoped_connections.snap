@@ -1,0 +1,100 @@
+$ sqlr add -n repo-conn -t postgresql -s "postgres://u:p@localhost:5432/db1" [cwd: repo]
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+  ┌───────────┬────────────┐
+  │ Name      │ Type       │
+  ├───────────┼────────────┤
+  │ repo-conn │ postgresql │
+  └───────────┴────────────┘
+--- stderr
+
+$ sqlr ls [cwd: repo/nested/dir]
+exit code: 0
+--- stdout
+  ┌───────────┬────────────┐
+  │ Name      │ Type       │
+  ├───────────┼────────────┤
+  │ repo-conn │ postgresql │
+  └───────────┴────────────┘
+--- stderr
+
+$ sqlr ls [cwd: other]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+
+$ sqlr ls -g [cwd: repo]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+
+$ sqlr add -n global-conn -t mysql -s "mysql://u:p@localhost:3306/db2" -g [cwd: repo]
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr ls -g [cwd: repo]
+exit code: 0
+--- stdout
+  ┌─────────────┬───────┐
+  │ Name        │ Type  │
+  ├─────────────┼───────┤
+  │ global-conn │ mysql │
+  └─────────────┴───────┘
+--- stderr
+
+$ sqlr ls -g [cwd: other]
+exit code: 0
+--- stdout
+  ┌─────────────┬───────┐
+  │ Name        │ Type  │
+  ├─────────────┼───────┤
+  │ global-conn │ mysql │
+  └─────────────┴───────┘
+--- stderr
+
+$ sqlr ls [cwd: other]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+
+$ sqlr clear [cwd: repo]
+exit code: 0
+--- stdout
+All connections removed
+--- stderr
+
+$ sqlr ls [cwd: repo]
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+
+$ sqlr ls -g [cwd: repo]
+exit code: 0
+--- stdout
+  ┌─────────────┬───────┐
+  │ Name        │ Type  │
+  ├─────────────┼───────┤
+  │ global-conn │ mysql │
+  └─────────────┴───────┘
+--- stderr
+

@@ -1,0 +1,86 @@
+$ sqlr add -n test-pg -t postgresql -s "postgres://u:p@localhost:5432/db1"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n test-mysql -t mysql -s "mysql://u:p@localhost:3306/db2"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n test-mssql -t mssql -s "mssql://sa:World123!@localhost:1433/db"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n test-clickhouse -t clickhouse -s "http://u:p@localhost:8123?database=db"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr add -n test-sqlite -t sqlite -s "/tmp/db.sqlite"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr ls
+exit code: 0
+--- stdout
+  ┌─────────────────┬────────────┐
+  │ Name            │ Type       │
+  ├─────────────────┼────────────┤
+  │ test-clickhouse │ clickhouse │
+  ├─────────────────┼────────────┤
+  │ test-mssql      │ mssql      │
+  ├─────────────────┼────────────┤
+  │ test-mysql      │ mysql      │
+  ├─────────────────┼────────────┤
+  │ test-pg         │ postgresql │
+  ├─────────────────┼────────────┤
+  │ test-sqlite     │ sqlite     │
+  └─────────────────┴────────────┘
+--- stderr
+
+$ sqlr rm -n test-pg
+exit code: 0
+--- stdout
+Connection removed
+--- stderr
+
+$ sqlr rm -n test-mysql
+exit code: 0
+--- stdout
+Connection removed
+--- stderr
+
+$ sqlr rm test-mssql
+exit code: 0
+--- stdout
+Connection removed
+--- stderr
+
+$ sqlr rm -n test-clickhouse
+exit code: 0
+--- stdout
+Connection removed
+--- stderr
+
+$ sqlr rm -n test-sqlite
+exit code: 0
+--- stdout
+Connection removed
+--- stderr
+
+$ sqlr ls
+exit code: 0
+--- stdout
+  ┌──────┬──────┐
+  │ Name │ Type │
+  └──────┴──────┘
+--- stderr
+
