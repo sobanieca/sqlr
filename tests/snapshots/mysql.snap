@@ -9,19 +9,40 @@ Rows affected: 1
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3"
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 3
+[
+  { code: "ABW", name: "Aruba" },
+  { code: "AFG", name: "Afghanistan" },
+  { code: "AGO", name: "Angola" }
+]
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --table
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 3
+  ┌──────┬─────────────┐
+  │ code │ name        │
+  ├──────┼─────────────┤
+  │ ABW  │ Aruba       │
+  ├──────┼─────────────┤
+  │ AFG  │ Afghanistan │
+  ├──────┼─────────────┤
+  │ AGO  │ Angola      │
+  └──────┴─────────────┘
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT code, name FROM country ORDER BY code LIMIT 3" --compact
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 3
+code,name
+ABW,Aruba
+AFG,Afghanistan
+AGO,Angola
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query.sql
@@ -46,7 +67,7 @@ Rows affected: 1
 [ { test: "1" } ]
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test" -o /tmp/sqlr-test-mysql-2448136-2/output-mysql.json
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 as test" -o <tmp>/output-mysql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -64,29 +85,139 @@ $ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f 
 exit code: 0
 --- stdout
 Database schema:
-[]
+[
+  {
+    schema: "world-db",
+    name: "country",
+    columns: [
+      { name: "code", type: "char", nullable: false },
+      { name: "name", type: "text", nullable: false },
+      { name: "continent", type: "enum", nullable: false },
+      { name: "region", type: "text", nullable: false },
+      { name: "surface_area", type: "float", nullable: false },
+      { name: "indep_year", type: "smallint", nullable: true },
+      { name: "population", type: "int", nullable: false },
+      { name: "life_expectancy", type: "float", nullable: true },
+      { name: "gnp", type: "decimal", nullable: true },
+      { name: "gnp_old", type: "decimal", nullable: true },
+      { name: "local_name", type: "text", nullable: false },
+      { name: "government_form", type: "text", nullable: false },
+      { name: "head_of_state", type: "text", nullable: true },
+      {
+        name: "capital",
+        type: "int",
+        nullable: true,
+        relation: "world-db.city.id"
+      },
+      { name: "code2", type: "char", nullable: false }
+    ]
+  },
+  {
+    schema: "world-db",
+    name: "country_flag",
+    columns: [
+      { name: "code2", type: "char", nullable: false },
+      { name: "emoji", type: "text", nullable: false },
+      { name: "unicode", type: "text", nullable: true }
+    ]
+  },
+  {
+    schema: "world-db",
+    name: "country_language",
+    columns: [
+      {
+        name: "country_code",
+        type: "char",
+        nullable: false,
+        relation: "world-db.country.code"
+      },
+      { name: "language", type: "text", nullable: false },
+      { name: "is_official", type: "tinyint", nullable: false },
+      { name: "percentage", type: "float", nullable: false }
+    ]
+  }
+]
 --- stderr
 
 $ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --table
 exit code: 0
 --- stdout
 Database schema:
+  ┌───────────────────────────────┐
+  │ world-db.country              │
+  ├───────────────────────────────┤
+  │ code char                     │
+  ├───────────────────────────────┤
+  │ name text                     │
+  ├───────────────────────────────┤
+  │ continent enum                │
+  ├───────────────────────────────┤
+  │ region text                   │
+  ├───────────────────────────────┤
+  │ surface_area float            │
+  ├───────────────────────────────┤
+  │ indep_year? smallint          │
+  ├───────────────────────────────┤
+  │ population int                │
+  ├───────────────────────────────┤
+  │ life_expectancy? float        │
+  ├───────────────────────────────┤
+  │ gnp? decimal                  │
+  ├───────────────────────────────┤
+  │ gnp_old? decimal              │
+  ├───────────────────────────────┤
+  │ local_name text               │
+  ├───────────────────────────────┤
+  │ government_form text          │
+  ├───────────────────────────────┤
+  │ head_of_state? text           │
+  ├───────────────────────────────┤
+  │ capital -> "world-db.city.id" │
+  ├───────────────────────────────┤
+  │ code2 char                    │
+  └───────────────────────────────┘
+  ┌───────────────────────┐
+  │ world-db.country_flag │
+  ├───────────────────────┤
+  │ code2 char            │
+  ├───────────────────────┤
+  │ emoji text            │
+  ├───────────────────────┤
+  │ unicode? text         │
+  └───────────────────────┘
+  ┌─────────────────────────────────────────┐
+  │ world-db.country_language               │
+  ├─────────────────────────────────────────┤
+  │ country_code -> "world-db.country.code" │
+  ├─────────────────────────────────────────┤
+  │ language text                           │
+  ├─────────────────────────────────────────┤
+  │ is_official tinyint                     │
+  ├─────────────────────────────────────────┤
+  │ percentage float                        │
+  └─────────────────────────────────────────┘
 --- stderr
 
 $ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --compact
 exit code: 0
 --- stdout
 Database schema:
+world-db.country [ code char, name text, continent enum, region text, surface_area float, indep_year? smallint, population int, life_expectancy? float, gnp? decimal, gnp_old? decimal, local_name text, government_form text, head_of_state? text, capital -> "world-db.city.id", code2 char ]
+world-db.country_flag [ code2 char, emoji text, unicode? text ]
+world-db.country_language [ country_code -> "world-db.country.code", language text, is_official tinyint, percentage float ]
 --- stderr
 
 $ sqlr describe -t mysql -s "mysql://world:world123@localhost:3306/world-db" -f "country" --tables-only
 exit code: 0
 --- stdout
 Database schema:
+world-db.country
+world-db.country_flag
+world-db.country_language
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" test-query-handlebars.sql
-exit code: 0
+exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
@@ -103,7 +234,7 @@ Rows affected: 1
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "INVALID SQL QUERY"
-exit code: 0
+exit code: 1
 --- stdout
 MySQL Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INVALID SQL QUERY' at line 1
 --- stderr
@@ -111,36 +242,179 @@ MySQL Error: You have an error in your SQL syntax; check the manual that corresp
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2"
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 2
+[
+  {
+    i: "1",
+    u: "3",
+    big: "9007199254740993",
+    dec1: "12.345",
+    f: 1.5,
+    dbl: 2.25,
+    t: "txt",
+    d: 2024-01-02T00:00:00.000Z,
+    dt: 2024-01-02T03:04:05.678Z,
+    tm: "03:04:05",
+    j: { a: 1, b: [ 1, 2 ] },
+    bin: <Buffer 01 02 ff>,
+    bit: <Buffer 05>,
+    n: null,
+    b: "1",
+    pop: 103000,
+    sa: 193,
+    gnp: "828.00",
+    iy: 1986,
+    cont: "North America",
+    le: 78.4
+  },
+  {
+    i: "1",
+    u: "3",
+    big: "9007199254740993",
+    dec1: "12.345",
+    f: 1.5,
+    dbl: 2.25,
+    t: "txt",
+    d: 2024-01-02T00:00:00.000Z,
+    dt: 2024-01-02T03:04:05.678Z,
+    tm: "03:04:05",
+    j: { a: 1, b: [ 1, 2 ] },
+    bin: <Buffer 01 02 ff>,
+    bit: <Buffer 05>,
+    n: null,
+    b: "1",
+    pop: 22720000,
+    sa: 652090,
+    gnp: "5976.00",
+    iy: 1919,
+    cont: "Asia",
+    le: 45.9
+  }
+]
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --compact
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 2
+i,u,big,dec1,f,dbl,t,d,dt,tm,j,bin,bit,n,b,pop,sa,gnp,iy,cont,le
+1,3,9007199254740993,12.345,1.5,2.25,txt,Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),03:04:05,[object Object],�,,,1,103000,193,828.00,1986,North America,78.4
+1,3,9007199254740993,12.345,1.5,2.25,txt,Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time),Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time),03:04:05,[object Object],�,,,1,22720000,652090,5976.00,1919,Asia,45.9
 --- stderr
 
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" --table
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 2
+  ┌───┬───┬──────────────────┬────────┬─────┬──────┬─────┬────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────┬─────┬───┬───┬──────────┬────────┬─────────┬──────┬───────────────┬──────┐
+  │ i │ u │ big              │ dec1   │ f   │ dbl  │ t   │ d                                                              │ dt                                                             │ tm       │ j               │ bin │ bit │ n │ b │ pop      │ sa     │ gnp     │ iy   │ cont          │ le   │
+  ├───┼───┼──────────────────┼────────┼─────┼──────┼─────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────┼─────┼───┼───┼──────────┼────────┼─────────┼──────┼───────────────┼──────┤
+  │ 1 │ 3 │ 9007199254740993 │ 12.345 │ 1.5 │ 2.25 │ txt │ Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time) │ Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time) │ 03:04:05 │ [object Object] │ �   │     │   │ 1 │ 103000   │ 193    │ 828.00  │ 1986 │ North America │ 78.4 │
+  ├───┼───┼──────────────────┼────────┼─────┼──────┼─────┼────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────┼─────┼───┼───┼──────────┼────────┼─────────┼──────┼───────────────┼──────┤
+  │ 1 │ 3 │ 9007199254740993 │ 12.345 │ 1.5 │ 2.25 │ txt │ Tue Jan 02 2024 00:00:00 GMT+0000 (Coordinated Universal Time) │ Tue Jan 02 2024 03:04:05 GMT+0000 (Coordinated Universal Time) │ 03:04:05 │ [object Object] │ �   │     │   │ 1 │ 22720000 │ 652090 │ 5976.00 │ 1919 │ Asia          │ 45.9 │
+  └───┴───┴──────────────────┴────────┴─────┴──────┴─────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────┴─────┴───┴───┴──────────┴────────┴─────────┴──────┴───────────────┴──────┘
 --- stderr
 
-$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" -o /tmp/sqlr-test-mysql-2448136-2/output-mysql.json
+$ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "SELECT 1 AS i, CAST(3 AS UNSIGNED) AS u, 9007199254740993 AS big, 12.345 AS dec1, CAST(1.5 AS FLOAT) AS f, CAST(2.25 AS DOUBLE) AS dbl, 'txt' AS t, DATE '2024-01-02' AS d, TIMESTAMP '2024-01-02 03:04:05.678' AS dt, TIME '03:04:05' AS tm, CAST('{\"a\":1,\"b\":[1,2]}' AS JSON) AS j, X'0102FF' AS bin, b'101' AS bit, NULL AS n, true AS b, population AS pop, surface_area AS sa, gnp AS gnp, indep_year AS iy, continent AS cont, life_expectancy AS le FROM country ORDER BY code LIMIT 2" -o <tmp>/output-mysql.json
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 2
+Results saved to <tmp>/output-mysql.json
 --- stderr
 
 --- output file
 [
   {
-    "test": "1"
+    "i": "1",
+    "u": "3",
+    "big": "9007199254740993",
+    "dec1": "12.345",
+    "f": 1.5,
+    "dbl": 2.25,
+    "t": "txt",
+    "d": "2024-01-02T00:00:00.000Z",
+    "dt": "2024-01-02T03:04:05.678Z",
+    "tm": "03:04:05",
+    "j": {
+      "a": 1,
+      "b": [
+        1,
+        2
+      ]
+    },
+    "bin": {
+      "type": "Buffer",
+      "data": [
+        1,
+        2,
+        255
+      ]
+    },
+    "bit": {
+      "type": "Buffer",
+      "data": [
+        5
+      ]
+    },
+    "n": null,
+    "b": "1",
+    "pop": 103000,
+    "sa": 193,
+    "gnp": "828.00",
+    "iy": 1986,
+    "cont": "North America",
+    "le": 78.4
+  },
+  {
+    "i": "1",
+    "u": "3",
+    "big": "9007199254740993",
+    "dec1": "12.345",
+    "f": 1.5,
+    "dbl": 2.25,
+    "t": "txt",
+    "d": "2024-01-02T00:00:00.000Z",
+    "dt": "2024-01-02T03:04:05.678Z",
+    "tm": "03:04:05",
+    "j": {
+      "a": 1,
+      "b": [
+        1,
+        2
+      ]
+    },
+    "bin": {
+      "type": "Buffer",
+      "data": [
+        1,
+        2,
+        255
+      ]
+    },
+    "bit": {
+      "type": "Buffer",
+      "data": [
+        5
+      ]
+    },
+    "n": null,
+    "b": "1",
+    "pop": 22720000,
+    "sa": 652090,
+    "gnp": "5976.00",
+    "iy": 1919,
+    "cont": "Asia",
+    "le": 45.9
   }
 ]
 $ sqlr query -t mysql -s "mysql://world:world123@localhost:3306/world-db" "UPDATE country SET name = name WHERE code = 'ABW'"
 exit code: 0
 --- stdout
-MySQL Error: Table 'world-db.country' doesn't exist
+Query executed in: *ms
+Rows affected: 1
 --- stderr
 

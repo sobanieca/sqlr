@@ -67,7 +67,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test" -o /tmp/sqlr-test-mssql-2448136-1/output-mssql.json
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT 1 as test" -o <tmp>/output-mssql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -217,7 +217,7 @@ dbo.country_language
 --- stderr
 
 $ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" test-query-handlebars.sql
-exit code: 0
+exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
@@ -234,7 +234,7 @@ Rows affected: 1
 --- stderr
 
 $ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "INVALID SQL QUERY"
-exit code: 0
+exit code: 1
 --- stdout
 MSSQLError: Incorrect syntax near 'QUERY'.
 --- stderr
@@ -294,7 +294,7 @@ Rows affected: 1
   └───┴──────────────────┴────────┴─────┴──────┴──────┴─────┴────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴─────┴──────────────────────────────────────┴──────┴───┴────┴────┴──────┴─────┴──────────┘
 --- stderr
 
-$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" -o /tmp/sqlr-test-mssql-2448136-1/output-mssql.json
+$ sqlr query -t mssql -s "mssql://sa:World123!@localhost:1433/world-db?encrypt=false&trustServerCertificate=true" "SELECT CAST(1 AS int) i, CAST(9007199254740993 AS bigint) big, CAST(12.345 AS decimal(10,3)) dec1, CAST(1.5 AS real) r, CAST(2.25 AS float) f, CAST(1 AS bit) b, N'txt' t, 'vc' vc, CAST('2024-01-02' AS date) d, CAST('2024-01-02 03:04:05.678' AS datetime2) dt2, CAST('2024-01-02 03:04:05.677' AS datetime) dt, CAST('2024-01-02 03:04:05' AS smalldatetime) sdt, CAST('2024-01-02T03:04:05.678+02:00' AS datetimeoffset) dto, CAST('03:04:05' AS time) tm, CAST(0x0102FF AS varbinary(10)) bin, CAST('A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11' AS uniqueidentifier) u, CAST(12.5 AS money) m, NULL n, CAST(3 AS tinyint) ti, CAST(4 AS smallint) si, CAST(1.25 AS numeric(5,2)) nu, CAST('x' AS char(3)) ch, CAST('<a>1</a>' AS xml) x" -o <tmp>/output-mssql.json
 exit code: 0
 --- stdout
 Query executed in: *ms

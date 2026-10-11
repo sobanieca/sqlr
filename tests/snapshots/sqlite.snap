@@ -67,7 +67,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test" -o /tmp/sqlr-test-sqlite-2448136-5/output-sqlite.json
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 as test" -o <tmp>/output-sqlite.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -217,7 +217,7 @@ main.country_language
 --- stderr
 
 $ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" test-query-handlebars.sql
-exit code: 0
+exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
@@ -234,7 +234,7 @@ Rows affected: 1
 --- stderr
 
 $ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "INVALID SQL QUERY"
-exit code: 0
+exit code: 1
 --- stdout
 SQLite Error: near "INVALID": syntax error
 --- stderr
@@ -294,7 +294,7 @@ Rows affected: 2
   └───┴─────┴─────┴─────────┴───┴──────────────────┴──────┴────────────┴─────────────────┘
 --- stderr
 
-$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 AS i, 1.5 AS r, 'txt' AS t, X'0102FF' AS b, NULL AS n, 9007199254740991 AS big, code, population, life_expectancy FROM country ORDER BY code LIMIT 2" -o /tmp/sqlr-test-sqlite-2448136-5/output-sqlite.json
+$ sqlr query -t sqlite -s "/tmp/sqlr-sqlite/world.db" "SELECT 1 AS i, 1.5 AS r, 'txt' AS t, X'0102FF' AS b, NULL AS n, 9007199254740991 AS big, code, population, life_expectancy FROM country ORDER BY code LIMIT 2" -o <tmp>/output-sqlite.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -335,7 +335,7 @@ Results saved to <tmp>/output-sqlite.json
     "life_expectancy": 45.9
   }
 ]
-$ sqlr query -t sqlite -s "/tmp/sqlr-test-sqlite-2448136-5/copy.db" "UPDATE country SET name = name WHERE continent = 'Asia'"
+$ sqlr query -t sqlite -s "<tmp>/copy.db" "UPDATE country SET name = name WHERE continent = 'Asia'"
 exit code: 0
 --- stdout
 Query executed in: *ms

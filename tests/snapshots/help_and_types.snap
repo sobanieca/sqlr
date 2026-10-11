@@ -2,7 +2,7 @@ $ sqlr
 exit code: 0
 --- stdout
 
-Usage:   sqlr  
+Usage:   sqlr 
 Version: *
 
 Description:
@@ -41,7 +41,7 @@ $ sqlr --help
 exit code: 0
 --- stdout
 
-Usage:   sqlr  
+Usage:   sqlr 
 Version: *
 
 Description:
@@ -85,16 +85,15 @@ exit code: 0
   │ postgresql │ postgres://host:port/database_name?user=user&password=password(urlencoded)&appli │
   │            │ cation_name=sqlr                                                                 │
   │            │ Additional url parameters:                                                       │
+  │            │ 'sslmode' - disable | prefer | require | verify-full (default: disable)          │
   │            │ 'options' - additional values for connection                                     │
   │            │ (options=--cluster=your_cluster_name)                                            │
   │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
-  │            │ More details: https://node-postgres.com/features/connecting                      │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mysql      │ mysql://user:password@host:port/database_name                                    │
   │            │ Additional url parameters:                                                       │
   │            │ 'ssl' - {"rejectUnauthorized":true|false}                                        │
   │            │ 'connectionTimeoutMs' - connection timeout in milliseconds (default: 10000)      │
-  │            │ More details: https://github.com/sidorares/node-mysql2#readme                    │
   ├────────────┼──────────────────────────────────────────────────────────────────────────────────┤
   │ mssql      │ mssql://user:password@host:port/database_name                                    │
   │            │ Additional url parameters:                                                       │
@@ -118,7 +117,7 @@ exit code: 0
 --- stdout
 
 Usage:   sqlr query [queryArg]
-Version: *               
+Version: *                
 
 Description:
 
@@ -150,7 +149,7 @@ exit code: 0
 --- stdout
 
 Usage:   sqlr describe
-Version: *       
+Version: *        
 
 Description:
 
@@ -178,7 +177,7 @@ exit code: 0
 --- stdout
 
 Usage:   sqlr add
-Version: *  
+Version: *   
 
 Connection Types: Available types and connection string hints can be found using 'ls-types' command
 
@@ -207,7 +206,7 @@ exit code: 0
 --- stdout
 
 Usage:   sqlr set [connection]
-Version: *               
+Version: *                
 
 Description:
 
@@ -227,7 +226,7 @@ exit code: 0
 --- stdout
 
 Usage:   sqlr skill
-Version: *    
+Version: *     
 
 Description:
 

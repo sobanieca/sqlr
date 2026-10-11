@@ -39,25 +39,6 @@ impl Value {
             Value::Array(_) | Value::Object(_) => true,
         }
     }
-
-    /// JS `String(value)`.
-    pub fn to_js_string(&self) -> String {
-        match self {
-            Value::Null => "null".to_string(),
-            Value::Bool(b) => b.to_string(),
-            Value::Number(n) => format_number(*n),
-            Value::String(s) => s.clone(),
-            Value::Array(items) => items
-                .iter()
-                .map(|item| match item {
-                    Value::Null => String::new(),
-                    other => other.to_js_string(),
-                })
-                .collect::<Vec<_>>()
-                .join(","),
-            Value::Object(_) => "[object Object]".to_string(),
-        }
-    }
 }
 
 impl From<&str> for Value {
@@ -110,17 +91,9 @@ impl Object {
         self.get(key).and_then(Value::as_str)
     }
 
-    pub fn get_object(&self, key: &str) -> Option<&Object> {
-        self.get(key).and_then(Value::as_object)
-    }
-
     /// `if (obj[key])`
     pub fn is_truthy(&self, key: &str) -> bool {
         self.get(key).is_some_and(Value::is_truthy)
-    }
-
-    pub fn contains_key(&self, key: &str) -> bool {
-        self.get(key).is_some()
     }
 
     /// Assigns a property like JS does: existing keys keep their position,
@@ -142,25 +115,6 @@ impl Object {
         self.entries.insert(position, (key, value));
     }
 
-    /// `Object.assign(this, other)`
-    pub fn assign(&mut self, other: &Object) {
-        for (key, value) in other.iter() {
-            self.insert(key.clone(), value.clone());
-        }
-    }
-
-    /// Returns the object stored under `key`, replacing any non-object value
-    /// with an empty object first (`obj[key] ??= {}`).
-    pub fn object_entry(&mut self, key: &str) -> &mut Object {
-        if !matches!(self.get(key), Some(Value::Object(_))) {
-            self.insert(key, Value::Object(Object::new()));
-        }
-        match self.get_mut(key) {
-            Some(Value::Object(o)) => o,
-            _ => unreachable!(),
-        }
-    }
-
     pub fn iter(&self) -> impl Iterator<Item = (&String, &Value)> {
         self.entries.iter().map(|(k, v)| (k, v))
     }
@@ -171,10 +125,6 @@ impl Object {
 
     pub fn len(&self) -> usize {
         self.entries.len()
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.entries.is_empty()
     }
 }
 

@@ -96,11 +96,6 @@ impl Url {
             .map(|(_, value)| value.as_str())
     }
 
-    /// `searchParams.delete(name)`
-    pub fn remove_param(&mut self, name: &str) {
-        self.query.retain(|(key, _)| key != name);
-    }
-
     /// Path without the leading `/`, as `pathname.replace("/", "")`.
     pub fn path_name(&self) -> String {
         self.path.replacen('/', "", 1)
@@ -256,13 +251,19 @@ mod tests {
     #[test]
     fn encodes_and_decodes_components() {
         assert_eq!(encode_uri_component("p@ss:w#rd;!*"), "p%40ss%3Aw%23rd%3B!*");
-        assert_eq!(decode_uri_component("p%40ss%3Aw%23rd").unwrap(), "p@ss:w#rd");
+        assert_eq!(
+            decode_uri_component("p%40ss%3Aw%23rd").unwrap(),
+            "p@ss:w#rd"
+        );
         assert!(decode_uri_component("100%").is_err());
         assert_eq!(percent_decode("100%"), "100%");
-        assert_eq!(parse_query("a=1+2&b=%7B%7D&c"), [
-            ("a".to_string(), "1 2".to_string()),
-            ("b".to_string(), "{}".to_string()),
-            ("c".to_string(), String::new()),
-        ]);
+        assert_eq!(
+            parse_query("a=1+2&b=%7B%7D&c"),
+            [
+                ("a".to_string(), "1 2".to_string()),
+                ("b".to_string(), "{}".to_string()),
+                ("c".to_string(), String::new()),
+            ]
+        );
     }
 }

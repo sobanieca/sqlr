@@ -127,16 +127,19 @@ pub fn execute(options: Options) -> Result<(), String> {
     let connector = connection_type.as_deref().and_then(connectors::find);
     let started = Instant::now();
     let result = match (connector, connection_string) {
-        (Some(connector), Some(connection_string)) => {
-            (connector.query)(&connection_string, &query)
-        }
-        _ => Err(Error::Other("Missing connection type or connection string".to_string())),
+        (Some(connector), Some(connection_string)) => (connector.query)(&connection_string, &query),
+        _ => Err(Error::Other(
+            "Missing connection type or connection string".to_string(),
+        )),
     };
     let elapsed = started.elapsed().as_millis();
 
     match result {
         Ok(result) => {
-            logger::info(format!("{} {elapsed}ms", colors::gray("Query executed in:")));
+            logger::info(format!(
+                "{} {elapsed}ms",
+                colors::gray("Query executed in:")
+            ));
             logger::info(format!(
                 "{} {}",
                 colors::gray("Rows affected:"),
@@ -205,10 +208,13 @@ fn show_result(
     }
 
     let rows = Node::Array(result.rows.iter().map(value::object_node).collect());
-    logger::info(inspect::inspect(&rows, inspect::Options {
-                colors: colors::enabled(),
-                ..inspect::Options::verbose()
-            }));
+    logger::info(inspect::inspect(
+        &rows,
+        inspect::Options {
+            colors: colors::enabled(),
+            ..inspect::Options::verbose()
+        },
+    ));
     Ok(())
 }
 
@@ -242,7 +248,10 @@ mod tests {
 
     #[test]
     fn previews_the_first_ten_lines() {
-        let query = (1..=12).map(|i| i.to_string()).collect::<Vec<_>>().join("\n");
+        let query = (1..=12)
+            .map(|i| i.to_string())
+            .collect::<Vec<_>>()
+            .join("\n");
         assert_eq!(preview(&query), "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...");
         assert_eq!(preview("SELECT 1;\n"), "SELECT 1;\n");
     }

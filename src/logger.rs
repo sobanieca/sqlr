@@ -1,5 +1,5 @@
 //! Console logger with the colors of the `@std/log` handler used by the Deno
-//! version: info is white, warnings yellow, errors red and debug output
+//! version: info is white, errors red and debug output
 //! (only with `--debug`) gray. Everything goes to stdout.
 
 use crate::colors;
@@ -31,10 +31,6 @@ pub fn debug(message: impl AsRef<str>) {
 
 pub fn info(message: impl AsRef<str>) {
     print_line(&colors::white(message.as_ref()));
-}
-
-pub fn warn(message: impl AsRef<str>) {
-    print_line(&colors::bright_yellow(message.as_ref()));
 }
 
 pub fn error(message: impl AsRef<str>) {

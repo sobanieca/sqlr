@@ -82,8 +82,11 @@ impl Storage {
         let error = |err: std::io::Error| format!("Failed to write {}: {err}", path.display());
         create_private_dir(&dir).map_err(error)?;
         let temp = dir.join(format!(".{FILE_NAME}-{}", std::process::id()));
-        write_private_file(&temp, json::stringify(&Value::Object(self.data.clone())).as_bytes())
-            .map_err(error)?;
+        write_private_file(
+            &temp,
+            json::stringify(&Value::Object(self.data.clone())).as_bytes(),
+        )
+        .map_err(error)?;
         std::fs::rename(&temp, &path).map_err(|err| {
             let _ = std::fs::remove_file(&temp);
             error(err)

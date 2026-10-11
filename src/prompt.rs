@@ -14,7 +14,6 @@ const SHOW_CURSOR: &str = "\x1b[?25h";
 const MAX_ROWS: usize = 10;
 
 /// Asks for a line of text. Returns an empty string when nothing is entered.
-#[allow(dead_code)]
 pub fn input(message: &str) -> Result<String, String> {
     if !std::io::stdin().is_terminal() {
         let value = read_line()?.trim().to_string();
@@ -25,7 +24,6 @@ pub fn input(message: &str) -> Result<String, String> {
 }
 
 /// Asks for a hidden value (passwords).
-#[allow(dead_code)]
 pub fn secret(message: &str) -> Result<String, String> {
     if !std::io::stdin().is_terminal() {
         let value = read_line()?;
@@ -37,7 +35,6 @@ pub fn secret(message: &str) -> Result<String, String> {
 }
 
 /// Lets the user pick one of `options` (name shown, value returned).
-#[allow(dead_code)]
 pub fn select(message: &str, options: &[(String, String)]) -> Result<String, String> {
     if options.is_empty() {
         return Err("No options to select from.".to_string());
@@ -47,7 +44,6 @@ pub fn select(message: &str, options: &[(String, String)]) -> Result<String, Str
 }
 
 /// Yes/no question.
-#[allow(dead_code)]
 pub fn toggle(message: &str) -> Result<bool, String> {
     require_terminal(message)?;
     run(&mut TogglePrompt::new(message))

@@ -224,8 +224,8 @@ impl Table {
             let mut changed = false;
             for i in 0..width.len() {
                 if shrink[i] > 0.0 && width[i] > min_col_width[i] {
-                    let shrunk = (width[i] as f64 * (1.0 - overflow * shrink[i] / scaled_total))
-                        .floor();
+                    let shrunk =
+                        (width[i] as f64 * (1.0 - overflow * shrink[i] / scaled_total)).floor();
                     let target = (min_col_width[i].max(1) as f64).max(shrunk) as usize;
                     if target != width[i] {
                         width[i] = target;
@@ -301,7 +301,12 @@ impl Table {
         result
     }
 
-    fn render_border_row(&self, prev: Option<usize>, next: Option<usize>, layout: &Layout) -> String {
+    fn render_border_row(
+        &self,
+        prev: Option<usize>,
+        next: Option<usize>,
+        layout: &Layout,
+    ) -> String {
         let mut result = String::new();
         let has_prev = prev.is_some();
         let has_next = next.is_some();
@@ -515,7 +520,10 @@ mod tests {
     fn renders_bordered_tables() {
         let table = Table::new()
             .header(strings(&["code", "name"]))
-            .body(vec![strings(&["ABW", "Aruba"]), strings(&["AFG", "Afghanistan"])])
+            .body(vec![
+                strings(&["ABW", "Aruba"]),
+                strings(&["AFG", "Afghanistan"]),
+            ])
             .max_col_width(80)
             .padding(1)
             .indent(2)
@@ -620,15 +628,18 @@ mod tests {
             .padding(1)
             .border(true)
             .to_string();
-        assert_eq!(
-            strip_ansi(&table),
-            "┌────┐\n│ id │\n├────┤\n│ 1  │\n└────┘"
-        );
+        assert_eq!(strip_ansi(&table), "┌────┐\n│ id │\n├────┤\n│ 1  │\n└────┘");
         assert_eq!(
             unclosed_ansi_runs("\x1b[31mred \x1b[1mbold"),
-            ("\x1b[22m\x1b[39m".to_string(), "\x1b[31m\x1b[1m".to_string())
+            (
+                "\x1b[22m\x1b[39m".to_string(),
+                "\x1b[31m\x1b[1m".to_string()
+            )
         );
-        assert_eq!(unclosed_ansi_runs("\x1b[31mred\x1b[39m"), (String::new(), String::new()));
+        assert_eq!(
+            unclosed_ansi_runs("\x1b[31mred\x1b[39m"),
+            (String::new(), String::new())
+        );
     }
 
     #[test]

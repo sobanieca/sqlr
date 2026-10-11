@@ -59,8 +59,8 @@ fn find_skill_root() -> Result<SkillRoot, String> {
             break;
         }
     }
-    let home = home
-        .ok_or("Not in a git repository and the home directory is unknown (set HOME).")?;
+    let home =
+        home.ok_or("Not in a git repository and the home directory is unknown (set HOME).")?;
     Ok(SkillRoot {
         dir: home,
         global: true,

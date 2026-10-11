@@ -76,7 +76,9 @@ pub const CONNECTORS: [&Connector; 5] = [
 ];
 
 pub fn find(key: &str) -> Option<&'static Connector> {
-    CONNECTORS.into_iter().find(|connector| connector.key == key)
+    CONNECTORS
+        .into_iter()
+        .find(|connector| connector.key == key)
 }
 
 pub fn keys() -> Vec<&'static str> {

@@ -125,8 +125,8 @@ fn encrypted_connection() {
     );
     s.run_env("sqlr get encrypted-pg", &env);
     s.run_env("sqlr get encrypted-pg", &wrong);
-    let storage = std::fs::read_to_string(s.path().join("config/sqlr/storage.json"))
-        .unwrap_or_default();
+    let storage =
+        std::fs::read_to_string(s.path().join("config/sqlr/storage.json")).unwrap_or_default();
     assert!(
         storage.is_empty() || !storage.contains("localhost:5432"),
         "connection string must be stored encrypted: {storage}"
@@ -262,8 +262,7 @@ fn skill_init() {
 
     let services = repo.join("services");
     s.run_in("sqlr skill --init -n prod", &services, &[]);
-    let pinned =
-        std::fs::read_to_string(repo.join(".claude/skills/sqlr-prod/SKILL.md")).unwrap();
+    let pinned = std::fs::read_to_string(repo.join(".claude/skills/sqlr-prod/SKILL.md")).unwrap();
     s.note(".claude/skills/sqlr-prod/SKILL.md", &pinned);
     s.run_in("sqlr skill --init -n prod", &services, &[]);
 

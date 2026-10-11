@@ -165,9 +165,11 @@ async fn simple_query(client: &Client, sql: &str) -> Result<Vec<Statement>, Erro
                 current.columns = columns.iter().map(|c| c.name().to_string()).collect();
             }
             SimpleQueryMessage::Row(row) => {
-                current
-                    .rows
-                    .push((0..row.len()).map(|i| row.get(i).map(str::to_string)).collect());
+                current.rows.push(
+                    (0..row.len())
+                        .map(|i| row.get(i).map(str::to_string))
+                        .collect(),
+                );
             }
             SimpleQueryMessage::CommandComplete(count) => {
                 current.count = count;
@@ -202,8 +204,17 @@ fn has_row_count(sql: &str) -> bool {
         .to_uppercase();
     matches!(
         keyword.as_str(),
-        "SELECT" | "WITH" | "VALUES" | "TABLE" | "INSERT" | "UPDATE" | "DELETE" | "MERGE"
-            | "COPY" | "MOVE" | "FETCH"
+        "SELECT"
+            | "WITH"
+            | "VALUES"
+            | "TABLE"
+            | "INSERT"
+            | "UPDATE"
+            | "DELETE"
+            | "MERGE"
+            | "COPY"
+            | "MOVE"
+            | "FETCH"
     )
 }
 
@@ -322,7 +333,10 @@ fn array_element(oid: u32) -> Option<u32> {
 
 /// `parseInt(text, 10)`
 fn parse_int(text: &str) -> f64 {
-    text.trim().parse::<i64>().map(|n| n as f64).unwrap_or(f64::NAN)
+    text.trim()
+        .parse::<i64>()
+        .map(|n| n as f64)
+        .unwrap_or(f64::NAN)
 }
 
 /// `parseFloat(text)`
@@ -339,7 +353,7 @@ fn parse_float(text: &str) -> f64 {
 fn parse_array(text: &str, element: u32) -> Cell {
     let mut chars = text.chars().peekable();
     if text.starts_with('[') {
-        while let Some(c) = chars.next() {
+        for c in chars.by_ref() {
             if c == '=' {
                 break;
             }
@@ -348,7 +362,10 @@ fn parse_array(text: &str, element: u32) -> Cell {
     parse_array_level(&mut chars, element).unwrap_or_else(|| Cell::String(text.to_string()))
 }
 
-fn parse_array_level(chars: &mut std::iter::Peekable<std::str::Chars>, element: u32) -> Option<Cell> {
+fn parse_array_level(
+    chars: &mut std::iter::Peekable<std::str::Chars>,
+    element: u32,
+) -> Option<Cell> {
     if chars.next()? != '{' {
         return None;
     }
@@ -529,8 +546,16 @@ fn parse_interval(text: &str) -> Cell {
             let negative = token.starts_with('-');
             let parts: Vec<&str> = token.trim_start_matches(['-', '+']).split(':').collect();
             let sign = if negative { -1.0 } else { 1.0 };
-            hours = sign * parts.first().and_then(|h| h.parse::<f64>().ok()).unwrap_or(0.0);
-            minutes = sign * parts.get(1).and_then(|m| m.parse::<f64>().ok()).unwrap_or(0.0);
+            hours = sign
+                * parts
+                    .first()
+                    .and_then(|h| h.parse::<f64>().ok())
+                    .unwrap_or(0.0);
+            minutes = sign
+                * parts
+                    .get(1)
+                    .and_then(|m| m.parse::<f64>().ok())
+                    .unwrap_or(0.0);
             if let Some(s) = parts.get(2) {
                 let (whole, fraction) = s.split_once('.').unwrap_or((s, ""));
                 seconds = sign * whole.parse::<f64>().unwrap_or(0.0);
@@ -675,14 +700,26 @@ mod tests {
     #[test]
     fn parses_scalars() {
         assert_eq!(parse_value(23, Some("2")), Cell::Number(2.0));
-        assert_eq!(parse_value(20, Some("9007199254740993")), Cell::String("9007199254740993".into()));
-        assert_eq!(parse_value(1700, Some("12.345")), Cell::String("12.345".into()));
+        assert_eq!(
+            parse_value(20, Some("9007199254740993")),
+            Cell::String("9007199254740993".into())
+        );
+        assert_eq!(
+            parse_value(1700, Some("12.345")),
+            Cell::String("12.345".into())
+        );
         assert_eq!(parse_value(16, Some("t")), Cell::Bool(true));
         assert_eq!(parse_value(16, Some("f")), Cell::Bool(false));
         assert!(matches!(parse_value(701, Some("NaN")), Cell::Number(n) if n.is_nan()));
-        assert_eq!(parse_value(701, Some("-Infinity")), Cell::Number(f64::NEG_INFINITY));
+        assert_eq!(
+            parse_value(701, Some("-Infinity")),
+            Cell::Number(f64::NEG_INFINITY)
+        );
         assert_eq!(parse_value(25, None), Cell::Null);
-        assert_eq!(parse_value(17, Some("\\x0102ff")), Cell::Buffer(vec![1, 2, 255]));
+        assert_eq!(
+            parse_value(17, Some("\\x0102ff")),
+            Cell::Buffer(vec![1, 2, 255])
+        );
         assert_eq!(parse_bytea("a\\\\b\\001"), b"a\\b\x01".to_vec());
     }
 
@@ -696,7 +733,10 @@ mod tests {
             panic!()
         };
         assert_eq!(to_iso_string(ms).unwrap(), "2024-01-01T21:34:05.123Z");
-        assert_eq!(parse_value(1114, Some("infinity")), Cell::Number(f64::INFINITY));
+        assert_eq!(
+            parse_value(1114, Some("infinity")),
+            Cell::Number(f64::INFINITY)
+        );
     }
 
     #[test]

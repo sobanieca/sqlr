@@ -177,7 +177,7 @@ fn server_message(body: &str) -> String {
                     name_len > 0 && rest[name_len..].starts_with(')')
                 })
                 .map(|(index, _)| index)
-                .last()?;
+                .next_back()?;
             Some(message[..end].to_string())
         });
     parsed.unwrap_or_else(|| body.trim().to_string())
@@ -283,9 +283,13 @@ mod tests {
         );
         assert_eq!(connection.timeout, Duration::from_millis(10000));
 
-        let connection = Connection::parse("http://localhost/analytics?connectionTimeoutMs=500").unwrap();
+        let connection =
+            Connection::parse("http://localhost/analytics?connectionTimeoutMs=500").unwrap();
         assert_eq!(connection.database, "analytics");
-        assert_eq!(connection.authorization, format!("Basic {}", base64_encode(b"default:")));
+        assert_eq!(
+            connection.authorization,
+            format!("Basic {}", base64_encode(b"default:"))
+        );
         assert_eq!(connection.timeout, Duration::from_millis(500));
     }
 

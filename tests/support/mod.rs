@@ -119,6 +119,7 @@ impl Session {
             }
             _ => String::new(),
         };
+        let command = command.replace(&self.root.display().to_string(), "<tmp>");
         let output = format!(
             "$ {command}{location}\nexit code: {code}\n--- stdout\n{stdout}--- stderr\n{stderr}\n"
         );

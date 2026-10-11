@@ -9,6 +9,7 @@ mkdir -p "$SQLITE_DIR"
 chmod 777 "$SQLITE_DIR"
 
 docker compose -f "$SCRIPT_DIR/docker-compose.yml" up -d --wait
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" up mssql-init sqlite-init > /dev/null
 
 echo ""
 echo "=== Connection strings ==="

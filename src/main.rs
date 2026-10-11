@@ -106,7 +106,10 @@ fn root() -> Command {
 
     let mut describe_options = connection_options();
     describe_options.extend([
-        opt("-f, --filter [filter]", "Filter results by schema/table name"),
+        opt(
+            "-f, --filter [filter]",
+            "Filter results by schema/table name",
+        ),
         opt("--table", "Display results in table"),
         opt("--compact", "Display results in compact form"),
         opt("--tables-only", "List only table names without columns"),
@@ -206,10 +209,7 @@ fn root() -> Command {
             query,
             command("update", "Update sqlr to the latest version"),
             skill,
-            command(
-                "help",
-                "Display detailed help text with usage instructions",
-            ),
+            command("help", "Display detailed help text with usage instructions"),
         ],
         ..command(
             "sqlr",
@@ -251,11 +251,9 @@ fn execute(root: &Command, matches: &Matches) -> Result<(), String> {
         }
         "ls" => commands::ls::execute(is_global),
         "clear" => commands::clear::execute(is_global),
-        "set" => commands::set::execute(
-            connection_name(matches),
-            matches.is_set("name"),
-            is_global,
-        ),
+        "set" => {
+            commands::set::execute(connection_name(matches), matches.is_set("name"), is_global)
+        }
         "set-global" => {
             commands::set_global::execute(matches!(matches.arg(0), Some(Value::Bool(true))))
         }

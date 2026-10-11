@@ -1,15 +1,43 @@
 $ sqlr query --foo
-exit code: 0
+exit code: 2
 --- stdout
-No connections defined. Add new connection first.
+
+Usage:   sqlr query [queryArg]
+Version: *                
+
+Description:
+
+  Run query against specified database
+
+Options:
+
+  -h, --help                                      - Show this help.                                                                                  
+  --debug                                         - Enable debug logs                                                                                
+  -g, --global                                    - Use global scope for connections (ignore git repository                                          
+                                                    scope)                                                                                           
+  -i, --input-variable       <var>                - Input variable in "key: value" format for {{key}}                                                
+                                                    substitution in SQL                                                                              
+  -o, --output-file          [output-file]        - Output file where JSON results will be stored                                                    
+  -n, --name                 [name]               - Name of the connection                                        (Conflicts: --type,                
+                                                                                                                  --connection-string)               
+  -t, --type                 [type]               - Type of the connection                                        (Values: "postgresql", "mysql",    
+                                                                                                                  "mssql", "clickhouse", "sqlite")   
+  -s, --connection-string    [connection-string]  - Connection string                                                                                
+  --table                                         - Display results as table                                      (Conflicts: --compact)             
+  --compact                                       - Display results in compact form                               (Conflicts: --table)               
+  --ignore-input-validation                       - Skip validation for missing input variables, allowing                                            
+                                                    {{handlebars}} syntax to pass through to the database                                            
+
 --- stderr
+  error: Unknown option "--foo". Did you mean option "-o"?
+
 
 $ sqlr query -t oracle -s x "SELECT 1"
 exit code: 2
 --- stdout
 
 Usage:   sqlr query [queryArg]
-Version: *               
+Version: *                
 
 Description:
 
@@ -43,7 +71,7 @@ exit code: 2
 --- stdout
 
 Usage:   sqlr query [queryArg]
-Version: *               
+Version: *                
 
 Description:
 
@@ -77,7 +105,7 @@ exit code: 2
 --- stdout
 
 Usage:   sqlr set-global <enabled>
-Version: *                   
+Version: *                    
 
 Description:
 
@@ -98,7 +126,7 @@ exit code: 2
 --- stdout
 
 Usage:   sqlr set-global <enabled>
-Version: *                   
+Version: *                    
 
 Description:
 

@@ -93,7 +93,9 @@ fn parse_connection_string(connection_string: &str) -> Result<Connection, Error>
         .client_found_rows(true);
     if let Some(ssl) = url.param("ssl") {
         let reject_unauthorized = match json::parse(ssl) {
-            Ok(json::Value::Object(options)) => options.get("rejectUnauthorized") != Some(&json::Value::Bool(false)),
+            Ok(json::Value::Object(options)) => {
+                options.get("rejectUnauthorized") != Some(&json::Value::Bool(false))
+            }
             _ => true,
         };
         let ssl_opts = SslOpts::default()
@@ -278,7 +280,10 @@ fn parse_date_time(text: &str) -> f64 {
 
 fn get_tables(connection_string: &str) -> Result<Vec<Table>, Error> {
     let connection = parse_connection_string(connection_string)?;
-    let database = connection.database.replace('\\', "\\\\").replace('\'', "\\'");
+    let database = connection
+        .database
+        .replace('\\', "\\\\")
+        .replace('\'', "\\'");
     block_on(async {
         let mut conn = connect(&connection).await?;
         let mut fetch = async |sql: String| -> Result<Vec<Vec<(String, String)>>, Error> {
@@ -379,14 +384,21 @@ mod tests {
             Cell::String("828.00".into())
         );
         assert_eq!(
-            parse_value(ColumnType::MYSQL_TYPE_VAR_STRING, BINARY_CHARSET, Some(&[1, 2, 255])),
+            parse_value(
+                ColumnType::MYSQL_TYPE_VAR_STRING,
+                BINARY_CHARSET,
+                Some(&[1, 2, 255])
+            ),
             Cell::Buffer(vec![1, 2, 255])
         );
         assert_eq!(
             parse_value(ColumnType::MYSQL_TYPE_VAR_STRING, utf8, Some(b"txt")),
             Cell::String("txt".into())
         );
-        assert_eq!(parse_value(ColumnType::MYSQL_TYPE_LONG, utf8, None), Cell::Null);
+        assert_eq!(
+            parse_value(ColumnType::MYSQL_TYPE_LONG, utf8, None),
+            Cell::Null
+        );
         assert!(matches!(
             parse_value(ColumnType::MYSQL_TYPE_DATE, utf8, Some(b"0000-00-00")),
             Cell::Date(ms) if ms.is_nan()
@@ -415,6 +427,9 @@ mod tests {
         let opts = mysql_async::Opts::from(connection.opts);
         assert_eq!(opts.user(), Some("u"));
         assert_eq!(opts.pass(), Some("p@ss"));
-        assert!(opts.ssl_opts().is_some_and(|ssl| ssl.accept_invalid_certs()));
+        assert!(
+            opts.ssl_opts()
+                .is_some_and(|ssl| ssl.accept_invalid_certs())
+        );
     }
 }

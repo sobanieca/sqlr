@@ -15,7 +15,10 @@ pub fn execute() {
         .collect();
     logger::info(
         Table::new()
-            .header(vec!["Type".to_string(), "Connection string hint".to_string()])
+            .header(vec![
+                "Type".to_string(),
+                "Connection string hint".to_string(),
+            ])
             .body(rows)
             .max_col_width(MAX_TABLE_COLUMN_WIDTH)
             .padding(1)

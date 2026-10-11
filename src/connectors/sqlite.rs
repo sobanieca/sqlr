@@ -161,7 +161,11 @@ mod tests {
         let path = std::env::temp_dir().join(format!("sqlr-sqlite-{}.db", std::process::id()));
         let _ = std::fs::remove_file(&path);
         let cs = path.to_str().unwrap();
-        let created = query(cs, "CREATE TABLE t (id INTEGER, b BLOB); INSERT INTO t VALUES (1, x'01'), (2, NULL)").unwrap();
+        let created = query(
+            cs,
+            "CREATE TABLE t (id INTEGER, b BLOB); INSERT INTO t VALUES (1, x'01'), (2, NULL)",
+        )
+        .unwrap();
         assert_eq!(created.rows_affected, Cell::Number(2.0));
         let updated = query(cs, "UPDATE t SET id = id + 1").unwrap();
         assert_eq!(updated.rows_affected, Cell::Number(2.0));

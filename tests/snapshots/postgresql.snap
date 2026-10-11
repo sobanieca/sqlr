@@ -67,7 +67,7 @@ Rows affected: 1
 [ { test: 1 } ]
 --- stderr
 
-$ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT 1 as test" -o /tmp/sqlr-test-postgresql-2448136-3/output-postgresql.json
+$ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT 1 as test" -o <tmp>/output-postgresql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -217,7 +217,7 @@ public.country_language
 --- stderr
 
 $ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" test-query-handlebars.sql
-exit code: 0
+exit code: 1
 --- stdout
 Missing input variables: template. Use -i "name: value" to provide them.
 --- stderr
@@ -234,7 +234,7 @@ Rows affected: 1
 --- stderr
 
 $ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "INVALID SQL QUERY"
-exit code: 0
+exit code: 1
 --- stdout
 error: syntax error at or near "INVALID"
 --- stderr
@@ -304,7 +304,7 @@ Rows affected: 1
   └────┴────┴──────────────────┴─────┴──────┴────────┴──────┴─────┴─────┴────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────┴──────────┴─────────────┴─────────────────┴─────────────────┴────┴───────┴──────┴─────────┴──────────────────────────────────────┴─────────────────┴───┴─────────────┴────────┴───────────────┴───┴─────┴──────────┴───────┴─────┴───────┘
 --- stderr
 
-$ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT 1::int2 AS i2, 2::int4 AS i4, 9007199254740993::int8 AS i8, 1.5::float4 AS f4, 2.25::float8 AS f8, 12.345::numeric AS num, true AS b, 'txt'::text AS t, 'ab'::char(3) AS bp, 'vc'::varchar AS vc, '2024-01-02'::date AS d, '2024-01-02 03:04:05.678'::timestamp AS ts, '2024-01-02 03:04:05.678+02'::timestamptz AS tstz, '03:04:05'::time AS tm, '03:04:05+02'::timetz AS tmtz, '{\"a\":1,\"b\":[1,2]}'::json AS j, '{\"a\":1}'::jsonb AS jb, '\\x0102ff'::bytea AS by, ARRAY[1,2,3] AS arr, ARRAY['a','b'] AS tarr, ARRAY[1.5,2.5]::float8[] AS farr, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'::uuid AS u, '1 day 02:03:04'::interval AS iv, NULL AS n, '192.168.0.1'::inet AS ip, 12.5::money AS m, continent AS en, 1::oid AS o, 'NaN'::float8 AS nan, 'Infinity'::float8 AS inf, '1e21'::float8 AS big, 0.1::float4 AS f4b, 'a\"b''c' AS q FROM country ORDER BY code LIMIT 1" -o /tmp/sqlr-test-postgresql-2448136-3/output-postgresql.json
+$ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" "SELECT 1::int2 AS i2, 2::int4 AS i4, 9007199254740993::int8 AS i8, 1.5::float4 AS f4, 2.25::float8 AS f8, 12.345::numeric AS num, true AS b, 'txt'::text AS t, 'ab'::char(3) AS bp, 'vc'::varchar AS vc, '2024-01-02'::date AS d, '2024-01-02 03:04:05.678'::timestamp AS ts, '2024-01-02 03:04:05.678+02'::timestamptz AS tstz, '03:04:05'::time AS tm, '03:04:05+02'::timetz AS tmtz, '{\"a\":1,\"b\":[1,2]}'::json AS j, '{\"a\":1}'::jsonb AS jb, '\\x0102ff'::bytea AS by, ARRAY[1,2,3] AS arr, ARRAY['a','b'] AS tarr, ARRAY[1.5,2.5]::float8[] AS farr, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'::uuid AS u, '1 day 02:03:04'::interval AS iv, NULL AS n, '192.168.0.1'::inet AS ip, 12.5::money AS m, continent AS en, 1::oid AS o, 'NaN'::float8 AS nan, 'Infinity'::float8 AS inf, '1e21'::float8 AS big, 0.1::float4 AS f4b, 'a\"b''c' AS q FROM country ORDER BY code LIMIT 1" -o <tmp>/output-postgresql.json
 exit code: 0
 --- stdout
 Query executed in: *ms
@@ -402,8 +402,8 @@ Rows affected: null
 --- stderr
 
 $ sqlr query -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=wrong" "SELECT 1"
-exit code: 0
+exit code: 1
 --- stdout
-Error occurred when executing query against database. Ensure that query or connection string is valid. Only simple queries are supported. Use --debug option for details.
+error: password authentication failed for user "world"
 --- stderr
 

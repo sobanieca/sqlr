@@ -31,7 +31,10 @@ fn database_scenario(s: &mut Session, db: &str, cs: &str, limit_query: &str, typ
         &[],
     );
     s.run(&q(&format!(r#""SELECT 1 as test" -o {output}"#)));
-    s.note("output file", &std::fs::read_to_string(s.path().join(format!("output-{db}.json"))).unwrap_or_default());
+    s.note(
+        "output file",
+        &std::fs::read_to_string(s.path().join(format!("output-{db}.json"))).unwrap_or_default(),
+    );
     s.run(&d(r#"-f "country""#));
     s.run(&d(r#"-f "country" --table"#));
     s.run(&d(r#"-f "country" --compact"#));
@@ -48,7 +51,10 @@ fn database_scenario(s: &mut Session, db: &str, cs: &str, limit_query: &str, typ
     s.run(&q(&format!(r#""{types}" --compact"#)));
     s.run(&q(&format!(r#""{types}" --table"#)));
     s.run(&q(&format!(r#""{types}" -o {output}"#)));
-    s.note("output file", &std::fs::read_to_string(s.path().join(format!("output-{db}.json"))).unwrap_or_default());
+    s.note(
+        "output file",
+        &std::fs::read_to_string(s.path().join(format!("output-{db}.json"))).unwrap_or_default(),
+    );
 }
 
 #[test]
@@ -163,8 +169,10 @@ fn sqlite() {
 #[ignore = "requires test databases"]
 fn stored_connection() {
     let mut s = Session::new("stored");
-    s.run(&format!(r#"sqlr add -n world -t postgresql -s "{POSTGRES}" -c blue -e "📦""#));
-    s.run(r#"sqlr "SELECT 1 AS test""#);
+    s.run(&format!(
+        r#"sqlr add -n world -t postgresql -s "{POSTGRES}" -c blue -e "📦""#
+    ));
+    s.run("sqlr ls");
     s.run("sqlr set world");
     s.run(r#"sqlr "SELECT 1 AS test""#);
     s.run(r#"sqlr describe --tables-only -f city"#);

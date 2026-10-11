@@ -199,12 +199,13 @@ pub fn run(root: &Command, version: &str, args: &[String]) -> Outcome {
     while let Some(arg) = rest.next() {
         let command = path.last().copied().unwrap_or(root);
         if literal || !is_option(arg) {
-            if !literal && positional.is_empty() && !command.commands.is_empty() {
-                if let Some(sub) = command.commands.iter().find(|c| c.name == arg) {
-                    path.push(sub);
-                    matches.command.push(sub.name.to_string());
-                    continue;
-                }
+            if !literal
+                && positional.is_empty()
+                && let Some(sub) = command.commands.iter().find(|c| c.name == arg)
+            {
+                path.push(sub);
+                matches.command.push(sub.name.to_string());
+                continue;
             }
             positional.push(arg.clone());
             continue;
@@ -219,7 +220,9 @@ pub fn run(root: &Command, version: &str, args: &[String]) -> Outcome {
             Some((name, value)) => (name, Some(value.to_string())),
             None => (arg.as_str(), None),
         };
-        let found = specs.iter().find(|spec| spec.names().iter().any(|n| n == name));
+        let found = specs
+            .iter()
+            .find(|spec| spec.names().iter().any(|n| n == name));
         let Some(spec) = found else {
             let names: Vec<String> = specs.iter().flat_map(Spec::names).collect();
             return fail(
@@ -242,11 +245,7 @@ pub fn run(root: &Command, version: &str, args: &[String]) -> Outcome {
                 if spec.short.as_deref() == Some(name.trim_start_matches('-')) {
                     logger::print_line(version);
                 } else {
-                    logger::print_line(&format!(
-                        "{} {}",
-                        bold(root.name),
-                        bright_blue(version)
-                    ));
+                    logger::print_line(&format!("{} {}", bold(root.name), bright_blue(version)));
                 }
                 return Outcome::Exit(0);
             }
@@ -268,7 +267,9 @@ pub fn run(root: &Command, version: &str, args: &[String]) -> Outcome {
             (Arity::Flag, None) => Value::Bool(true),
             (_, Some(value)) => Value::String(value),
             (arity, None) => match rest.peek() {
-                Some(next) if !is_option(next) => Value::String(rest.next().cloned().unwrap_or_default()),
+                Some(next) if !is_option(next) => {
+                    Value::String(rest.next().cloned().unwrap_or_default())
+                }
                 _ if arity == Arity::Optional => Value::Bool(true),
                 _ => {
                     return fail(
@@ -299,7 +300,11 @@ pub fn run(root: &Command, version: &str, args: &[String]) -> Outcome {
         }
 
         let collect = spec.opt.is_some_and(|opt| opt.collect);
-        match matches.options.iter_mut().find(|(key, _)| *key == spec.long) {
+        match matches
+            .options
+            .iter_mut()
+            .find(|(key, _)| *key == spec.long)
+        {
             Some((_, Value::List(values))) if collect => {
                 if let Value::String(value) = value {
                     values.push(value);
@@ -460,7 +465,11 @@ fn levenshtein(a: &str, b: &str) -> usize {
         let mut current = vec![i + 1];
         for (j, cb) in b.iter().enumerate() {
             let cost = usize::from(ca != *cb);
-            current.push((previous[j] + cost).min(previous[j + 1] + 1).min(current[j] + 1));
+            current.push(
+                (previous[j] + cost)
+                    .min(previous[j + 1] + 1)
+                    .min(current[j] + 1),
+            );
         }
         previous = current;
     }
@@ -574,9 +583,13 @@ fn help_for(root: &Command, version: &str, path: &[&Command]) -> String {
             .indent(INDENT)
             .max_width(width - INDENT);
         let table = if has_types {
-            table.padding_each(&[2, 2, 1, 2]).flex_shrink_each(&[0.0, 0.0, 0.0, 1.0, 1.0])
+            table
+                .padding_each(&[2, 2, 1, 2])
+                .flex_shrink_each(&[0.0, 0.0, 0.0, 1.0, 1.0])
         } else {
-            table.padding_each(&[2, 1, 2]).flex_shrink_each(&[0.0, 0.0, 1.0, 1.0])
+            table
+                .padding_each(&[2, 1, 2])
+                .flex_shrink_each(&[0.0, 0.0, 1.0, 1.0])
         };
         out.push_str(&table.to_string());
         out.push('\n');
@@ -594,7 +607,13 @@ fn help_for(root: &Command, version: &str, path: &[&Command]) -> String {
                     row.push(highlight_arguments(sub.arguments));
                 }
                 row.push(red(&bold("-")));
-                row.push(sub.description.lines().next().unwrap_or_default().to_string());
+                row.push(
+                    sub.description
+                        .lines()
+                        .next()
+                        .unwrap_or_default()
+                        .to_string(),
+                );
                 row
             })
             .collect();
@@ -602,9 +621,13 @@ fn help_for(root: &Command, version: &str, path: &[&Command]) -> String {
             .indent(INDENT)
             .max_width(width - INDENT);
         let table = if has_arguments {
-            table.padding_each(&[2, 2, 1, 2]).flex_shrink_each(&[0.0, 0.0, 0.0, 1.0])
+            table
+                .padding_each(&[2, 2, 1, 2])
+                .flex_shrink_each(&[0.0, 0.0, 0.0, 1.0])
         } else {
-            table.padding_each(&[2, 1, 2]).flex_shrink_each(&[0.0, 0.0, 1.0])
+            table
+                .padding_each(&[2, 1, 2])
+                .flex_shrink_each(&[0.0, 0.0, 1.0])
         };
         out.push_str(&table.to_string());
         out.push('\n');
@@ -643,7 +666,11 @@ fn option_hints(spec: &Spec) -> String {
             .map(|name| flag(name))
             .collect::<Vec<_>>()
             .join(", ");
-        hints.push(format!("{}{}", red(&bold("Conflicts: ")), italic(&conflicts)));
+        hints.push(format!(
+            "{}{}",
+            red(&bold("Conflicts: ")),
+            italic(&conflicts)
+        ));
     }
     if let Some(values) = &opt.values {
         let values = values
@@ -756,7 +783,16 @@ mod tests {
 
     #[test]
     fn parses_options_and_arguments() {
-        let matches = parse(&["-g", "query", "-i", "a: 1", "--input-variable=b: 2", "-n", "SELECT 1"]).unwrap();
+        let matches = parse(&[
+            "-g",
+            "query",
+            "-i",
+            "a: 1",
+            "--input-variable=b: 2",
+            "-n",
+            "SELECT 1",
+        ])
+        .unwrap();
         assert_eq!(matches.command, ["query"]);
         assert!(matches.flag("global"));
         assert_eq!(matches.list("input-variable"), ["a: 1", "b: 2"]);

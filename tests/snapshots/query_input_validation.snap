@@ -1,11 +1,11 @@
 $ sqlr query -t sqlite -s /nonexistent/db.sqlite test-query-vars.sql -i "col: 1"
-exit code: 0
+exit code: 1
 --- stdout
 Missing input variables: alias. Use -i "name: value" to provide them.
 --- stderr
 
 $ sqlr query -t sqlite -s /nonexistent/db.sqlite test-query-vars.sql -i "col"
-exit code: 0
+exit code: 1
 --- stdout
 Invalid input variable format: "col". Expected "key: value".
 --- stderr
@@ -14,7 +14,7 @@ $ sqlr -t sqlite -s /nonexistent/db.sqlite
 exit code: 2
 --- stdout
 
-Usage:   sqlr  
+Usage:   sqlr 
 Version: *
 
 Description:
@@ -52,7 +52,7 @@ Commands:
 
 
 $ sqlr query
-exit code: 0
+exit code: 1
 --- stdout
 No connections defined. Add new connection first.
 --- stderr

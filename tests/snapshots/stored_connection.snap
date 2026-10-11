@@ -1,0 +1,95 @@
+$ sqlr add -n world -t postgresql -s "postgres://localhost:5432/world-db?user=world&password=world123&application_name=sqlr" -c blue -e "📦"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr ls
+exit code: 0
+--- stdout
+  ┌──────────┬────────────┐
+  │ Name     │ Type       │
+  ├──────────┼────────────┤
+  │ 📦 world │ postgresql │
+  └──────────┴────────────┘
+--- stderr
+
+$ sqlr set world
+exit code: 0
+--- stdout
+Default connection set to world
+--- stderr
+
+$ sqlr "SELECT 1 AS test"
+exit code: 0
+--- stdout
+Using connection: 📦 world
+Query executed in: *ms
+Rows affected: 1
+[ { test: 1 } ]
+--- stderr
+
+$ sqlr describe --tables-only -f city
+exit code: 0
+--- stdout
+Using connection: 📦 world
+Database schema:
+public.city
+--- stderr
+
+$ sqlr query -n world "SELECT 2 AS test"
+exit code: 0
+--- stdout
+Using connection: 📦 world
+Query executed in: *ms
+Rows affected: 1
+[ { test: 2 } ]
+--- stderr
+
+$ sqlr add -n secure -t sqlite -s "/tmp/sqlr-sqlite/world.db"
+exit code: 0
+--- stdout
+Connection has been added
+--- stderr
+
+$ sqlr -n secure "SELECT count(*) AS n FROM country"
+exit code: 2
+--- stdout
+
+Usage:   sqlr 
+Version: *
+
+Description:
+
+  Command line for interacting with SQL databases. Use '--help' for each command to list it's parameters.
+                                                                                                         
+  For detailed usage instructions, workflows and guidance run 'sqlr help'.                               
+  AI agents: run 'sqlr help' first — it contains step-by-step instructions for operating sqlr.           
+
+Options:
+
+  -h, --help     - Show this help.                                                 
+  -V, --version  - Show the version number for this program.                       
+  --debug        - Enable debug logs                                               
+  -g, --global   - Use global scope for connections (ignore git repository scope)  
+
+Commands:
+
+  add                       - Add new connection. Run without parameters to use wizard.                            
+  rm          [connection]  - Remove selected connection                                                           
+  get         [connection]  - Get details of selected connection                                                   
+  ls-types                  - Get available connection types to be used with '--type' parameter in 'add' command   
+  ls                        - List all defined connections                                                         
+  clear                     - Remove all connections                                                               
+  set         [connection]  - Set default connection for current scope                                             
+  set-global  <enabled>     - Toggle global mode (true = ignore git repository scope, false = use repository scope)
+  describe                  - Describe all tables and columns available in database                                
+  query       [queryArg]    - Run query against specified database                                                 
+  update                    - Update sqlr to the latest version                                                    
+  skill                     - Print instructions for AI agents. Use --init to create a skill (/sqlr)               
+  help                      - Display detailed help text with usage instructions                                   
+
+--- stderr
+  error: Unknown option "-n". Did you mean option "-h"?
+
+

@@ -24,7 +24,7 @@ Connection scoping:
 Commands:
 
   help                  Display this help text
-  version               Display version info
+  -V, --version         Display version info
   add                   Add new connection. Run without parameters to use interactive wizard.
                         Usage: sqlr add [-n name] [-t type] [-s connection-string] [-g]
 
@@ -102,8 +102,17 @@ Commands:
                           --compact                Display results in compact CSV-like form
                           --ignore-input-validation  Skip validation for missing input variables
 
-  update                Display instructions for updating sqlr to the latest version.
-                        Usage: sqlr update [--deno]
+  update                Update sqlr to the latest version: downloads the latest release
+                        and replaces the sqlr binary.
+                        Usage: sqlr update
+
+                        If sqlr is installed in a system directory, run it with
+                        elevated permissions:
+                               sudo sqlr update
+
+                        sqlr checks for a new version once a day and prints a notice
+                        when one is available. Set SQLR_NO_UPDATE_CHECK=1 to disable
+                        the check.
 
   skill                 Print instructions for AI agents (this help text with an agent preamble).
                         Usage: sqlr skill
@@ -180,6 +189,11 @@ Environment variables:
                             When set during 'get', 'describe', or 'query',
                             encrypted connections will be decrypted without prompting.
                             This enables non-interactive usage by AI agents and scripts.
+
+  SQLR_NO_UPDATE_CHECK      Set to 1 to disable the daily check for new versions.
+
+  XDG_CONFIG_HOME           Connections are stored in $XDG_CONFIG_HOME/sqlr
+                            (default: ~/.config/sqlr).
 
 Global options:
 
@@ -232,7 +246,7 @@ Connection scoping:
 Commands:
 
   help                  Display this help text
-  version               Display version info
+  -V, --version         Display version info
   add                   Add new connection. Run without parameters to use interactive wizard.
                         Usage: sqlr add [-n name] [-t type] [-s connection-string] [-g]
 
@@ -310,8 +324,17 @@ Commands:
                           --compact                Display results in compact CSV-like form
                           --ignore-input-validation  Skip validation for missing input variables
 
-  update                Display instructions for updating sqlr to the latest version.
-                        Usage: sqlr update [--deno]
+  update                Update sqlr to the latest version: downloads the latest release
+                        and replaces the sqlr binary.
+                        Usage: sqlr update
+
+                        If sqlr is installed in a system directory, run it with
+                        elevated permissions:
+                               sudo sqlr update
+
+                        sqlr checks for a new version once a day and prints a notice
+                        when one is available. Set SQLR_NO_UPDATE_CHECK=1 to disable
+                        the check.
 
   skill                 Print instructions for AI agents (this help text with an agent preamble).
                         Usage: sqlr skill
@@ -388,6 +411,11 @@ Environment variables:
                             When set during 'get', 'describe', or 'query',
                             encrypted connections will be decrypted without prompting.
                             This enables non-interactive usage by AI agents and scripts.
+
+  SQLR_NO_UPDATE_CHECK      Set to 1 to disable the daily check for new versions.
+
+  XDG_CONFIG_HOME           Connections are stored in $XDG_CONFIG_HOME/sqlr
+                            (default: ~/.config/sqlr).
 
 Global options:
 

@@ -52,7 +52,11 @@ pub fn exists(storage: &Storage, name: &str, is_global: bool) -> bool {
 }
 
 pub fn save(storage: &mut Storage, connection: &Connection, is_global: bool) -> Result<(), String> {
-    let key = format!("{}{}", scope::scope_prefix(storage, is_global), connection.name);
+    let key = format!(
+        "{}{}",
+        scope::scope_prefix(storage, is_global),
+        connection.name
+    );
     storage.set(&key, connection.to_value())
 }
 
@@ -66,14 +70,16 @@ pub fn clear(storage: &mut Storage, is_global: bool) -> Result<(), String> {
     storage.remove_where(|key| key.starts_with(&prefix))
 }
 
-/// Connections in the effective scope, in the order they were added.
+/// Connections in the effective scope, sorted by name.
 pub fn all(storage: &Storage, is_global: bool) -> Vec<Connection> {
     let prefix = scope::scope_prefix(storage, is_global);
-    storage
+    let mut connections: Vec<Connection> = storage
         .keys()
         .filter(|key| key.starts_with(&prefix))
         .filter_map(|key| storage.get(key).and_then(Connection::from_value))
-        .collect()
+        .collect();
+    connections.sort_by(|a, b| a.name.cmp(&b.name));
+    connections
 }
 
 /// Reads a connection and decrypts its connection string, asking for the
@@ -87,8 +93,7 @@ pub fn get(storage: &Storage, name: &str, is_global: bool) -> Result<Connection,
     };
     let mut connection = Connection::from_value(value).ok_or_else(|| {
         logger::debug(format!("Error when reading connection {name}"));
-        "Unknown error occured when reading connection. Enable debug mode for details."
-            .to_string()
+        "Unknown error occured when reading connection. Enable debug mode for details.".to_string()
     })?;
 
     if connection.is_encrypted {
@@ -131,16 +136,56 @@ pub struct Color {
 }
 
 pub const COLORS: [Color; 10] = [
-    Color { name: "Red", value: "red", rgb: 0xff0000 },
-    Color { name: "Dark Red", value: "dark-red", rgb: 0x8b0000 },
-    Color { name: "Yellow", value: "yellow", rgb: 0xffd700 },
-    Color { name: "Dark Yellow", value: "dark-yellow", rgb: 0xb8860b },
-    Color { name: "Gray", value: "gray", rgb: 0xa9a9a9 },
-    Color { name: "Dark Gray", value: "dark-gray", rgb: 0x696969 },
-    Color { name: "Blue", value: "blue", rgb: 0x5b9bd5 },
-    Color { name: "Dark Blue", value: "dark-blue", rgb: 0x00008b },
-    Color { name: "Orange", value: "orange", rgb: 0xff8c00 },
-    Color { name: "Dark Orange", value: "dark-orange", rgb: 0xd2691e },
+    Color {
+        name: "Red",
+        value: "red",
+        rgb: 0xff0000,
+    },
+    Color {
+        name: "Dark Red",
+        value: "dark-red",
+        rgb: 0x8b0000,
+    },
+    Color {
+        name: "Yellow",
+        value: "yellow",
+        rgb: 0xffd700,
+    },
+    Color {
+        name: "Dark Yellow",
+        value: "dark-yellow",
+        rgb: 0xb8860b,
+    },
+    Color {
+        name: "Gray",
+        value: "gray",
+        rgb: 0xa9a9a9,
+    },
+    Color {
+        name: "Dark Gray",
+        value: "dark-gray",
+        rgb: 0x696969,
+    },
+    Color {
+        name: "Blue",
+        value: "blue",
+        rgb: 0x5b9bd5,
+    },
+    Color {
+        name: "Dark Blue",
+        value: "dark-blue",
+        rgb: 0x00008b,
+    },
+    Color {
+        name: "Orange",
+        value: "orange",
+        rgb: 0xff8c00,
+    },
+    Color {
+        name: "Dark Orange",
+        value: "dark-orange",
+        rgb: 0xd2691e,
+    },
 ];
 
 const EMOJIS: [(&str, &str); 10] = [
@@ -169,7 +214,11 @@ pub fn prompt_color() -> Result<String, String> {
     let options: Vec<(String, String)> = std::iter::once(("None".to_string(), "none".to_string()))
         .chain(COLORS.iter().map(|color| {
             (
-                format!("{} {}", colors::rgb24("\u{2588}\u{2588}", color.rgb), color.name),
+                format!(
+                    "{} {}",
+                    colors::rgb24("\u{2588}\u{2588}", color.rgb),
+                    color.name
+                ),
                 color.value.to_string(),
             )
         }))

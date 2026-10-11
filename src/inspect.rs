@@ -14,9 +14,7 @@ pub enum Node {
     Null,
     Bool(bool),
     Number(f64),
-    BigInt(String),
     String(String),
-    Symbol(String),
     Array(Vec<Node>),
     /// Array-like value with a prefix, e.g. `Uint8Array(3) [ 1, 2, 3 ]`.
     TypedArray(String, Vec<Node>),
@@ -24,8 +22,6 @@ pub enum Node {
         class: Option<String>,
         entries: Vec<(String, Node)>,
     },
-    /// Preformatted text styled as "special" (e.g. `[Function: foo]`).
-    Special(String),
     /// Preformatted text styled as a date.
     Date(String),
     /// Preformatted text without styling (e.g. error stacks).
@@ -69,16 +65,6 @@ impl Options {
             str_abbreviate_size: 256000,
         }
     }
-
-    /// Defaults of `console.log`.
-    pub fn console(colors: bool) -> Self {
-        Options {
-            colors,
-            depth: 4,
-            iterable_limit: 100,
-            str_abbreviate_size: 10000,
-        }
-    }
 }
 
 pub fn inspect(node: &Node, options: Options) -> String {
@@ -90,6 +76,7 @@ pub fn inspect(node: &Node, options: Options) -> String {
     ctx.format_value(node, 0)
 }
 
+#[cfg(test)]
 pub fn inspect_value(value: &Value, options: Options) -> String {
     inspect(&Node::from(value), options)
 }
@@ -135,10 +122,7 @@ impl Ctx {
             Node::Null => self.stylize("null", Style::Null),
             Node::Bool(b) => self.stylize(if *b { "true" } else { "false" }, Style::Number),
             Node::Number(n) => self.stylize(&number_display(*n), Style::Number),
-            Node::BigInt(n) => self.stylize(&format!("{n}n"), Style::Number),
             Node::String(s) => self.format_string(s),
-            Node::Symbol(s) => self.stylize(s, Style::String),
-            Node::Special(s) => self.stylize(s, Style::Special),
             Node::Date(s) => self.stylize(s, Style::Date),
             Node::Raw(s) => s.clone(),
             Node::Array(_) | Node::TypedArray(..) | Node::Object { .. } => {
@@ -210,7 +194,9 @@ impl Ctx {
                     class: Some(class), ..
                 } => format!("[{class}]"),
                 Node::Object { .. } => "[Object]".to_string(),
-                Node::TypedArray(name, _) => format!("[{}]", name.split('(').next().unwrap_or(name)),
+                Node::TypedArray(name, _) => {
+                    format!("[{}]", name.split('(').next().unwrap_or(name))
+                }
                 _ => "[Array]".to_string(),
             };
             return self.stylize(&name, Style::Special);
@@ -254,7 +240,7 @@ impl Ctx {
                 items
                     .iter()
                     .take(output.len())
-                    .all(|item| matches!(item, Node::Number(_) | Node::BigInt(_))),
+                    .all(|item| matches!(item, Node::Number(_))),
             ),
             _ => None,
         };

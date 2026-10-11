@@ -158,7 +158,10 @@ fn install(temp: &Path, exe: &Path, binary: &[u8], version: &str) -> Result<(), 
         .output()
         .map_err(|err| format!("Downloaded binary could not be started: {err}"))?;
     let reported = colors::strip_ansi(String::from_utf8_lossy(&output.stdout).trim());
-    let reported = reported.strip_prefix("sqlr ").unwrap_or(&reported).to_string();
+    let reported = reported
+        .strip_prefix("sqlr ")
+        .unwrap_or(&reported)
+        .to_string();
     if reported != version {
         return Err(format!(
             "Downloaded binary reports version '{reported}' instead of '{version}', update aborted"

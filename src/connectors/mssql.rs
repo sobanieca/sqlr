@@ -6,7 +6,7 @@ use super::{
     Column, Connector, DEFAULT_CONNECTION_TIMEOUT_MS, Error, QueryResult, Table, block_on,
     prompt_or, prompt_timeout, timeout_ms,
 };
-use crate::date::{DateTime, days_from_civil};
+use crate::date::days_from_civil;
 use crate::prompt;
 use crate::url::{Url, encode_uri_component};
 use crate::value::{Cell, Row};
@@ -51,7 +51,10 @@ fn prompt_connection_string() -> Result<String, String> {
     let database = prompt::input("Database name")?;
     let user = prompt::input("Username")?;
     let password = encode_uri_component(&prompt::secret("Password")?);
-    let encrypt = prompt::select("Encrypt connection (default: true)", &boolean_options("true"))?;
+    let encrypt = prompt::select(
+        "Encrypt connection (default: true)",
+        &boolean_options("true"),
+    )?;
     let trust = prompt::select(
         "Trust server certificate (default: false)",
         &boolean_options("false"),
@@ -138,12 +141,14 @@ async fn execute(
         }
         Ok((sets, result.rows_affected().to_vec()))
     };
-    tokio::time::timeout(timeout, run).await.unwrap_or_else(|_| {
-        Err(Error::Other(format!(
-            "Timeout: Request failed to complete in {}ms",
-            timeout.as_millis()
-        )))
-    })
+    tokio::time::timeout(timeout, run)
+        .await
+        .unwrap_or_else(|_| {
+            Err(Error::Other(format!(
+                "Timeout: Request failed to complete in {}ms",
+                timeout.as_millis()
+            )))
+        })
 }
 
 fn query(connection_string: &str, sql: &str) -> Result<QueryResult, Error> {
@@ -194,9 +199,7 @@ fn cell(value: ColumnData<'static>) -> Cell {
         ColumnData::F64(v) => v.map_or(Cell::Null, Cell::Number),
         ColumnData::Bit(v) => v.map_or(Cell::Null, Cell::Bool),
         ColumnData::String(v) => v.map_or(Cell::Null, |v| Cell::String(v.into_owned())),
-        ColumnData::Guid(v) => v.map_or(Cell::Null, |v| {
-            Cell::String(v.to_string().to_uppercase())
-        }),
+        ColumnData::Guid(v) => v.map_or(Cell::Null, |v| Cell::String(v.to_string().to_uppercase())),
         ColumnData::Binary(v) => v.map_or(Cell::Null, |v| Cell::Buffer(v.into_owned())),
         ColumnData::Numeric(v) => v.map_or(Cell::Null, |v| {
             Cell::Number(v.value() as f64 / 10f64.powi(i32::from(v.scale())))
@@ -308,18 +311,26 @@ mod tests {
             panic!()
         };
         assert_eq!(to_iso_string(ms).unwrap(), "1970-01-01T03:04:05.678Z");
-        let datetime = tiberius::time::DateTime::new(45291, 3 * 3600 * 300 + 4 * 60 * 300 + 5 * 300 + 203);
+        let datetime =
+            tiberius::time::DateTime::new(45291, 3 * 3600 * 300 + 4 * 60 * 300 + 5 * 300 + 203);
         let Cell::Date(ms) = cell(ColumnData::DateTime(Some(datetime))) else {
             panic!()
         };
         assert_eq!(to_iso_string(ms).unwrap(), "2024-01-02T03:04:05.677Z");
-        assert_eq!(DateTime::date(1970, 1, 1).to_utc_ms(), 0.0);
     }
 
     #[test]
     fn converts_numbers_like_tedious() {
-        assert_eq!(cell(ColumnData::I64(Some(9007199254740993))), Cell::String("9007199254740993".into()));
-        assert_eq!(cell(ColumnData::Numeric(Some(tiberius::numeric::Numeric::new_with_scale(12345, 3)))), Cell::Number(12.345));
+        assert_eq!(
+            cell(ColumnData::I64(Some(9007199254740993))),
+            Cell::String("9007199254740993".into())
+        );
+        assert_eq!(
+            cell(ColumnData::Numeric(Some(
+                tiberius::numeric::Numeric::new_with_scale(12345, 3)
+            ))),
+            Cell::Number(12.345)
+        );
         assert_eq!(cell(ColumnData::I32(None)), Cell::Null);
     }
 

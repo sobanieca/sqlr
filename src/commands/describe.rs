@@ -49,7 +49,9 @@ pub fn execute(options: Options) -> Result<(), String> {
         "Error occurred when executing query against database. Ensure connection string is valid. Use --debug option for details.".to_string()
     })?;
 
-    tables.sort_by(|a, b| locale_compare(&a.schema, &b.schema).then(locale_compare(&a.name, &b.name)));
+    tables.sort_by(|a, b| {
+        locale_compare(&a.schema, &b.schema).then(locale_compare(&a.name, &b.name))
+    });
     if let Some(filter) = &options.filter {
         tables.retain(|table| format!("{}.{}", table.schema, table.name).contains(filter.as_str()));
     }
@@ -65,10 +67,13 @@ pub fn execute(options: Options) -> Result<(), String> {
         show_tables(&tables);
     } else {
         let nodes = Node::Array(tables.iter().map(table_node).collect());
-        logger::info(inspect::inspect(&nodes, inspect::Options {
+        logger::info(inspect::inspect(
+            &nodes,
+            inspect::Options {
                 colors: colors::enabled(),
                 ..inspect::Options::verbose()
-            }));
+            },
+        ));
     }
     Ok(())
 }
@@ -189,15 +194,41 @@ mod tests {
     #[test]
     fn sorts_like_locale_compare() {
         let mut names = vec![
-            "country_language", "City", "country", "_tmp", "2fa", "city", "countryflag", "a-b",
-            "a_b", "ab", "A", "a", "b1", "b10", "b2",
+            "country_language",
+            "City",
+            "country",
+            "_tmp",
+            "2fa",
+            "city",
+            "countryflag",
+            "a-b",
+            "a_b",
+            "ab",
+            "A",
+            "a",
+            "b1",
+            "b10",
+            "b2",
         ];
         names.sort_by(|a, b| locale_compare(a, b));
         assert_eq!(
             names,
             [
-                "_tmp", "2fa", "a", "A", "a_b", "a-b", "ab", "b1", "b10", "b2", "city", "City",
-                "country", "country_language", "countryflag"
+                "_tmp",
+                "2fa",
+                "a",
+                "A",
+                "a_b",
+                "a-b",
+                "ab",
+                "b1",
+                "b10",
+                "b2",
+                "city",
+                "City",
+                "country",
+                "country_language",
+                "countryflag"
             ]
         );
     }

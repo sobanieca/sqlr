@@ -79,9 +79,7 @@ pub fn set_default_connection(
 }
 
 pub fn clear_default_connection(storage: &mut Storage, is_global: bool) -> Result<(), String> {
-    logger::debug(format!(
-        "Clearing default connection (global: {is_global})"
-    ));
+    logger::debug(format!("Clearing default connection (global: {is_global})"));
     let key = default_connection_key(storage, is_global);
     storage.remove(&key)
 }
