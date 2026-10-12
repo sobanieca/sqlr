@@ -1,6 +1,3 @@
-> **Beta:** This project is in beta. Database connectors need more real-world
-> usage to be fully validated across all supported databases.
-
 Website: https://sobanieca.github.io/sqlr/
 
 # About
