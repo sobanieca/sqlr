@@ -1,4 +1,4 @@
-Website: https://sobanieca.github.io/sqlr/
+Website: https://adam.sobaniec.com/sqlr/
 
 # About
 
@@ -139,7 +139,7 @@ needed.
 ### Option 1: Quick Install Script (Recommended)
 
 ```bash
-curl -fsSL sobanieca.github.io/sqlr/install.sh | bash
+curl -fsSL adam.sobaniec.com/sqlr/install.sh | bash
 ```
 
 This script automatically detects your OS and architecture (Linux/macOS,
@@ -148,14 +148,14 @@ can't write to `/usr/local/bin`, the script stops with an error. Run it with
 `sudo`:
 
 ```bash
-curl -fsSL sobanieca.github.io/sqlr/install.sh | sudo bash
+curl -fsSL adam.sobaniec.com/sqlr/install.sh | sudo bash
 ```
 
 Or install to a custom location: set `INSTALL_DIR` to a directory that is on
 your `PATH`:
 
 ```bash
-curl -fsSL sobanieca.github.io/sqlr/install.sh | INSTALL_DIR=~/.local/bin bash
+curl -fsSL adam.sobaniec.com/sqlr/install.sh | INSTALL_DIR=~/.local/bin bash
 ```
 
 ### Option 2: Manual Binary Installation
