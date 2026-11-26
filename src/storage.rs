@@ -1,7 +1,7 @@
 //! Persistent key-value storage for connections and settings (replaces the
 //! `localStorage` used by the Deno version). Data is kept in
-//! `$XDG_CONFIG_HOME/sqlr/storage.json` (default `~/.config/sqlr`), readable
-//! only by the current user.
+//! `~/.sqlr/storage.json`, next to the `bin` folder that `install.sh` installs
+//! sqlr to, readable only by the current user.
 
 use crate::json::{self, Object, Value};
 use std::path::PathBuf;
@@ -15,16 +15,13 @@ pub fn home_dir() -> Option<String> {
         .filter(|home| !home.is_empty())
 }
 
-fn storage_dir() -> Result<PathBuf, String> {
-    if let Some(dir) = std::env::var_os("XDG_CONFIG_HOME").filter(|dir| !dir.is_empty()) {
-        return Ok(PathBuf::from(dir).join("sqlr"));
-    }
+pub fn data_dir() -> Result<PathBuf, String> {
     let home = home_dir().ok_or("Unable to locate the home directory (set HOME)")?;
-    Ok(PathBuf::from(home).join(".config").join("sqlr"))
+    Ok(PathBuf::from(home).join(".sqlr"))
 }
 
 fn storage_file() -> Result<PathBuf, String> {
-    Ok(storage_dir()?.join(FILE_NAME))
+    Ok(data_dir()?.join(FILE_NAME))
 }
 
 pub struct Storage {
@@ -77,7 +74,7 @@ impl Storage {
     }
 
     fn save(&self) -> Result<(), String> {
-        let dir = storage_dir()?;
+        let dir = data_dir()?;
         let path = dir.join(FILE_NAME);
         let error = |err: std::io::Error| format!("Failed to write {}: {err}", path.display());
         create_private_dir(&dir).map_err(error)?;

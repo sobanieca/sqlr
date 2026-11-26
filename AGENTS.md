@@ -50,7 +50,7 @@ Connectors convert driver values the way the Node.js drivers did (e.g. bigint
 and decimal as strings, dates as `Date`).
 
 **Connection storage:** `src/storage.rs` keeps connections and settings in
-`$XDG_CONFIG_HOME/sqlr/storage.json` (default `~/.config/sqlr`). Connections are
+`~/.sqlr/storage.json` (no XDG folders; the update check is kept there too). Connections are
 scoped to the nearest git repository or the global scope (`src/scope.rs`).
 Encryption (`src/guard.rs`) uses AES-256-GCM with a PBKDF2-SHA256 key and a
 random salt and nonce per connection.

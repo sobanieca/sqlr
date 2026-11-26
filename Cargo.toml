@@ -1,6 +1,6 @@
 [package]
 name = "sqlr"
-version = "1.0.0"
+version = "1.0.2"
 edition = "2024"
 description = "CLI tool for interacting with SQL databases"
 license = "MIT"

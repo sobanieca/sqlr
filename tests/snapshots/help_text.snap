@@ -192,8 +192,7 @@ Environment variables:
 
   SQLR_NO_UPDATE_CHECK      Set to 1 to disable the daily check for new versions.
 
-  XDG_CONFIG_HOME           Connections are stored in $XDG_CONFIG_HOME/sqlr
-                            (default: ~/.config/sqlr).
+Connections are stored in ~/.sqlr/storage.json.
 
 Global options:
 
@@ -414,8 +413,7 @@ Environment variables:
 
   SQLR_NO_UPDATE_CHECK      Set to 1 to disable the daily check for new versions.
 
-  XDG_CONFIG_HOME           Connections are stored in $XDG_CONFIG_HOME/sqlr
-                            (default: ~/.config/sqlr).
+Connections are stored in ~/.sqlr/storage.json.
 
 Global options:
 

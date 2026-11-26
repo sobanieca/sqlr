@@ -90,8 +90,6 @@ impl Session {
             .current_dir(cwd)
             .env("PATH", path)
             .env("HOME", &self.home)
-            .env("XDG_CONFIG_HOME", self.root.join("config"))
-            .env("XDG_CACHE_HOME", self.root.join("cache"))
             .env("TZ", "UTC")
             .env("SQLR_NO_UPDATE_CHECK", "1")
             .env("SQLR_TEST_LOCATION", &self.location)

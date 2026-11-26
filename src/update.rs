@@ -172,11 +172,9 @@ fn install(temp: &Path, exe: &Path, binary: &[u8], version: &str) -> Result<(), 
 }
 
 fn cache_file() -> Option<PathBuf> {
-    let base = std::env::var_os("XDG_CACHE_HOME")
-        .filter(|dir| !dir.is_empty())
-        .map(PathBuf::from)
-        .or_else(|| crate::storage::home_dir().map(|home| Path::new(&home).join(".cache")))?;
-    Some(base.join("sqlr").join("latest-version"))
+    crate::storage::data_dir()
+        .ok()
+        .map(|dir| dir.join("latest-version"))
 }
 
 fn now() -> u64 {

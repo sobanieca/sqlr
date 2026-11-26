@@ -143,16 +143,12 @@ curl -fsSL adam.sobaniec.com/sqlr/install.sh | bash
 ```
 
 This script automatically detects your OS and architecture (Linux/macOS,
-x64/arm64) and installs the appropriate binary to `/usr/local/bin`, for all users. If you
-can't write to `/usr/local/bin`, the script stops with an error. Run it with
-`sudo`:
+x64/arm64) and installs the appropriate binary to `~/.sqlr/bin`, with no `sudo` needed. If
+that folder is not on your `PATH`, the script asks to add it in your shell's startup file
+(`~/.bashrc`, `~/.zshrc`, fish's `conf.d` or `~/.profile`). Set `SQLR_NO_MODIFY_PATH=1` to
+leave the file unchanged. Run as root, the script installs to `/usr/local/bin`.
 
-```bash
-curl -fsSL adam.sobaniec.com/sqlr/install.sh | sudo bash
-```
-
-Or install to a custom location: set `INSTALL_DIR` to a directory that is on
-your `PATH`:
+Or install to another folder: set `INSTALL_DIR`:
 
 ```bash
 curl -fsSL adam.sobaniec.com/sqlr/install.sh | INSTALL_DIR=~/.local/bin bash
@@ -199,7 +195,7 @@ available (set `SQLR_NO_UPDATE_CHECK=1` to disable it).
 NO_COLOR=1 sqlr ...
 ```
 
-- Connections are stored in `~/.config/sqlr/storage.json` (readable only by
+- Connections are stored in `~/.sqlr/storage.json` (readable only by
   your user). Use encrypted connections (`sqlr add` wizard or
   `SQLR_ENCRYPTION_PASSWORD`) for sensitive environments.
 
