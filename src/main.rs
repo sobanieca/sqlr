@@ -312,6 +312,12 @@ fn main() {
     logger::debug("Debug mode enabled");
     let _ = rustls::crypto::ring::default_provider().install_default();
 
+    // Hidden: `sqlr update` runs the new binary with it to rewrite the skills.
+    if args == ["skill", "--refresh"] {
+        commands::skill::refresh();
+        return;
+    }
+
     let root = root();
     let args = with_implicit_query(&root, args);
     let matches = match cli::run(&root, VERSION, &args) {

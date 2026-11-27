@@ -1,0 +1,20 @@
+$ sqlr skill --refresh [cwd: home/repo]
+exit code: 0
+--- stdout
+Updated skills:
+  <tmp>/home/repo/.agents/skills/sqlr-prod/SKILL.md
+  <tmp>/home/repo/.claude/skills/sqlr/SKILL.md
+--- stderr
+
+$ sqlr skill --refresh [cwd: home/empty]
+exit code: 0
+--- stdout
+Updated skills:
+  <tmp>/home/.claude/skills/sqlr/SKILL.md
+--- stderr
+
+$ sqlr skill --refresh [cwd: home]
+exit code: 0
+--- stdout
+--- stderr
+

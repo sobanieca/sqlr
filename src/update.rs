@@ -104,6 +104,7 @@ pub fn execute() -> Result<(), String> {
     write_cache(&latest);
     if !is_newer(&latest, VERSION) {
         logger::info(format!("sqlr is up to date ({VERSION})"));
+        crate::commands::skill::refresh();
         return Ok(());
     }
 
@@ -139,7 +140,20 @@ pub fn execute() -> Result<(), String> {
     result?;
 
     logger::info(format!("sqlr has been updated to {latest}"));
+    refresh_skills(&exe);
     Ok(())
+}
+
+/// The skill text is part of the binary, so the new binary rewrites the
+/// skills written by `sqlr skill --init`.
+fn refresh_skills(exe: &Path) {
+    let status = std::process::Command::new(exe)
+        .args(["skill", "--refresh"])
+        .env(NO_UPDATE_CHECK_ENV, "1")
+        .status();
+    if !status.is_ok_and(|status| status.success()) {
+        logger::error("Failed to update the skills. Run 'sqlr skill --init' again.");
+    }
 }
 
 fn install(temp: &Path, exe: &Path, binary: &[u8], version: &str) -> Result<(), String> {

@@ -3,6 +3,7 @@
 
 mod support;
 
+use std::path::Path;
 use support::Session;
 
 #[test]
@@ -272,4 +273,60 @@ fn skill_init() {
     assert!(s.home.join(".claude/skills/sqlr/SKILL.md").exists());
     assert!(!notes.join(".claude").exists());
     s.assert_snapshot("skill_init");
+}
+
+#[test]
+fn skill_refresh() {
+    let mut s = Session::new("skill-refresh");
+    let home = s.home.clone();
+    let repo = s.dir("home/repo");
+    let empty = s.dir("home/empty");
+    let other = s.dir("home/other");
+    for dir in [&repo, &empty, &other] {
+        std::fs::create_dir_all(dir.join(".git")).unwrap();
+    }
+    for cwd in [&repo, &other, &home] {
+        s.exec("sqlr skill --init", cwd, &[]);
+    }
+    s.exec("sqlr skill --init -n prod", &repo, &[]);
+    let skill = std::fs::read_to_string(home.join(".claude/skills/sqlr/SKILL.md")).unwrap();
+    let pinned = std::fs::read_to_string(repo.join(".claude/skills/sqlr-prod/SKILL.md")).unwrap();
+    let marker = |text: &str| {
+        text.lines()
+            .find(|line| line.starts_with("<!-- Generated"))
+            .unwrap()
+            .to_string()
+    };
+    let stale = |marker: &str| format!("---\nname: sqlr\n---\n{marker}\nold text\n");
+    let claude = |root: &Path| root.join(".claude/skills/sqlr/SKILL.md");
+    for root in [&repo, &other, &home] {
+        std::fs::write(claude(root), stale(&marker(&skill))).unwrap();
+    }
+    std::fs::write(
+        repo.join(".agents/skills/sqlr-prod/SKILL.md"),
+        stale(&marker(&pinned)),
+    )
+    .unwrap();
+    std::fs::write(repo.join(".agents/skills/sqlr/SKILL.md"), "my own skill\n").unwrap();
+
+    // In a repository with skills: only its skills.
+    s.run_in("sqlr skill --refresh", &repo, &[]);
+    assert_eq!(std::fs::read_to_string(claude(&repo)).unwrap(), skill);
+    let text = std::fs::read_to_string(repo.join(".agents/skills/sqlr-prod/SKILL.md")).unwrap();
+    assert_eq!(text, pinned);
+    let text = std::fs::read_to_string(repo.join(".agents/skills/sqlr/SKILL.md")).unwrap();
+    assert_eq!(text, "my own skill\n");
+    assert_eq!(
+        std::fs::read_to_string(claude(&home)).unwrap(),
+        stale(&marker(&skill))
+    );
+    // In a repository without skills: the skills in the home directory.
+    s.run_in("sqlr skill --refresh", &empty, &[]);
+    assert_eq!(std::fs::read_to_string(claude(&home)).unwrap(), skill);
+    assert_eq!(
+        std::fs::read_to_string(claude(&other)).unwrap(),
+        stale(&marker(&skill))
+    );
+    s.run_in("sqlr skill --refresh", &home, &[]);
+    s.assert_snapshot("skill_refresh");
 }
